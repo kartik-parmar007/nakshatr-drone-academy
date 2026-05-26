@@ -134,9 +134,11 @@ function DronePage() {
   );
 }
 
-function FlipCard({ component }: { component: (typeof import("./drone"))[never] | { icon: any; name: string; fn: string } }) {
+type Component = { icon: typeof Box; name: string; fn: string };
+
+function FlipCard({ component: c }: { component: Component }) {
   const [flipped, setFlipped] = useState(false);
-  const c = component as { icon: any; name: string; fn: string };
+
   return (
     <div
       className="relative h-44 cursor-pointer"
