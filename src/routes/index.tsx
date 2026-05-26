@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { DroneGLB } from "@/components/DroneGLB";
-import { AgricultureDroneGLB } from "@/components/AgricultureDroneGLB";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -260,48 +259,35 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Philosophy + 3D drone */}
+      {/* Philosophy */}
       <section className="bg-white py-16 sm:py-20 lg:py-24 bg-line-grid border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-16 items-center">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="text-blue-600 text-[10px] sm:text-xs font-bold font-mono tracking-[0.2em] mb-3 sm:mb-4 uppercase">
+            <div className="text-blue-600 text-[10px] sm:text-xs font-bold font-mono tracking-[0.2em] mb-3 sm:mb-4 uppercase text-center">
               [ THE NAKSHATR PHILOSOPHY ]
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-950 leading-tight tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-955 leading-tight tracking-tight text-center max-w-4xl mx-auto">
               We place a drone in a student's hands before a single lecture is delivered
             </h2>
             <div className="w-full h-[1px] bg-blue-100 my-5 sm:my-7" />
-            <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-xl">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed mx-auto text-center max-w-2xl">
               Our reverse-engineering pedagogy builds genuine understanding — not
               procedural memory. Every component examined. Every question owned.
               Every skill demonstrated, not just declared.
             </p>
-            <ul className="mt-7 sm:mt-10 space-y-4 sm:space-y-5">
+            <ul className="mt-8 sm:mt-12 grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {pillars.map((p, i) => (
-                <li key={p.text} className="flex items-start gap-3 sm:gap-4">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 shadow-sm">
-                    <p.icon size={18} />
+                <li key={p.text} className="flex flex-col items-center text-center p-5 rounded-md border border-blue-50/80 bg-white/60 backdrop-blur-sm shadow-sm">
+                  <div className="w-10 h-10 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-4 shadow-sm">
+                    <p.icon size={20} />
                   </div>
-                  <div className="pt-0.5 sm:pt-1">
-                    <span className="font-mono text-[10px] sm:text-xs text-blue-400 font-semibold uppercase block">PILLAR 0{i + 1}</span>
-                    <span className="text-blue-950 font-semibold text-base sm:text-lg">{p.text}</span>
+                  <div>
+                    <span className="font-mono text-[9px] sm:text-[10px] text-blue-400 font-semibold uppercase block mb-1">PILLAR 0{i + 1}</span>
+                    <span className="text-blue-955 font-semibold text-sm sm:text-base leading-snug">{p.text}</span>
                   </div>
                 </li>
               ))}
             </ul>
-          </Reveal>
-
-          <Reveal delay={0.2}>
-            <div className="border border-blue-100/80 rounded-lg p-3 sm:p-4 bg-white/80 backdrop-blur-sm shadow-sm relative">
-              <div className="absolute top-2.5 sm:top-3 left-3 sm:left-4 font-mono text-[9px] text-blue-400 uppercase select-none flex items-center gap-1.5 z-10">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                AGRICULTURE-3D-SIMULATOR
-              </div>
-              <AgricultureDroneGLB
-                className="h-[320px] xs:h-[380px] sm:h-[440px] md:h-[480px] lg:h-[520px]"
-                scale={1.2}
-              />
-            </div>
           </Reveal>
         </div>
       </section>
