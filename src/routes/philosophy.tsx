@@ -4,10 +4,9 @@ import { motion } from "framer-motion";
 import {
   Plane, Wind, Combine, Helicopter, PlaneLanding,
   Box, Cog, Cpu, Gamepad2, Satellite, Radio, Battery, Fan,
-  Wrench, Brain, CheckCircle2,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { DronePhilosophy } from "@/components/DronePhilosophy";
+import { ScrollDroneAnimation } from "@/components/ScrollDroneAnimation";
 
 export const Route = createFileRoute("/philosophy")({
   head: () => ({
@@ -50,128 +49,10 @@ const steps = [
   "Pre-flight Check",
 ];
 
-const philosophyPillars = [
-  { icon: Wrench, text: "Learn by doing, not by listening" },
-  { icon: Brain, text: "Understand the root, master every variant" },
-  { icon: CheckCircle2, text: "Demonstrate competence, not memory" },
-];
-
 function PhilosophyPage() {
   return (
     <div>
-      {/* Philosophy Hero — dark, two-column with embedded 3D drone */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          background: "#0a1628",
-          padding: "80px 0",
-          minHeight: "600px",
-        }}
-      >
-        {/* Subtle blue glow accents */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%)" }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(6,182,212,0.12), transparent 70%)" }}
-        />
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-12 items-center relative">
-          {/* Left: text */}
-          <div>
-            <motion.span
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-block text-xs font-mono font-semibold tracking-[0.25em] uppercase"
-              style={{ color: "rgba(255,255,255,0.45)" }}
-            >
-              The Nakshatr Philosophy
-            </motion.span>
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="mt-4 font-bold leading-tight tracking-tight text-white"
-              style={{ fontSize: "clamp(28px, 4vw, 40px)" }}
-            >
-              We place a drone in a student's hands before a single lecture is delivered
-            </motion.h1>
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.25, duration: 0.5 }}
-              className="origin-left my-6"
-              style={{ width: "60px", height: "3px", background: "#3b82f6" }}
-            />
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="text-base leading-relaxed max-w-xl"
-              style={{ color: "#bfdbfe" }}
-            >
-              Our reverse-engineering pedagogy builds genuine understanding —
-              not procedural memory. Every component examined. Every question
-              owned. Every skill demonstrated, not just declared.
-            </motion.p>
-
-            <ul className="mt-8 space-y-4">
-              {philosophyPillars.map((p, i) => (
-                <motion.li
-                  key={p.text}
-                  initial={{ opacity: 0, x: -12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 + i * 0.08 }}
-                  className="flex items-center gap-3"
-                  style={{ color: "#93c5fd" }}
-                >
-                  <span
-                    className="flex items-center justify-center rounded-md shrink-0"
-                    style={{
-                      width: 36, height: 36,
-                      background: "rgba(59,130,246,0.12)",
-                      border: "1px solid rgba(59,130,246,0.3)",
-                      color: "#60a5fa",
-                    }}
-                  >
-                    <p.icon size={18} />
-                  </span>
-                  <span className="text-sm md:text-base font-medium">{p.text}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right: 3D drone animation */}
-          <div className="w-full">
-            <div
-              className="mx-auto"
-              style={{
-                width: "100%",
-                maxWidth: "500px",
-                height: "550px",
-              }}
-            >
-              <DronePhilosophy />
-            </div>
-            <p
-              className="text-center mt-4 text-xs font-mono uppercase tracking-[0.2em]"
-              style={{ color: "rgba(255,255,255,0.35)" }}
-            >
-              [ Live disassembly · Reverse engineering ]
-            </p>
-          </div>
-        </div>
-      </section>
+      <ScrollDroneAnimation />
 
       {/* What is a drone */}
       <section className="bg-white py-20 border-b border-slate-100">

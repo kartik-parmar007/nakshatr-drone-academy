@@ -1,6 +1,6 @@
-import { Canvas, useLoader } from "@react-three/fiber";
-import { Environment, useGLTF, Center, OrbitControls } from "@react-three/drei";
-import { Suspense, useEffect, useState, useMemo } from "react";
+import { Canvas } from "@react-three/fiber";
+import { Environment, useGLTF, Center } from "@react-three/drei";
+import { Suspense, useEffect, useState } from "react";
 import * as THREE from "three";
 
 /**
@@ -8,41 +8,35 @@ import * as THREE from "three";
  * --------
  * Static 3D drone model rendered from /models/drone.glb.
  * - No mouse interaction, no rotation, no orbit controls.
- * - Subtle idle float animation only.
- * - Used as a decorative right-column element.
+ * - Subtle idle float animation only (driven by parent CSS).
+ * - Used as a decorative right-column element on the hero.
+ *
+ * NOTE: All Three.js + GLTF code is gated behind a `mounted` flag so it
+ * never executes during SSR (which has no XHR, no DOM, and can't load
+ * a relative GLB URL).
  */
-
-if (typeof window !== "undefined") {
-  useGLTF.preload("/models/drone.glb");
-}
 
 function DroneMesh() {
   const { scene } = useGLTF("/models/drone.glb");
 
-  // Clone the scene so that each render/mount has a unique 3D hierarchy instance
-  const clonedScene = useMemo(() => scene.clone(), [scene]);
-
-  // Make sure all meshes look reasonable on first paint:
-  // shadows on, sensible material defaults if the GLB ships without them.
   useEffect(() => {
-    clonedScene.traverse((obj) => {
+    scene.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
       if (mesh.isMesh) {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
       }
     });
-  }, [clonedScene]);
+  }, [scene]);
 
   return (
     <Center>
-      <primitive object={clonedScene} scale={1.8} />
+      <primitive object={scene} scale={1.2} />
     </Center>
   );
 }
 
 function Fallback() {
-  // Simple wireframe placeholder while the GLB loads.
   return (
     <mesh>
       <boxGeometry args={[0.8, 0.2, 0.8]} />
@@ -53,7 +47,12 @@ function Fallback() {
 
 export function DroneGLB({ height = 420 }: { height?: number | string }) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    setMounted(true);
+    // Preload only on the client — module-top-level preload breaks SSR.
+    useGLTF.preload("/models/drone.glb");
+  }, []);
 
   if (!mounted) {
     return <div style={{ width: "100%", height }} />;
@@ -64,7 +63,7 @@ export function DroneGLB({ height = 420 }: { height?: number | string }) {
       style={{
         width: "100%",
         height,
-        cursor: "grab",
+        pointerEvents: "none", // not movable / not interactive
       }}
     >
       <Canvas
@@ -87,7 +86,6 @@ export function DroneGLB({ height = 420 }: { height?: number | string }) {
         <Suspense fallback={<Fallback />}>
           <DroneMesh />
           <Environment preset="city" />
-          <OrbitControls enableZoom={false} enablePan={false} autoRotate={true} autoRotateSpeed={0.8} />
         </Suspense>
       </Canvas>
     </div>
