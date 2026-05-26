@@ -55,19 +55,19 @@ function PhilosophyPage() {
       <ScrollDroneAnimation />
 
       {/* What is a drone */}
-      <section className="bg-white py-20 border-b border-slate-100">
+      <section className="bg-white py-14 sm:py-16 lg:py-20 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h1 className="text-4xl md:text-5xl font-bold text-blue-955 text-center uppercase tracking-tight">What is a Drone?</h1>
-            <p className="text-gray-500 text-center mt-3 max-w-2xl mx-auto text-sm font-mono">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-955 text-center uppercase tracking-tight">What is a Drone?</h1>
+            <p className="text-gray-500 text-center mt-3 max-w-2xl mx-auto text-xs sm:text-sm font-mono">
               [ AERIAL KINEMATICS & WING CONFIGURATIONS ]
             </p>
-            <p className="text-gray-600 text-center mt-5 max-w-3xl mx-auto text-lg leading-relaxed">
+            <p className="text-gray-600 text-center mt-4 sm:mt-5 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed px-2">
               A drone is an unmanned aerial vehicle that moves air to achieve controlled flight.
               Different drones move air in different ways — but the principle is universal.
             </p>
           </Reveal>
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="mt-10 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {types.map((t, i) => (
               <Reveal key={t.name} delay={i * 0.05}>
                 <div className="tech-card rounded-md p-5 h-full relative overflow-hidden">
@@ -85,15 +85,15 @@ function PhilosophyPage() {
       </section>
 
       {/* Components flip cards */}
-      <section className="bg-white py-20 border-b border-slate-100 bg-dot-grid">
+      <section className="bg-white py-14 sm:py-16 lg:py-20 border-b border-slate-100 bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-955 text-center uppercase tracking-tight">Disassemble to Assemble</h2>
-            <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto text-sm font-mono">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-955 text-center uppercase tracking-tight">Disassemble to Assemble</h2>
+            <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto text-xs sm:text-sm font-mono">
               [ SYSTEM SCHEMATICS & COMPONENT IDENTIFICATION ]
             </p>
           </Reveal>
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="mt-10 sm:mt-12 grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {components.map((c, i) => (
               <Reveal key={c.name} delay={i * 0.04}>
                 <FlipCard component={c} index={i} />
@@ -104,19 +104,19 @@ function PhilosophyPage() {
       </section>
 
       {/* Assembly steps */}
-      <section className="bg-white py-20 border-b border-slate-100">
+      <section className="bg-white py-14 sm:py-16 lg:py-20 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-955 text-center uppercase tracking-tight">Assembly Sequence</h2>
-            <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto text-sm font-mono">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-955 text-center uppercase tracking-tight">Assembly Sequence</h2>
+            <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto text-xs sm:text-sm font-mono">
               [ COMPLIANCE CHECKLIST & HARDWARE INTEGRATION FLOW ]
             </p>
           </Reveal>
-          <div className="mt-12 overflow-x-auto pb-4">
-            <div className="flex items-start gap-6 min-w-max px-2">
+          <div className="mt-10 sm:mt-12 overflow-x-auto pb-4 -mx-4 sm:mx-0 px-4 sm:px-0">
+            <div className="flex items-start gap-6 min-w-max">
               {steps.map((s, i) => (
                 <div key={s} className="flex items-start gap-6">
-                  <div className="w-56">
+                  <div className="w-44 sm:w-56">
                     <div className="w-10 h-10 rounded border-2 border-blue-600 bg-white text-blue-600 font-mono font-bold flex items-center justify-center text-sm shadow-sm">
                       0{i + 1}
                     </div>
@@ -124,7 +124,7 @@ function PhilosophyPage() {
                     <p className="text-gray-600 text-sm mt-1">Standard procedure executed and verified before next step.</p>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="w-12 border-t-2 border-dashed border-blue-200 mt-5" />
+                    <div className="w-8 sm:w-12 border-t-2 border-dashed border-blue-200 mt-5" />
                   )}
                 </div>
               ))}
@@ -134,14 +134,14 @@ function PhilosophyPage() {
       </section>
 
       {/* Root principle */}
-      <section className="bg-white py-20 bg-line-grid border-b border-slate-100">
+      <section className="bg-white py-14 sm:py-16 lg:py-20 bg-line-grid border-b border-slate-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Reveal>
-            <p className="text-blue-950 text-xl md:text-3xl italic font-bold leading-relaxed">
+            <p className="text-blue-950 text-lg sm:text-xl md:text-3xl italic font-bold leading-relaxed">
               "Every drone ever built moves air to achieve controlled flight.
               Understand this — understand all drones."
             </p>
-            <p className="text-blue-600 font-mono text-xs uppercase tracking-wider mt-4">
+            <p className="text-blue-600 font-mono text-[10px] sm:text-xs uppercase tracking-wider mt-4">
               [ FUNDAMENTAL RULE OF UAV KINEMATICS ]
             </p>
           </Reveal>

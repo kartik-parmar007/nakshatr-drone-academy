@@ -304,12 +304,24 @@ export function ScrollDroneAnimation() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [viewport, setViewport] = useState({ w: 1280, isMobile: false, isTablet: false });
 
   useEffect(() => {
     setMounted(true);
     // Preload GLB on the client only.
     useGLTF.preload("/models/drone.glb");
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const onResize = () => {
+      const w = window.innerWidth;
+      setViewport({ w, isMobile: w < 640, isTablet: w >= 640 && w < 1024 });
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [mounted]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -360,7 +372,7 @@ export function ScrollDroneAnimation() {
       ref={sectionRef}
       style={{
         position: "relative",
-        height: "600vh",
+        height: viewport.isMobile ? "450vh" : viewport.isTablet ? "520vh" : "600vh",
         background: `linear-gradient(180deg, ${NAVY} 0%, ${NAVY_2} 100%)`,
       }}
     >
@@ -471,6 +483,7 @@ export function ScrollDroneAnimation() {
             opacity={cardOpacity}
             index={activeIndex}
             total={CALLOUTS.length}
+            isMobile={viewport.isMobile || viewport.isTablet}
           />
         )}
 
@@ -478,8 +491,8 @@ export function ScrollDroneAnimation() {
         <div
           style={{
             position: "absolute",
-            top: 24,
-            right: 24,
+            top: viewport.isMobile ? 14 : 24,
+            right: viewport.isMobile ? 14 : 24,
             color: "rgba(255,255,255,0.6)",
             fontFamily: "JetBrains Mono, ui-monospace, Menlo, monospace",
             fontSize: 10,
@@ -660,34 +673,39 @@ function CalloutCard({
   opacity,
   index,
   total,
+  isMobile = false,
 }: {
   callout: Callout;
   opacity: number;
   index: number;
   total: number;
+  isMobile?: boolean;
 }) {
   const isLeft = callout.cardOffset.x < 0;
-  return (
-    <>
-      {/* Card */}
+
+  // On mobile/tablet the card sits anchored to the bottom of the screen,
+  // full-width, so it never collides with the 3D drone or runs off-screen.
+  if (isMobile) {
+    return (
       <div
         style={{
           position: "absolute",
-          top: "50%",
-          [isLeft ? "left" : "right"]: "8%",
-          transform: `translateY(-50%) translateY(${(1 - opacity) * 16}px)`,
-          width: "min(340px, 38vw)",
-          background: "rgba(8,14,30,0.78)",
+          left: "50%",
+          bottom: "16%",
+          transform: `translateX(-50%) translateY(${(1 - opacity) * 16}px)`,
+          width: "min(92vw, 460px)",
+          background: "rgba(8,14,30,0.85)",
           border: `1px solid ${CYAN}33`,
           backdropFilter: "blur(14px)",
           borderRadius: 14,
-          padding: "20px 22px",
+          padding: "16px 18px",
           color: "#e6f7ff",
           fontFamily: "Inter, sans-serif",
           opacity,
           transition: "opacity 0.4s, transform 0.4s",
           pointerEvents: "none",
-          boxShadow: `0 30px 80px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,211,238,0.08), 0 0 30px rgba(34,211,238,0.08)`,
+          boxShadow:
+            `0 30px 80px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,211,238,0.08), 0 0 30px rgba(34,211,238,0.08)`,
         }}
       >
         <div
@@ -696,28 +714,26 @@ function CalloutCard({
             alignItems: "center",
             justifyContent: "space-between",
             fontFamily: "JetBrains Mono, ui-monospace, Menlo, monospace",
-            fontSize: 10,
+            fontSize: 9,
             letterSpacing: "0.25em",
             color: CYAN,
             textTransform: "uppercase",
-            marginBottom: 10,
+            marginBottom: 8,
           }}
         >
-          <span>
-            ▍ {String(index + 1).padStart(2, "0")} · {callout.id}
-          </span>
+          <span>▍ {String(index + 1).padStart(2, "0")} · {callout.id}</span>
           <span style={{ color: "rgba(255,255,255,0.4)" }}>
             of {String(total).padStart(2, "0")}
           </span>
         </div>
         <div
           style={{
-            fontSize: "clamp(20px, 2.2vw, 28px)",
+            fontSize: "clamp(18px, 5vw, 24px)",
             fontWeight: 700,
             color: "#ffffff",
             letterSpacing: "-0.01em",
             lineHeight: 1.15,
-            marginBottom: 10,
+            marginBottom: 8,
           }}
         >
           {callout.title}
@@ -727,23 +743,97 @@ function CalloutCard({
             height: 1,
             width: "100%",
             background: `linear-gradient(90deg, ${CYAN}, transparent)`,
-            transformOrigin: isLeft ? "right" : "left",
-            animation: "sda-line-grow 0.6s cubic-bezier(.2,.8,.2,1) forwards",
-            marginBottom: 12,
+            marginBottom: 10,
           }}
         />
         <div
           style={{
-            fontSize: "clamp(13px, 1.05vw, 15px)",
+            fontSize: "13px",
             color: "#bcd7e8",
-            lineHeight: 1.55,
+            lineHeight: 1.5,
             fontWeight: 400,
           }}
         >
           {callout.desc}
         </div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: "50%",
+        [isLeft ? "left" : "right"]: "8%",
+        transform: `translateY(-50%) translateY(${(1 - opacity) * 16}px)`,
+        width: "min(340px, 38vw)",
+        background: "rgba(8,14,30,0.78)",
+        border: `1px solid ${CYAN}33`,
+        backdropFilter: "blur(14px)",
+        borderRadius: 14,
+        padding: "20px 22px",
+        color: "#e6f7ff",
+        fontFamily: "Inter, sans-serif",
+        opacity,
+        transition: "opacity 0.4s, transform 0.4s",
+        pointerEvents: "none",
+        boxShadow: `0 30px 80px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,211,238,0.08), 0 0 30px rgba(34,211,238,0.08)`,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontFamily: "JetBrains Mono, ui-monospace, Menlo, monospace",
+          fontSize: 10,
+          letterSpacing: "0.25em",
+          color: CYAN,
+          textTransform: "uppercase",
+          marginBottom: 10,
+        }}
+      >
+        <span>
+          ▍ {String(index + 1).padStart(2, "0")} · {callout.id}
+        </span>
+        <span style={{ color: "rgba(255,255,255,0.4)" }}>
+          of {String(total).padStart(2, "0")}
+        </span>
+      </div>
+      <div
+        style={{
+          fontSize: "clamp(20px, 2.2vw, 28px)",
+          fontWeight: 700,
+          color: "#ffffff",
+          letterSpacing: "-0.01em",
+          lineHeight: 1.15,
+          marginBottom: 10,
+        }}
+      >
+        {callout.title}
+      </div>
+      <div
+        style={{
+          height: 1,
+          width: "100%",
+          background: `linear-gradient(90deg, ${CYAN}, transparent)`,
+          transformOrigin: isLeft ? "right" : "left",
+          animation: "sda-line-grow 0.6s cubic-bezier(.2,.8,.2,1) forwards",
+          marginBottom: 12,
+        }}
+      />
+      <div
+        style={{
+          fontSize: "clamp(13px, 1.05vw, 15px)",
+          color: "#bcd7e8",
+          lineHeight: 1.55,
+          fontWeight: 400,
+        }}
+      >
+        {callout.desc}
+      </div>
+    </div>
   );
 }
 

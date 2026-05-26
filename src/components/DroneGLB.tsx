@@ -1,31 +1,66 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, useGLTF, Center, ContactShadows } from "@react-three/drei";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Environment, useGLTF, ContactShadows } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 /**
  * DroneGLB
  * --------
- * Hero 3D drone rendered from /models/drone.glb.
+ * Responsive 3D drone hero. Fills its parent container (use Tailwind classes
+ * on the wrapper to control responsive sizing).
  *
- * - Cursor interactive: drone gently tilts and rotates to follow the cursor
- *   (premium feel — smooth lerps, no orbit controls jank).
- * - Scaled prominently for the hero section.
- * - Subtle idle float and slow auto-rotation when the cursor isn't engaged.
- * - Client-only rendering (preload + Three.js gated behind `mounted` so SSR
- *   never tries to fetch the GLB).
+ * - Auto-fits the GLB regardless of native scale.
+ * - Camera position adapts to canvas aspect ratio so the drone never gets
+ *   cut off on narrow / tall mobile screens.
+ * - Smooth cursor + touch tracking with strong rotation range.
+ * - Client-only render (SSR-safe).
  */
 
-function DroneMesh({ scale = 1.6 }: { scale?: number }) {
+interface DroneSceneProps {
+  scaleBoost?: number;
+  wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
+}
+
+function CameraRig() {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    const aspect = size.width / size.height;
+    // Pull the camera back when the canvas is narrow (mobile portrait) so the
+    // drone always fits horizontally. Push in slightly when wide.
+    const dist = aspect < 1 ? 5.4 : aspect < 1.4 ? 4.4 : 3.7;
+    const fov = aspect < 1 ? 42 : aspect < 1.4 ? 38 : 36;
+
+    camera.position.set(dist * 0.85, dist * 0.36, dist);
+    if ("fov" in camera) {
+      (camera as THREE.PerspectiveCamera).fov = fov;
+      (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+    }
+    camera.lookAt(0, 0, 0);
+  }, [camera, size.width, size.height]);
+
+  return null;
+}
+
+function DroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
   const { scene } = useGLTF("/models/drone.glb");
   const groupRef = useRef<THREE.Group>(null);
-  const { size } = useThree();
   const target = useRef({ x: 0, y: 0 });
   const current = useRef({ x: 0, y: 0 });
 
-  // Polish materials so real GLB metals pick up reflections
-  useEffect(() => {
-    scene.traverse((obj) => {
+  // Auto-normalize the model: clone, recenter, rescale so longest edge fills
+  // a known world size regardless of how the GLB was authored.
+  const fitted = useMemo(() => {
+    const root = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(root);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const fitScale = (2.6 / maxDim) * scaleBoost;
+    root.position.sub(center).multiplyScalar(fitScale);
+    root.scale.setScalar(fitScale);
+
+    root.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
       if (mesh.isMesh) {
         mesh.castShadow = true;
@@ -39,67 +74,71 @@ function DroneMesh({ scale = 1.6 }: { scale?: number }) {
         }
       }
     });
-  }, [scene]);
+    return root;
+  }, [scene, scaleBoost]);
 
-  // Track pointer relative to the canvas
+  // Wrapper-scoped pointer tracking (mouse + touch)
   useEffect(() => {
-    const handlePointer = (e: PointerEvent) => {
-      // Find the canvas inside the wrapper to anchor coordinates
-      const canvas = document.querySelector<HTMLCanvasElement>(
-        "[data-drone-glb] canvas",
-      );
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
+    const wrap = wrapperRef.current;
+    if (!wrap) return;
+
+    const update = (clientX: number, clientY: number) => {
+      const rect = wrap.getBoundingClientRect();
       const inside =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom;
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom;
       if (!inside) {
-        // Pull back toward neutral so it returns to idle when the cursor leaves.
         target.current.x = 0;
         target.current.y = 0;
         return;
       }
-      const nx = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
-      const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      target.current.x = nx;
-      target.current.y = ny;
+      target.current.x = (clientX - rect.left) / rect.width - 0.5;
+      target.current.y = (clientY - rect.top) / rect.height - 0.5;
     };
-    window.addEventListener("pointermove", handlePointer);
-    return () => window.removeEventListener("pointermove", handlePointer);
-  }, [size.width, size.height]);
+
+    const onMouse = (e: MouseEvent) => update(e.clientX, e.clientY);
+    const onTouch = (e: TouchEvent) => {
+      if (e.touches.length === 0) return;
+      update(e.touches[0].clientX, e.touches[0].clientY);
+    };
+    const onLeave = () => {
+      target.current.x = 0;
+      target.current.y = 0;
+    };
+
+    window.addEventListener("mousemove", onMouse);
+    window.addEventListener("touchmove", onTouch, { passive: true });
+    wrap.addEventListener("mouseleave", onLeave);
+    return () => {
+      window.removeEventListener("mousemove", onMouse);
+      window.removeEventListener("touchmove", onTouch);
+      wrap.removeEventListener("mouseleave", onLeave);
+    };
+  }, [wrapperRef]);
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
 
-    // Smoothly track cursor target
-    current.current.x += (target.current.x - current.current.x) * 0.06;
-    current.current.y += (target.current.y - current.current.y) * 0.06;
+    // Smooth cursor follow
+    current.current.x += (target.current.x - current.current.x) * 0.1;
+    current.current.y += (target.current.y - current.current.y) * 0.1;
 
-    // Idle: slow auto-rotate when cursor is at rest
-    const idleSpin = 0.0035;
-    const cursorBoost = Math.abs(current.current.x) * 0.6;
-    const baseY = (groupRef.current.userData.baseY ?? 0) + idleSpin;
+    // Idle yaw drift
+    const baseY = (groupRef.current.userData.baseY ?? 0) + 0.0035;
     groupRef.current.userData.baseY = baseY;
 
-    // Final rotation = idle drift + cursor offset (max ~25 deg horizontal, 15 vert)
-    groupRef.current.rotation.y =
-      baseY + current.current.x * Math.PI * 0.25 - cursorBoost * 0.05;
-    groupRef.current.rotation.x = current.current.y * Math.PI * 0.18;
-
-    // Subtle float
-    groupRef.current.position.y = Math.sin(t * 0.9) * 0.06;
-    // Slight side drift toward cursor
-    groupRef.current.position.x = current.current.x * 0.15;
+    groupRef.current.rotation.y = baseY + current.current.x * Math.PI * 0.45;
+    groupRef.current.rotation.x = current.current.y * Math.PI * 0.25;
+    groupRef.current.position.y = Math.sin(t * 0.9) * 0.07;
+    groupRef.current.position.x = current.current.x * 0.2;
   });
 
   return (
     <group ref={groupRef}>
-      <Center>
-        <primitive object={scene} scale={scale} />
-      </Center>
+      <primitive object={fitted} />
     </group>
   );
 }
@@ -114,40 +153,44 @@ function Fallback() {
 }
 
 export function DroneGLB({
-  height = 560,
-  scale = 1.6,
+  className = "",
+  scale = 1.15,
+  height,
 }: {
-  height?: number | string;
+  className?: string;
   scale?: number;
+  /** Optional fixed height. Prefer using Tailwind classes via `className`. */
+  height?: number | string;
 }) {
   const [mounted, setMounted] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
     useGLTF.preload("/models/drone.glb");
   }, []);
 
+  const inlineStyle: React.CSSProperties = {
+    width: "100%",
+    height: height ?? "100%",
+    cursor: "grab",
+    position: "relative",
+  };
+
   if (!mounted) {
-    return <div style={{ width: "100%", height }} />;
+    return <div className={className} style={inlineStyle} />;
   }
 
   return (
-    <div
-      data-drone-glb
-      style={{
-        width: "100%",
-        height,
-        cursor: "grab",
-        position: "relative",
-      }}
-    >
+    <div ref={wrapperRef} className={className} style={inlineStyle}>
       <Canvas
         shadows
-        camera={{ position: [3.2, 1.4, 3.6], fov: 36 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
       >
-        <ambientLight intensity={0.5} />
+        <CameraRig />
+
+        <ambientLight intensity={0.55} />
         <directionalLight
           position={[5, 7, 5]}
           intensity={1.6}
@@ -159,16 +202,16 @@ export function DroneGLB({
         <pointLight position={[2, -1, 3]} intensity={0.6} color="#60a5fa" />
 
         <Suspense fallback={<Fallback />}>
-          <DroneMesh scale={scale} />
+          <DroneMesh scaleBoost={scale} wrapperRef={wrapperRef} />
           <Environment preset="city" />
         </Suspense>
 
         <ContactShadows
-          position={[0, -1.0, 0]}
+          position={[0, -1.3, 0]}
           opacity={0.35}
-          scale={6}
+          scale={7}
           blur={2.5}
-          far={2}
+          far={2.4}
           color="#0a1628"
         />
       </Canvas>

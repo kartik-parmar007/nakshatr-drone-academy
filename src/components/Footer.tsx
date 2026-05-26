@@ -42,11 +42,21 @@ export function Footer() {
             </li>
             <li className="flex items-start gap-2.5 text-gray-600">
               <Mail size={16} className="mt-0.5 text-blue-600 shrink-0" />
-              <span>hello@nakshatr.tech</span>
+              <a
+                href="mailto:hello@nakshatr.tech"
+                className="hover:text-blue-600 transition-colors break-all"
+              >
+                hello@nakshatr.tech
+              </a>
             </li>
             <li className="flex items-start gap-2.5 text-gray-600">
               <Phone size={16} className="mt-0.5 text-blue-600 shrink-0" />
-              <span>+91 00000 00000</span>
+              <a
+                href="tel:+919737112440"
+                className="hover:text-blue-600 transition-colors"
+              >
+                +91 97371 12440
+              </a>
             </li>
           </ul>
         </div>

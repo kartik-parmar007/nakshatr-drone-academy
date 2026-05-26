@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, useGLTF, ContactShadows } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -6,20 +6,32 @@ import * as THREE from "three";
 /**
  * AgricultureDroneGLB
  * -------------------
- * Renders /models/agriculture-drone.glb prominently on the page.
- *
- * - Auto-normalizes the model: regardless of how the GLB was exported,
- *   it is recentered and rescaled so the longest edge fills the canvas.
- * - Cursor-driven yaw + tilt with strong, smooth response.
- * - Idle auto-rotation underneath the cursor offset so it never feels static.
- * - Client-only render (SSR-safe).
+ * Responsive sibling to DroneGLB but loads /models/agriculture-drone.glb.
+ * Fills its parent. Camera adapts to container aspect ratio.
  */
 
 interface DroneSceneProps {
-  /** Multiplies the auto-fit scale. 1 = exactly fits, >1 zooms in. */
   scaleBoost?: number;
-  /** Reference back to the wrapper so pointer events scope properly. */
   wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
+}
+
+function CameraRig() {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    const aspect = size.width / size.height;
+    const dist = aspect < 1 ? 5.4 : aspect < 1.4 ? 4.4 : 3.7;
+    const fov = aspect < 1 ? 42 : aspect < 1.4 ? 38 : 36;
+
+    camera.position.set(dist * 0.85, dist * 0.36, dist);
+    if ("fov" in camera) {
+      (camera as THREE.PerspectiveCamera).fov = fov;
+      (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+    }
+    camera.lookAt(0, 0, 0);
+  }, [camera, size.width, size.height]);
+
+  return null;
 }
 
 function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
@@ -27,16 +39,13 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
   const groupRef = useRef<THREE.Group>(null);
   const target = useRef({ x: 0, y: 0 });
   const current = useRef({ x: 0, y: 0 });
-  const hovered = useRef(false);
 
-  // Auto-normalize: clone, recenter, rescale, polish materials.
   const fitted = useMemo(() => {
     const root = scene.clone(true);
     const box = new THREE.Box3().setFromObject(root);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    // Target world size of 2.6 fills our 38° FOV camera at z≈3.5 nicely.
     const fitScale = (2.6 / maxDim) * scaleBoost;
     root.position.sub(center).multiplyScalar(fitScale);
     root.scale.setScalar(fitScale);
@@ -58,7 +67,6 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
     return root;
   }, [scene, scaleBoost]);
 
-  // Pointer tracking — scoped to the wrapper so multiple drones don't fight.
   useEffect(() => {
     const wrap = wrapperRef.current;
     if (!wrap) return;
@@ -70,17 +78,13 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
         clientX <= rect.right &&
         clientY >= rect.top &&
         clientY <= rect.bottom;
-      hovered.current = inside;
       if (!inside) {
-        // Ease back to neutral once cursor leaves.
         target.current.x = 0;
         target.current.y = 0;
         return;
       }
-      const nx = (clientX - rect.left) / rect.width - 0.5;
-      const ny = (clientY - rect.top) / rect.height - 0.5;
-      target.current.x = nx;
-      target.current.y = ny;
+      target.current.x = (clientX - rect.left) / rect.width - 0.5;
+      target.current.y = (clientY - rect.top) / rect.height - 0.5;
     };
 
     const onMouse = (e: MouseEvent) => update(e.clientX, e.clientY);
@@ -89,7 +93,6 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
       update(e.touches[0].clientX, e.touches[0].clientY);
     };
     const onLeave = () => {
-      hovered.current = false;
       target.current.x = 0;
       target.current.y = 0;
     };
@@ -108,21 +111,14 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
 
-    // Strong but smooth lerp toward cursor target
     current.current.x += (target.current.x - current.current.x) * 0.1;
     current.current.y += (target.current.y - current.current.y) * 0.1;
 
-    // Continuous idle drift on top of cursor offset
     const baseY = (groupRef.current.userData.baseY ?? 0) + 0.004;
     groupRef.current.userData.baseY = baseY;
 
-    // Big rotation range so motion is obvious
-    const cursorYaw = current.current.x * Math.PI * 0.45;   // ±~80°
-    const cursorPitch = current.current.y * Math.PI * 0.25; // ±~45°
-    groupRef.current.rotation.y = baseY + cursorYaw;
-    groupRef.current.rotation.x = cursorPitch;
-
-    // Idle bob + cursor-driven horizontal nudge
+    groupRef.current.rotation.y = baseY + current.current.x * Math.PI * 0.45;
+    groupRef.current.rotation.x = current.current.y * Math.PI * 0.25;
     groupRef.current.position.y = Math.sin(t * 0.9) * 0.08;
     groupRef.current.position.x = current.current.x * 0.25;
   });
@@ -144,12 +140,13 @@ function Fallback() {
 }
 
 export function AgricultureDroneGLB({
-  height = 520,
+  className = "",
   scale = 1.15,
+  height,
 }: {
-  height?: number | string;
-  /** >1 zooms past auto-fit. Auto-fit already maxes the canvas. */
+  className?: string;
   scale?: number;
+  height?: number | string;
 }) {
   const [mounted, setMounted] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -159,26 +156,26 @@ export function AgricultureDroneGLB({
     useGLTF.preload("/models/agriculture-drone.glb");
   }, []);
 
+  const inlineStyle: React.CSSProperties = {
+    width: "100%",
+    height: height ?? "100%",
+    cursor: "grab",
+    position: "relative",
+  };
+
   if (!mounted) {
-    return <div style={{ width: "100%", height }} />;
+    return <div className={className} style={inlineStyle} />;
   }
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{
-        width: "100%",
-        height,
-        cursor: "grab",
-        position: "relative",
-      }}
-    >
+    <div ref={wrapperRef} className={className} style={inlineStyle}>
       <Canvas
         shadows
-        camera={{ position: [3.0, 1.2, 3.6], fov: 38 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
       >
+        <CameraRig />
+
         <ambientLight intensity={0.55} />
         <directionalLight
           position={[5, 7, 5]}

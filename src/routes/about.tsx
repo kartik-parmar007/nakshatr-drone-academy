@@ -193,7 +193,12 @@ function AboutPage() {
                 </div>
                 <div>
                   <div className="font-bold text-blue-950 text-sm font-mono uppercase tracking-tight">Email</div>
-                  <div className="text-gray-600 text-sm mt-0.5">hello@nakshatr.tech</div>
+                  <a
+                    href="mailto:hello@nakshatr.tech"
+                    className="text-gray-600 text-sm mt-0.5 hover:text-blue-600 transition-colors block"
+                  >
+                    hello@nakshatr.tech
+                  </a>
                 </div>
               </li>
               <li className="flex items-start gap-4">
@@ -202,7 +207,12 @@ function AboutPage() {
                 </div>
                 <div>
                   <div className="font-bold text-blue-950 text-sm font-mono uppercase tracking-tight">Phone</div>
-                  <div className="text-gray-600 text-sm mt-0.5">+91 00000 00000</div>
+                  <a
+                    href="tel:+919737112440"
+                    className="text-gray-600 text-sm mt-0.5 hover:text-blue-600 transition-colors block"
+                  >
+                    +91 97371 12440
+                  </a>
                 </div>
               </li>
             </ul>
