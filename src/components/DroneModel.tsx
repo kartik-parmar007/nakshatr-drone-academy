@@ -1,7 +1,8 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useRef, useState, Suspense } from "react";
-import type { Group, Mesh } from "three";
+import { useRef, useState, Suspense, useEffect } from "react";
+import type { Group } from "three";
+
 
 function Propeller({ position }: { position: [number, number, number] }) {
   const ref = useRef<Group>(null);
