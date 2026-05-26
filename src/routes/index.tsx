@@ -294,7 +294,7 @@ function HomePage() {
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 AGRICULTURE-3D-SIMULATOR
               </div>
-              <AgricultureDroneGLB height={420} scale={1.6} />
+              <AgricultureDroneGLB height={520} scale={1.2} />
             </div>
           </Reveal>
         </div>
