@@ -7,8 +7,8 @@ import {
   ArrowRight, Wrench, Brain, CheckCircle2,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { DroneModel } from "@/components/DroneModel";
 import { DroneGLB } from "@/components/DroneGLB";
+import { AgricultureDroneGLB } from "@/components/AgricultureDroneGLB";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -292,9 +292,9 @@ function HomePage() {
             <div className="border border-blue-100/80 rounded-lg p-4 bg-white/80 backdrop-blur-sm shadow-sm relative">
               <div className="absolute top-3 left-4 font-mono text-[9px] text-blue-400 uppercase select-none flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                INTEGRATED-3D-SIMULATOR
+                AGRICULTURE-3D-SIMULATOR
               </div>
-              <DroneModel />
+              <AgricultureDroneGLB height={420} scale={1.6} />
             </div>
           </Reveal>
         </div>
