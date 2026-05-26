@@ -32,25 +32,25 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.375rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.22 0.08 255);
+  --foreground: oklch(0.16 0.05 250);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.08 255);
+  --card-foreground: oklch(0.16 0.05 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.08 255);
+  --popover-foreground: oklch(0.16 0.05 250);
   --primary: oklch(0.52 0.21 258);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0.02 245);
-  --secondary-foreground: oklch(0.22 0.08 255);
-  --muted: oklch(0.97 0.012 245);
-  --muted-foreground: oklch(0.52 0.04 255);
-  --accent: oklch(0.94 0.04 245);
-  --accent-foreground: oklch(0.22 0.08 255);
+  --secondary: oklch(0.97 0.015 250);
+  --secondary-foreground: oklch(0.16 0.05 250);
+  --muted: oklch(0.98 0.008 250);
+  --muted-foreground: oklch(0.45 0.05 250);
+  --accent: oklch(0.95 0.02 250);
+  --accent-foreground: oklch(0.16 0.05 250);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.91 0.03 245);
-  --input: oklch(0.91 0.03 245);
+  --border: oklch(0.92 0.02 250);
+  --input: oklch(0.92 0.02 250);
   --ring: oklch(0.52 0.21 258);
 }
 
@@ -73,19 +73,43 @@
 
   /* Blue scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #eff6ff;
+    background: #f8fafc;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2563eb;
-    border-radius: 6px;
+    background: #cbd5e1;
+    border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #1d4ed8;
+    background: #94a3b8;
   }
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.05) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.bg-line-grid {
+  background-size: 30px 30px;
+  background-image: linear-gradient(to right, rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+}
+
+.tech-card {
+  background-color: #ffffff;
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tech-card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06), 0 0 0 1px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
 }
 
 @keyframes float-drone {

@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as ProgramsRouteImport } from './routes/programs'
-import { Route as DroneRouteImport } from './routes/drone'
+import { Route as PhilosophyRouteImport } from './routes/philosophy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -25,9 +25,9 @@ const ProgramsRoute = ProgramsRouteImport.update({
   path: '/programs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DroneRoute = DroneRouteImport.update({
-  id: '/drone',
-  path: '/drone',
+const PhilosophyRoute = PhilosophyRouteImport.update({
+  id: '/philosophy',
+  path: '/philosophy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -44,14 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/drone': typeof DroneRoute
+  '/philosophy': typeof PhilosophyRoute
   '/programs': typeof ProgramsRoute
   '/universities': typeof UniversitiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/drone': typeof DroneRoute
+  '/philosophy': typeof PhilosophyRoute
   '/programs': typeof ProgramsRoute
   '/universities': typeof UniversitiesRoute
 }
@@ -59,22 +59,28 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/drone': typeof DroneRoute
+  '/philosophy': typeof PhilosophyRoute
   '/programs': typeof ProgramsRoute
   '/universities': typeof UniversitiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/drone' | '/programs' | '/universities'
+  fullPaths: '/' | '/about' | '/philosophy' | '/programs' | '/universities'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/drone' | '/programs' | '/universities'
-  id: '__root__' | '/' | '/about' | '/drone' | '/programs' | '/universities'
+  to: '/' | '/about' | '/philosophy' | '/programs' | '/universities'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/philosophy'
+    | '/programs'
+    | '/universities'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  DroneRoute: typeof DroneRoute
+  PhilosophyRoute: typeof PhilosophyRoute
   ProgramsRoute: typeof ProgramsRoute
   UniversitiesRoute: typeof UniversitiesRoute
 }
@@ -95,11 +101,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/drone': {
-      id: '/drone'
-      path: '/drone'
-      fullPath: '/drone'
-      preLoaderRoute: typeof DroneRouteImport
+    '/philosophy': {
+      id: '/philosophy'
+      path: '/philosophy'
+      fullPath: '/philosophy'
+      preLoaderRoute: typeof PhilosophyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -122,10 +128,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  DroneRoute: DroneRoute,
+  PhilosophyRoute: PhilosophyRoute,
   ProgramsRoute: ProgramsRoute,
   UniversitiesRoute: UniversitiesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
