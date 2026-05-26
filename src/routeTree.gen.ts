@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as DroneRouteImport } from './routes/drone'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
 const UniversitiesRoute = UniversitiesRouteImport.update({
@@ -29,6 +30,11 @@ const DroneRoute = DroneRouteImport.update({
   path: '/drone',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/drone': typeof DroneRoute
   '/programs': typeof ProgramsRoute
   '/universities': typeof UniversitiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/drone': typeof DroneRoute
   '/programs': typeof ProgramsRoute
   '/universities': typeof UniversitiesRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/drone': typeof DroneRoute
   '/programs': typeof ProgramsRoute
   '/universities': typeof UniversitiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/drone' | '/programs' | '/universities'
+  fullPaths: '/' | '/about' | '/drone' | '/programs' | '/universities'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/drone' | '/programs' | '/universities'
-  id: '__root__' | '/' | '/drone' | '/programs' | '/universities'
+  to: '/' | '/about' | '/drone' | '/programs' | '/universities'
+  id: '__root__' | '/' | '/about' | '/drone' | '/programs' | '/universities'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   DroneRoute: typeof DroneRoute
   ProgramsRoute: typeof ProgramsRoute
   UniversitiesRoute: typeof UniversitiesRoute
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DroneRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   DroneRoute: DroneRoute,
   ProgramsRoute: ProgramsRoute,
   UniversitiesRoute: UniversitiesRoute,
