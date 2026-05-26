@@ -109,14 +109,14 @@ function HomePage() {
           </div>
 
           <div className="relative flex justify-center items-center">
-            <div className="absolute bottom-4 w-3/4 h-8 bg-blue-400/20 blur-2xl rounded-full" />
+            <div className="absolute bottom-4 w-3/4 h-8 bg-blue-400/30 blur-3xl rounded-full" />
             <motion.div
-              className="animate-float-drone w-full max-w-[460px]"
-              initial={{ opacity: 0, scale: 0.9 }}
+              className="w-full max-w-[640px]"
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <DroneGLB height={420} />
+              <DroneGLB height={560} scale={1.7} />
             </motion.div>
           </div>
         </div>
