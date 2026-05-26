@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { DroneModel } from "@/components/DroneModel";
+import { DroneGLB } from "@/components/DroneGLB";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -110,12 +111,12 @@ function HomePage() {
           <div className="relative flex justify-center items-center">
             <div className="absolute bottom-4 w-3/4 h-8 bg-blue-400/20 blur-2xl rounded-full" />
             <motion.div
-              className="animate-float-drone"
+              className="animate-float-drone w-full max-w-[460px]"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <HeroDroneSvg />
+              <DroneGLB height={420} />
             </motion.div>
           </div>
         </div>
@@ -299,35 +300,5 @@ function HomePage() {
         </div>
       </section>
     </div>
-  );
-}
-
-function HeroDroneSvg() {
-  return (
-    <svg width="380" height="300" viewBox="0 0 380 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* arms */}
-      <g stroke="#1d4ed8" strokeWidth="6" strokeLinecap="round">
-        <line x1="100" y1="100" x2="190" y2="150" />
-        <line x1="280" y1="100" x2="190" y2="150" />
-        <line x1="100" y1="200" x2="190" y2="150" />
-        <line x1="280" y1="200" x2="190" y2="150" />
-      </g>
-      {/* body */}
-      <rect x="155" y="120" width="70" height="60" rx="10" fill="#1e3a8a" />
-      <circle cx="190" cy="150" r="8" fill="#60a5fa" />
-      {/* motors */}
-      {[
-        [100, 100], [280, 100], [100, 200], [280, 200],
-      ].map(([x, y], i) => (
-        <g key={i}>
-          <circle cx={x} cy={y} r="14" fill="#1d4ed8" />
-          <ellipse cx={x} cy={y - 5} rx="40" ry="4" fill="#93c5fd" opacity="0.7" />
-          <ellipse cx={x} cy={y - 5} rx="4" ry="40" fill="#93c5fd" opacity="0.7" />
-        </g>
-      ))}
-      {/* legs */}
-      <line x1="170" y1="180" x2="160" y2="215" stroke="#1e3a5f" strokeWidth="4" strokeLinecap="round" />
-      <line x1="210" y1="180" x2="220" y2="215" stroke="#1e3a5f" strokeWidth="4" strokeLinecap="round" />
-    </svg>
   );
 }
