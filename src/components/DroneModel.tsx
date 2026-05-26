@@ -110,6 +110,13 @@ function Drone({ hovered }: { hovered: boolean }) {
 
 export function DroneModel() {
   const [hovered, setHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <div style={{ width: "100%", height: 400 }} />;
+  }
+
   return (
     <div
       onPointerEnter={() => setHovered(true)}
@@ -129,3 +136,4 @@ export function DroneModel() {
     </div>
   );
 }
+
