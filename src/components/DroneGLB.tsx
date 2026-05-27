@@ -184,22 +184,18 @@ export function DroneGLB({
   return (
     <div ref={wrapperRef} className={className} style={inlineStyle}>
       <Canvas
-        shadows
-        dpr={[1, 2]}
+        dpr={[1, 1.5]} // optimized DPR for retina displays to reduce GPU pixel fill rate stutters
         gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
       >
         <CameraRig />
 
-        <ambientLight intensity={0.55} />
+        <ambientLight intensity={0.65} />
         <directionalLight
           position={[5, 7, 5]}
-          intensity={1.6}
-          castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
+          intensity={1.8}
         />
-        <pointLight position={[-3, 2, -2]} intensity={1.0} color="#3b82f6" />
-        <pointLight position={[2, -1, 3]} intensity={0.6} color="#60a5fa" />
+        <pointLight position={[-3, 2, -2]} intensity={1.2} color="#3b82f6" />
+        <pointLight position={[2, -1, 3]} intensity={0.8} color="#60a5fa" />
 
         <Suspense fallback={<Fallback />}>
           <DroneMesh scaleBoost={scale} wrapperRef={wrapperRef} />
@@ -208,11 +204,11 @@ export function DroneGLB({
 
         <ContactShadows
           position={[0, -1.3, 0]}
-          opacity={0.35}
+          opacity={0.5} // slightly enhanced soft shadow depth
           scale={7}
-          blur={2.5}
+          blur={2.4}
           far={2.4}
-          color="#0a1628"
+          color="#030712"
         />
       </Canvas>
     </div>

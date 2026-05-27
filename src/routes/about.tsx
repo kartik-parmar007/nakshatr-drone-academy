@@ -7,6 +7,27 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 
+const DroneVector = ({ className = "" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="2" />
+    <path d="M12 10V2M12 22v-8M10 12H2M22 12h-8" />
+    <path d="M8.5 8.5l-5-5M15.5 8.5l5-5M8.5 15.5l-5 5M15.5 15.5l5 5" />
+    <circle cx="3.5" cy="3.5" r="1" />
+    <circle cx="20.5" cy="3.5" r="1" />
+    <circle cx="3.5" cy="20.5" r="1" />
+    <circle cx="20.5" cy="20.5" r="1" />
+    <path d="M2 3.5h3M19 3.5h3M2 20.5h3M19 20.5h3" />
+  </svg>
+);
+
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
@@ -18,11 +39,7 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
-const timeline = [
-  { date: "June 2024", title: "Inaugurated at Bhavnagar", desc: "Centre of Excellence opens its doors." },
-  { date: "Patron", title: "Shri Manoj Gohil, MLA", desc: "Patronage from the local representative." },
-  { date: "Partner", title: "MKBU First Batch", desc: "First cohort of MKBU students enrolled." },
-];
+
 
 const credentials = [
   { icon: Plane, text: "DGCA Approved Remote Pilot" },
@@ -40,7 +57,6 @@ const facts = [
   { icon: Shield, label: "Regulatory", value: "DGCA Compliant" },
   { icon: ShieldCheck, label: "Insurance", value: "Fully Covered" },
 ];
-
 function AboutPage() {
   const [form, setForm] = useState({ name: "", email: "", org: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
@@ -48,65 +64,50 @@ function AboutPage() {
   return (
     <div>
       {/* Story */}
-      <section className="bg-white py-20 border-b border-slate-100">
+      <section className="bg-background py-20 border-b border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h1 className="text-4xl md:text-5xl font-bold text-blue-950 text-center uppercase tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground text-center uppercase tracking-tight font-display">
               About Nakshatr Technologies
             </h1>
-            <p className="text-gray-500 text-center mt-4 max-w-3xl mx-auto text-sm font-mono">
+            <p className="text-muted-foreground text-center mt-4 max-w-3xl mx-auto text-sm font-mono">
               [ INDIA'S FIRST UNIVERSITY-EMBEDDED DRONE COMPANY · ESTABLISHED JUNE 2024 ]
             </p>
           </Reveal>
 
-          <div className="mt-16 relative">
-            <div className="hidden md:block absolute top-5 left-0 right-0 border-t-2 border-dashed border-blue-100" />
-            <div className="grid md:grid-cols-3 gap-8">
-              {timeline.map((t, i) => (
-                <Reveal key={t.title} delay={i * 0.1}>
-                  <div className="relative text-center md:text-left bg-white">
-                    <div className="w-10 h-10 rounded border-2 border-blue-600 bg-white text-blue-600 flex items-center justify-center font-mono font-bold mx-auto md:mx-0 relative z-10 shadow-sm">
-                      0{i + 1}
-                    </div>
-                    <div className="mt-4 text-blue-600 font-mono text-xs uppercase tracking-wider font-semibold">{t.date}</div>
-                    <h3 className="text-lg font-bold text-blue-950 mt-1">{t.title}</h3>
-                    <p className="text-gray-600 text-sm mt-1">{t.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
       {/* Founder */}
-      <section className="bg-white py-20 border-b border-slate-100 bg-dot-grid">
+      <section className="bg-background py-20 border-b border-border bg-dot-grid">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="bg-white border border-blue-100 shadow-sm rounded-lg p-8 md:p-12 grid md:grid-cols-3 gap-10 relative">
-              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-300 select-none uppercase">
+            <div className="tech-card group rounded-lg p-8 md:p-12 grid md:grid-cols-3 gap-10 relative overflow-hidden">
+              <div className="cyber-scanline" />
+              <DroneVector className="absolute -bottom-6 -right-6 w-32 h-32 text-primary opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-500/50 select-none uppercase z-10">
                 PERSONNEL-LOG-001
               </div>
-              <div className="flex justify-center md:justify-start">
-                <div className="w-36 h-36 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-inner">
+              <div className="flex justify-center md:justify-start z-10">
+                <div className="w-36 h-36 rounded-md bg-blue-955 border border-blue-900/55 flex items-center justify-center text-primary shadow-inner">
                   <User size={64} />
                 </div>
               </div>
-              <div className="md:col-span-2">
-                <div className="text-blue-600 font-mono text-xs font-bold tracking-widest uppercase">[ FOUNDER PROFILE ]</div>
-                <h2 className="text-3xl font-bold text-blue-955 mt-2 tracking-tight">A pilot, a researcher, an educator</h2>
-                <p className="text-gray-600 mt-4 leading-relaxed text-sm">
+              <div className="md:col-span-2 z-10">
+                <div className="text-primary font-mono text-xs font-bold tracking-widest uppercase">[ FOUNDER PROFILE ]</div>
+                <h2 className="text-3xl font-bold text-foreground mt-2 tracking-tight font-display transition-colors duration-300 group-hover:text-primary">A pilot, a researcher, an educator</h2>
+                <p className="text-muted-foreground mt-4 leading-relaxed text-sm">
                   After a decade of R&D in the UK and operational experience in India's drone
                   market, our founder returned to Bhavnagar to architect a programme that
                   produces deployment-ready operators — not certificate holders.
                 </p>
                 <ul className="mt-6 grid sm:grid-cols-2 gap-3">
                   {credentials.map((c) => (
-                    <li key={c.text} className="flex items-center gap-3 text-gray-700">
-                      <div className="w-6 h-6 rounded bg-blue-50 border border-blue-100/50 flex items-center justify-center text-blue-600 shrink-0">
+                    <li key={c.text} className="flex items-center gap-3 text-muted-foreground">
+                      <div className="w-6 h-6 rounded bg-blue-955 border border-blue-900/40 flex items-center justify-center text-primary shrink-0">
                         <c.icon size={14} />
                       </div>
-                      <span className="text-xs font-semibold text-blue-955 uppercase font-mono tracking-tight">{c.text}</span>
+                      <span className="text-xs font-semibold text-foreground uppercase font-mono tracking-tight transition-colors duration-300 group-hover:text-primary">{c.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -117,24 +118,26 @@ function AboutPage() {
       </section>
 
       {/* Facts */}
-      <section className="bg-white py-20 border-b border-slate-100">
+      <section className="bg-background py-20 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-950 text-center uppercase tracking-tight">Company Facts</h2>
-            <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto text-sm font-mono">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">Company Facts</h2>
+            <p className="text-muted-foreground text-center mt-3 max-w-xl mx-auto text-sm font-mono">
               [ VERIFIED REGULATORY & OPERATIONAL METRICS ]
             </p>
           </Reveal>
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {facts.map((f, i) => (
               <Reveal key={f.label} delay={i * 0.05}>
-                <div className="tech-card rounded-md p-6 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-2 font-mono text-[9px] text-blue-300 select-none">
+                <div className="tech-card group rounded-md p-6 relative overflow-hidden">
+                  <div className="cyber-scanline" />
+                  <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-primary opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+                  <div className="absolute top-0 right-0 p-2 font-mono text-[9px] text-blue-500/50 select-none">
                     FACT-LNK-0{i + 1}
                   </div>
-                  <f.icon className="text-blue-600" size={26} />
-                  <div className="mt-3 text-xs uppercase tracking-wider text-blue-500 font-mono font-bold">{f.label}</div>
-                  <div className="text-blue-955 font-bold text-lg mt-1">{f.value}</div>
+                  <f.icon className="text-primary animate-pulse relative z-10" size={26} />
+                  <div className="mt-3 text-xs uppercase tracking-wider text-primary font-mono font-bold relative z-10">{f.label}</div>
+                  <div className="text-foreground font-bold text-lg mt-1 font-display transition-colors duration-300 group-hover:text-primary relative z-10">{f.value}</div>
                 </div>
               </Reveal>
             ))}
@@ -143,22 +146,26 @@ function AboutPage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="bg-white py-20 border-b border-slate-100 bg-dot-grid">
+      <section className="bg-background py-20 border-b border-border bg-dot-grid">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-7">
           <Reveal>
-            <div className="tech-card rounded-md p-10 h-full relative overflow-hidden bg-white">
-              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-300 select-none">SYS-MISSION</div>
-              <div className="text-blue-600 text-xs font-mono font-bold tracking-widest uppercase">[ MISSION ]</div>
-              <p className="mt-4 text-2xl font-bold text-blue-950 leading-snug">
+            <div className="tech-card group rounded-md p-10 h-full relative overflow-hidden">
+              <div className="cyber-scanline" />
+              <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-primary opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-500/50 select-none uppercase">SYS-MISSION</div>
+              <div className="text-primary text-xs font-mono font-bold tracking-widest uppercase relative z-10">[ MISSION ]</div>
+              <p className="mt-4 text-2xl font-bold text-foreground leading-snug font-display transition-colors duration-300 group-hover:text-primary relative z-10">
                 Place a drone in every student's hands before a single lecture is delivered.
               </p>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="tech-card rounded-md p-10 h-full relative overflow-hidden bg-white">
-              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-300 select-none">SYS-VISION</div>
-              <div className="text-blue-600 text-xs font-mono font-bold tracking-widest uppercase">[ VISION ]</div>
-              <p className="mt-4 text-2xl font-bold text-blue-950 leading-snug">
+            <div className="tech-card group rounded-md p-10 h-full relative overflow-hidden">
+              <div className="cyber-scanline" />
+              <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-primary opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-500/50 select-none uppercase">SYS-VISION</div>
+              <div className="text-primary text-xs font-mono font-bold tracking-widest uppercase relative z-10">[ VISION ]</div>
+              <p className="mt-4 text-2xl font-bold text-foreground leading-snug font-display transition-colors duration-300 group-hover:text-primary relative z-10">
                 Become the foundational layer of drone talent for India by 2030.
               </p>
             </div>
@@ -167,49 +174,49 @@ function AboutPage() {
       </section>
 
       {/* Contact */}
-      <section className="bg-white py-20">
+      <section className="bg-background py-20 border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12">
           <Reveal>
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-955 uppercase tracking-tight">Get in Touch</h2>
-            <p className="text-gray-500 mt-2 text-sm font-mono">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground uppercase tracking-tight font-display">Get in Touch</h2>
+            <p className="text-muted-foreground mt-2 text-sm font-mono">
               [ COMMUNICATIONS CHANNELS & PORTAL ENTRY ]
             </p>
-            <p className="text-gray-600 mt-4 leading-relaxed">
+            <p className="text-muted-foreground mt-4 leading-relaxed">
               Whether you're a student, a university, or an industry partner — let's talk.
             </p>
             <ul className="mt-8 space-y-5">
               <li className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                <div className="w-10 h-10 rounded bg-blue-955 border border-blue-900/50 flex items-center justify-center text-primary shrink-0 font-mono">
                   <MapPin size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-blue-950 text-sm font-mono uppercase tracking-tight">Address</div>
-                  <div className="text-gray-600 text-sm mt-0.5">Bhavnagar, Gujarat, India</div>
+                  <div className="font-bold text-foreground text-sm font-mono uppercase tracking-widest">Address</div>
+                  <div className="text-muted-foreground text-sm mt-0.5">Bhavnagar, Gujarat, India</div>
                 </div>
               </li>
               <li className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                <div className="w-10 h-10 rounded bg-blue-955 border border-blue-900/50 flex items-center justify-center text-primary shrink-0 font-mono">
                   <Mail size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-blue-950 text-sm font-mono uppercase tracking-tight">Email</div>
+                  <div className="font-bold text-foreground text-sm font-mono uppercase tracking-widest">Email</div>
                   <a
                     href="mailto:hello@nakshatr.tech"
-                    className="text-gray-600 text-sm mt-0.5 hover:text-blue-600 transition-colors block"
+                    className="text-muted-foreground text-sm mt-0.5 hover:text-primary transition-colors block font-mono"
                   >
                     hello@nakshatr.tech
                   </a>
                 </div>
               </li>
               <li className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                <div className="w-10 h-10 rounded bg-blue-955 border border-blue-900/50 flex items-center justify-center text-primary shrink-0 font-mono">
                   <Phone size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-blue-950 text-sm font-mono uppercase tracking-tight">Phone</div>
+                  <div className="font-bold text-foreground text-sm font-mono uppercase tracking-widest">Phone</div>
                   <a
                     href="tel:+919737112440"
-                    className="text-gray-600 text-sm mt-0.5 hover:text-blue-600 transition-colors block"
+                    className="text-muted-foreground text-sm mt-0.5 hover:text-primary transition-colors block font-mono"
                   >
                     +91 97371 12440
                   </a>
@@ -226,7 +233,7 @@ function AboutPage() {
               }}
               className="tech-card rounded-md p-8 space-y-4 bg-dot-grid relative"
             >
-              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-300 select-none uppercase">
+              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-500/50 select-none uppercase">
                 COMMS-FORM-V1
               </div>
               {(["name", "email", "org"] as const).map((k) => (
@@ -237,7 +244,7 @@ function AboutPage() {
                   placeholder={k === "org" ? "Organization (optional)" : k === "email" ? "Email Address" : "Full Name"}
                   value={form[k]}
                   onChange={(e) => setForm({ ...form, [k]: e.target.value })}
-                  className="w-full bg-white border border-slate-200 focus:border-blue-600 outline-none rounded px-4 py-2.5 text-gray-900 placeholder:text-gray-400 text-sm font-mono transition-colors"
+                  className="w-full bg-zinc-950/80 border border-border focus:border-primary outline-none rounded px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 text-sm font-mono transition-colors"
                 />
               ))}
               <textarea
@@ -246,11 +253,11 @@ function AboutPage() {
                 placeholder="Message Content"
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="w-full bg-white border border-slate-200 focus:border-blue-600 outline-none rounded px-4 py-2.5 text-gray-900 placeholder:text-gray-400 text-sm font-mono transition-colors resize-none"
+                className="w-full bg-zinc-950/80 border border-border focus:border-primary outline-none rounded px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 text-sm font-mono transition-colors resize-none"
               />
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold font-mono text-xs uppercase tracking-wider py-3.5 rounded transition-colors shadow-sm"
+                className="w-full bg-primary hover:bg-blue-700 text-white font-bold font-mono text-xs uppercase tracking-widest py-3.5 rounded transition-all shadow-sm cursor-pointer shadow-blue-500/10 hover:shadow-blue-500/20"
               >
                 {submitted ? "[ TRANSMISSION RECEIVED — THANK YOU ]" : "[ TRANSMIT MESSAGE ]"}
               </button>

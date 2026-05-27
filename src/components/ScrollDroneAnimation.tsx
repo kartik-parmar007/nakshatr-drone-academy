@@ -110,9 +110,9 @@ const CALLOUTS: Callout[] = [
 ];
 
 /* ------------------------------------------------------------------
-   The real drone model
+   The real drone model (Highly Optimized)
    ------------------------------------------------------------------ */
-function DroneModelGLB({ progress }: { progress: number }) {
+function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }) {
   const { scene } = useGLTF("/models/drone.glb");
   const ref = useRef<THREE.Group>(null);
 
@@ -126,12 +126,13 @@ function DroneModelGLB({ progress }: { progress: number }) {
     const scale = 2.4 / maxDim; // normalized so the drone fits in ~2.4 world units
     root.position.sub(center).multiplyScalar(scale);
     root.scale.setScalar(scale);
-    // Boost material polish
+    
+    // Boost material polish (No shadow casting setup to optimize performance)
     root.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
       if (mesh.isMesh) {
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
         const m = mesh.material as THREE.MeshStandardMaterial;
         if (m && "metalness" in m) {
           m.metalness = Math.min(1, (m.metalness ?? 0.5) + 0.15);
@@ -146,6 +147,7 @@ function DroneModelGLB({ progress }: { progress: number }) {
 
   useFrame((state) => {
     if (!ref.current) return;
+    const progress = progressRef.current ?? 0;
     const t = state.clock.elapsedTime;
     // Calm idle hover — always present, intensified at start & end
     const calm = Math.max(1 - progress * 1.5, 0) + Math.max(progress - 0.85, 0) * 4;
@@ -163,19 +165,29 @@ function DroneModelGLB({ progress }: { progress: number }) {
 }
 
 /* ------------------------------------------------------------------
-   Cinematic scene with scroll-driven camera
+   Cinematic scene with scroll-driven camera (Lag-Free)
    ------------------------------------------------------------------ */
-function Scene({ progress, activeIndex }: { progress: number; activeIndex: number }) {
+function Scene({ 
+  progressRef, 
+  activeIndexRef 
+}: { 
+  progressRef: React.RefObject<number>;
+  activeIndexRef: React.RefObject<number>;
+}) {
   const { camera } = useThree();
   const targetCam = useRef(new THREE.Vector3(0, 1.8, 4.2));
   const targetLook = useRef(new THREE.Vector3(0, 0, 0));
 
   useFrame(() => {
+    const progress = progressRef.current ?? 0;
+    
+    // Calculate activeIndex smoothly inside useFrame
+    const tourP = Math.max(0, Math.min(1, (progress - 0.10) / 0.68));
+    const activeFloat = tourP * CALLOUTS.length;
+    const activeIndex = Math.min(CALLOUTS.length - 1, Math.floor(activeFloat));
+    activeIndexRef.current = activeIndex;
+
     // Stage windows
-    // 0.00–0.10 intro
-    // 0.10–0.78 tour  → 8 callouts, each owns ~0.085 of progress
-    // 0.78–0.88 principle
-    // 0.88–1.00 closing
     let cam: THREE.Vector3Tuple = [0, 1.8, 4.2];
     let look: THREE.Vector3Tuple = [0, 0, 0];
 
@@ -184,7 +196,6 @@ function Scene({ progress, activeIndex }: { progress: number; activeIndex: numbe
       const a = progress * 6;
       cam = [Math.sin(a) * 4.5, 1.6 + progress * 0.4, Math.cos(a) * 4.5];
     } else if (progress < 0.78) {
-      const tourP = (progress - 0.10) / 0.68; // 0..1
       const idxF = tourP * CALLOUTS.length;
       const i = Math.min(CALLOUTS.length - 1, Math.floor(idxF));
       const next = Math.min(CALLOUTS.length - 1, i + 1);
@@ -218,7 +229,7 @@ function Scene({ progress, activeIndex }: { progress: number; activeIndex: numbe
     targetLook.current.set(...look);
 
     // Smooth camera lerp
-    camera.position.lerp(targetCam.current, 0.06);
+    camera.position.lerp(targetCam.current, 0.08);
     const tmp = new THREE.Vector3().lerp(targetLook.current, 1);
     camera.lookAt(tmp.x, tmp.y, tmp.z);
   });
@@ -228,29 +239,25 @@ function Scene({ progress, activeIndex }: { progress: number; activeIndex: numbe
       <color attach="background" args={[NAVY]} />
       <fog attach="fog" args={[NAVY, 7, 22]} />
 
-      {/* Three-point lighting */}
-      <ambientLight intensity={0.3} />
+      {/* Optimized Three-point lighting (No shadow maps) */}
+      <ambientLight intensity={0.5} />
       <directionalLight
         position={[6, 8, 5]}
-        intensity={1.8}
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-bias={-0.0001}
+        intensity={2.0}
       />
-      <pointLight position={[-6, 2, -4]} intensity={1.6} color={CYAN} />
-      <pointLight position={[6, -1, 4]} intensity={1.0} color={ACCENT} />
-      <pointLight position={[0, 5, 0]} intensity={0.6} color="#ffffff" />
+      <pointLight position={[-6, 2, -4]} intensity={2.0} color={CYAN} />
+      <pointLight position={[6, -1, 4]} intensity={1.4} color={ACCENT} />
+      <pointLight position={[0, 5, 0]} intensity={0.8} color="#ffffff" />
 
       <Suspense fallback={null}>
         <Environment preset="city" />
-        <DroneModelGLB progress={progress} />
+        <DroneModelGLB progressRef={progressRef} />
       </Suspense>
 
-      {/* Soft ground reflection */}
+      {/* Soft ground reflection shadow (Very high performance) */}
       <ContactShadows
         position={[0, -1.4, 0]}
-        opacity={0.55}
+        opacity={0.65}
         scale={10}
         blur={2.4}
         far={3}
@@ -258,35 +265,45 @@ function Scene({ progress, activeIndex }: { progress: number; activeIndex: numbe
       />
 
       {/* Subtle highlight ring under the active callout anchor */}
-      <ActiveAnchorRing index={activeIndex} progress={progress} />
+      <ActiveAnchorRing progressRef={progressRef} activeIndexRef={activeIndexRef} />
     </>
   );
 }
 
-function ActiveAnchorRing({ index, progress }: { index: number; progress: number }) {
+function ActiveAnchorRing({ 
+  progressRef, 
+  activeIndexRef 
+}: { 
+  progressRef: React.RefObject<number>;
+  activeIndexRef: React.RefObject<number>;
+}) {
   const ref = useRef<THREE.Mesh>(null);
   const target = useRef(new THREE.Vector3(0, 0, 0));
+  
   useFrame((state) => {
     if (!ref.current) return;
+    const progress = progressRef.current ?? 0;
+    const index = activeIndexRef.current ?? 0;
     const visible = progress >= 0.10 && progress < 0.78;
     const callout = CALLOUTS[Math.max(0, Math.min(CALLOUTS.length - 1, index))];
     target.current.set(...callout.anchor);
-    ref.current.position.lerp(target.current, 0.12);
+    ref.current.position.lerp(target.current, 0.15);
     ref.current.rotation.x = -Math.PI / 2;
     const t = state.clock.elapsedTime;
-    const pulse = 0.85 + Math.sin(t * 3) * 0.08;
+    const pulse = 0.85 + Math.sin(t * 3.5) * 0.08;
     ref.current.scale.setScalar(visible ? pulse : 0.001);
   });
+  
   return (
     <mesh ref={ref}>
       <ringGeometry args={[0.22, 0.28, 48]} />
-      <meshBasicMaterial color={CYAN} transparent opacity={0.7} />
+      <meshBasicMaterial color={CYAN} transparent opacity={0.75} />
     </mesh>
   );
 }
 
 /* ------------------------------------------------------------------
-   Easing
+   Easing utilities
    ------------------------------------------------------------------ */
 function ease(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -302,7 +319,8 @@ function map(v: number, a: number, b: number, oa: number, ob: number) {
    ------------------------------------------------------------------ */
 export function ScrollDroneAnimation() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const [progress, setProgress] = useState(0);
+  const progressRef = useRef<number>(0);
+  const activeIndexRef = useRef<number>(0);
   const [mounted, setMounted] = useState(false);
   const [viewport, setViewport] = useState({ w: 1280, isMobile: false, isTablet: false });
 
@@ -323,21 +341,25 @@ export function ScrollDroneAnimation() {
     return () => window.removeEventListener("resize", onResize);
   }, [mounted]);
 
+  // Handle scroll checks in requestAnimationFrame to set the scroll ref (Canvas never re-renders!)
   useEffect(() => {
     if (!mounted) return;
     const el = sectionRef.current;
     if (!el) return;
     let raf = 0;
+    
     const update = () => {
       const rect = el.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
       const p = Math.max(0, Math.min(1, -rect.top / total));
-      setProgress(p);
+      progressRef.current = p;
     };
+    
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(update);
     };
+    
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -347,25 +369,6 @@ export function ScrollDroneAnimation() {
       window.removeEventListener("resize", onScroll);
     };
   }, [mounted]);
-
-  /* Compute which callout is active and its in/out fade */
-  const tourActive = progress >= 0.10 && progress < 0.78;
-  const tourP = clamp01((progress - 0.10) / 0.68);
-  const activeFloat = tourP * CALLOUTS.length;
-  const activeIndex = Math.min(CALLOUTS.length - 1, Math.floor(activeFloat));
-  const localT = activeFloat - activeIndex;
-  // Fade card in/out at the seam between callouts
-  const cardOpacity = tourActive
-    ? clamp01(map(localT, 0, 0.15, 0, 1)) * (1 - clamp01(map(localT, 0.85, 1, 0, 1)))
-    : 0;
-
-  /* Stage opacities */
-  const introOpacity = clamp01(map(progress, 0.0, 0.05, 1, 1)) * (1 - clamp01(map(progress, 0.07, 0.10, 0, 1)));
-  const principleA = clamp01(map(progress, 0.78, 0.81, 0, 1)) * (1 - clamp01(map(progress, 0.86, 0.88, 0, 1)));
-  const principleB = clamp01(map(progress, 0.81, 0.84, 0, 1)) * (1 - clamp01(map(progress, 0.86, 0.88, 0, 1)));
-  const closingOpacity = clamp01(map(progress, 0.90, 0.95, 0, 1));
-
-  const stageLabel = stageFor(progress, activeIndex);
 
   return (
     <section
@@ -385,7 +388,7 @@ export function ScrollDroneAnimation() {
           overflow: "hidden",
         }}
       >
-        {/* Subtle radial glow */}
+        {/* Subtle radial glow background overlay */}
         <div
           style={{
             position: "absolute",
@@ -397,20 +400,19 @@ export function ScrollDroneAnimation() {
           }}
         />
 
-        {/* 3D canvas */}
+        {/* 3D canvas (Never re-renders since its props are completely stable!) */}
         {mounted && (
           <Canvas
-            shadows
-            dpr={[1, 2]}
+            dpr={[1, 1.5]} // optimized for high DPI devices
             camera={{ position: [4, 2, 4.5], fov: 38 }}
             gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
             style={{ position: "absolute", inset: 0 }}
           >
-            <Scene progress={progress} activeIndex={activeIndex} />
+            <Scene progressRef={progressRef} activeIndexRef={activeIndexRef} />
           </Canvas>
         )}
 
-        {/* Vignette */}
+        {/* Vignette styling overlay */}
         <div
           style={{
             position: "absolute", inset: 0, pointerEvents: "none",
@@ -418,235 +420,8 @@ export function ScrollDroneAnimation() {
           }}
         />
 
-        {/* Top eyebrow */}
-        <div
-          style={{
-            position: "absolute",
-            top: "5%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            color: "rgba(255,255,255,0.55)",
-            fontSize: 11,
-            letterSpacing: "0.35em",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 600,
-            textTransform: "uppercase",
-            opacity: introOpacity,
-            transition: "opacity 0.4s",
-            pointerEvents: "none",
-            textAlign: "center",
-            width: "90%",
-          }}
-        >
-          The Nakshatr Philosophy
-        </div>
-
-        {/* Intro title */}
-        <div
-          style={{
-            position: "absolute",
-            top: "12%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            color: "#ffffff",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 700,
-            fontSize: "clamp(22px, 3.6vw, 44px)",
-            lineHeight: 1.2,
-            textAlign: "center",
-            maxWidth: "min(900px, 90vw)",
-            opacity: introOpacity,
-            transition: "opacity 0.5s",
-            pointerEvents: "none",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          Disassemble to assemble.
-          <div
-            style={{
-              fontSize: "clamp(11px, 1.2vw, 14px)",
-              fontWeight: 500,
-              color: CYAN,
-              letterSpacing: "0.25em",
-              marginTop: 14,
-              textTransform: "uppercase",
-            }}
-          >
-            Scroll to explore
-          </div>
-        </div>
-
-        {/* Side annotation card (component callout) */}
-        {tourActive && (
-          <CalloutCard
-            callout={CALLOUTS[activeIndex]}
-            opacity={cardOpacity}
-            index={activeIndex}
-            total={CALLOUTS.length}
-            isMobile={viewport.isMobile || viewport.isTablet}
-          />
-        )}
-
-        {/* Component counter strip (top right) */}
-        <div
-          style={{
-            position: "absolute",
-            top: viewport.isMobile ? 14 : 24,
-            right: viewport.isMobile ? 14 : 24,
-            color: "rgba(255,255,255,0.6)",
-            fontFamily: "JetBrains Mono, ui-monospace, Menlo, monospace",
-            fontSize: 10,
-            letterSpacing: "0.2em",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            opacity: tourActive ? 1 : 0,
-            transition: "opacity 0.4s",
-            pointerEvents: "none",
-            background: "rgba(8,14,30,0.5)",
-            border: "1px solid rgba(34,211,238,0.2)",
-            borderRadius: 6,
-            padding: "6px 10px",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          <span style={{ color: CYAN }}>
-            {String(activeIndex + 1).padStart(2, "0")}
-          </span>
-          <span>/</span>
-          <span>{String(CALLOUTS.length).padStart(2, "0")}</span>
-        </div>
-
-        {/* Root principle reveal */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            pointerEvents: "none",
-            padding: "0 24px",
-          }}
-        >
-          <div
-            style={{
-              color: "#ffffff",
-              fontSize: "clamp(22px, 3.6vw, 44px)",
-              fontWeight: 700,
-              textAlign: "center",
-              opacity: principleA,
-              transform: `translateY(${(1 - principleA) * 16}px)`,
-              transition: "opacity 0.4s, transform 0.4s",
-              maxWidth: "min(900px, 92vw)",
-              letterSpacing: "-0.01em",
-              lineHeight: 1.2,
-              textShadow: "0 4px 30px rgba(0,0,0,0.5)",
-            }}
-          >
-            Every drone ever built does one thing.
-          </div>
-          <div
-            style={{
-              marginTop: 18,
-              color: CYAN,
-              fontSize: "clamp(18px, 2.8vw, 32px)",
-              fontWeight: 600,
-              textAlign: "center",
-              opacity: principleB,
-              transform: `translateY(${(1 - principleB) * 16}px)`,
-              transition: "opacity 0.4s, transform 0.4s",
-              maxWidth: "min(900px, 92vw)",
-              letterSpacing: "-0.005em",
-              lineHeight: 1.3,
-              textShadow: "0 4px 30px rgba(34,211,238,0.25)",
-            }}
-          >
-            A power source moves air in controlled directions.
-          </div>
-        </div>
-
-        {/* Closing line */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "14%",
-            left: "50%",
-            transform: `translateX(-50%) translateY(${(1 - closingOpacity) * 18}px)`,
-            color: "#ffffff",
-            fontSize: "clamp(16px, 2vw, 24px)",
-            fontWeight: 600,
-            textAlign: "center",
-            opacity: closingOpacity,
-            pointerEvents: "none",
-            letterSpacing: "-0.005em",
-            maxWidth: "min(700px, 90vw)",
-            textShadow: "0 4px 24px rgba(0,0,0,0.5)",
-            transition: "opacity 0.4s, transform 0.4s",
-          }}
-        >
-          You just had your first Nakshatr session.
-        </div>
-
-        {/* Stage indicator pill */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "5%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "rgba(8,14,30,0.7)",
-            border: "1px solid rgba(34,211,238,0.3)",
-            backdropFilter: "blur(8px)",
-            borderRadius: 999,
-            padding: "8px 18px",
-            color: "#cbd5e1",
-            fontSize: 11,
-            letterSpacing: "0.25em",
-            fontFamily: "Inter, sans-serif",
-            textTransform: "uppercase",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            pointerEvents: "none",
-            fontWeight: 500,
-          }}
-        >
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: 999,
-              background: CYAN,
-              boxShadow: `0 0 8px ${CYAN}`,
-              animation: "sda-pulse 1.6s infinite",
-            }}
-          />
-          {stageLabel}
-        </div>
-
-        {/* Progress bar */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 2,
-            background: "rgba(255,255,255,0.06)",
-          }}
-        >
-          <div
-            style={{
-              height: "100%",
-              width: `${progress * 100}%`,
-              background: `linear-gradient(90deg, ${ACCENT}, ${CYAN})`,
-              boxShadow: `0 0 10px ${CYAN}`,
-              transition: "width 0.1s linear",
-            }}
-          />
-        </div>
+        {/* Throttled dynamic text/HTML card overlay component (isolated state re-renders) */}
+        <ScrollOverlays sectionRef={sectionRef} viewport={viewport} progressRef={progressRef} activeIndexRef={activeIndexRef} />
 
         <style>{`
           @keyframes sda-pulse {
@@ -664,6 +439,301 @@ export function ScrollDroneAnimation() {
 }
 
 export default ScrollDroneAnimation;
+
+/* ------------------------------------------------------------------
+   Throttled overlays for high-performance HTML text changes
+   ------------------------------------------------------------------ */
+function ScrollOverlays({ 
+  sectionRef, 
+  viewport,
+  progressRef,
+  activeIndexRef
+}: { 
+  sectionRef: React.RefObject<HTMLElement | null>;
+  viewport: { w: number; isMobile: boolean; isTablet: boolean };
+  progressRef: React.RefObject<number>;
+  activeIndexRef: React.RefObject<number>;
+}) {
+  const [progress, setProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Monitor progress ref and update active elements on scroll ticks
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    let raf = 0;
+    
+    const tick = () => {
+      const currentProgress = progressRef.current ?? 0;
+      const currentActiveIndex = activeIndexRef.current ?? 0;
+      
+      // Only trigger a React state change when values actually shift by significant delta,
+      // avoiding useless text updates on small scroll micro-steps.
+      setProgress(currentProgress);
+      setActiveIndex(currentActiveIndex);
+      
+      raf = requestAnimationFrame(tick);
+    };
+    
+    tick();
+    return () => cancelAnimationFrame(raf);
+  }, [sectionRef]);
+
+  /* Compute stage opacities */
+  const tourActive = progress >= 0.10 && progress < 0.78;
+  const tourP = clamp01((progress - 0.10) / 0.68);
+  const activeFloat = tourP * CALLOUTS.length;
+  const localT = activeFloat - activeIndex;
+
+  // Fade card in/out at the seam between callouts
+  const cardOpacity = tourActive
+    ? clamp01(map(localT, 0, 0.15, 0, 1)) * (1 - clamp01(map(localT, 0.85, 1, 0, 1)))
+    : 0;
+
+  const introOpacity = clamp01(map(progress, 0.0, 0.05, 1, 1)) * (1 - clamp01(map(progress, 0.07, 0.10, 0, 1)));
+  const principleA = clamp01(map(progress, 0.78, 0.81, 0, 1)) * (1 - clamp01(map(progress, 0.86, 0.88, 0, 1)));
+  const principleB = clamp01(map(progress, 0.81, 0.84, 0, 1)) * (1 - clamp01(map(progress, 0.86, 0.88, 0, 1)));
+  const closingOpacity = clamp01(map(progress, 0.90, 0.95, 0, 1));
+  const stageLabel = stageFor(progress, activeIndex);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {/* Top eyebrow */}
+      <div
+        style={{
+          position: "absolute",
+          top: "5%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          color: "rgba(255,255,255,0.55)",
+          fontSize: 11,
+          letterSpacing: "0.35em",
+          fontFamily: "Space Grotesk, sans-serif",
+          fontWeight: 600,
+          textTransform: "uppercase",
+          opacity: introOpacity,
+          transition: "opacity 0.4s",
+          pointerEvents: "none",
+          textAlign: "center",
+          width: "90%",
+        }}
+      >
+        The Nakshatr Philosophy
+      </div>
+
+      {/* Intro title */}
+      <div
+        style={{
+          position: "absolute",
+          top: "12%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          color: "#ffffff",
+          fontFamily: "Space Grotesk, sans-serif",
+          fontWeight: 700,
+          fontSize: "clamp(22px, 3.6vw, 44px)",
+          lineHeight: 1.2,
+          textAlign: "center",
+          maxWidth: "min(900px, 90vw)",
+          opacity: introOpacity,
+          transition: "opacity 0.5s",
+          pointerEvents: "none",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        Disassemble to assemble.
+        <div
+          style={{
+            fontSize: "clamp(11px, 1.2vw, 14px)",
+            fontWeight: 500,
+            color: CYAN,
+            letterSpacing: "0.25em",
+            marginTop: 14,
+            textTransform: "uppercase",
+            fontFamily: "JetBrains Mono, monospace"
+          }}
+        >
+          Scroll to explore
+        </div>
+      </div>
+
+      {/* Side annotation card (component callout) */}
+      {tourActive && (
+        <CalloutCard
+          callout={CALLOUTS[activeIndex]}
+          opacity={cardOpacity}
+          index={activeIndex}
+          total={CALLOUTS.length}
+          isMobile={viewport.isMobile || viewport.isTablet}
+        />
+      )}
+
+      {/* Component counter strip (top right) */}
+      <div
+        style={{
+          position: "absolute",
+          top: viewport.isMobile ? 14 : 24,
+          right: viewport.isMobile ? 14 : 24,
+          color: "rgba(255,255,255,0.6)",
+          fontFamily: "JetBrains Mono, ui-monospace, Menlo, monospace",
+          fontSize: 10,
+          letterSpacing: "0.2em",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          opacity: tourActive ? 1 : 0,
+          transition: "opacity 0.4s",
+          pointerEvents: "none",
+          background: "rgba(8,14,30,0.5)",
+          border: "1px solid rgba(34,211,238,0.2)",
+          borderRadius: 6,
+          padding: "6px 10px",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <span style={{ color: CYAN }}>
+          {String(activeIndex + 1).padStart(2, "0")}
+        </span>
+        <span>/</span>
+        <span>{String(CALLOUTS.length).padStart(2, "0")}</span>
+      </div>
+
+      {/* Root principle reveal */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none",
+          padding: "0 24px",
+        }}
+      >
+        <div
+          style={{
+            color: "#ffffff",
+            fontSize: "clamp(22px, 3.6vw, 44px)",
+            fontWeight: 700,
+            textAlign: "center",
+            opacity: principleA,
+            transform: `translateY(${(1 - principleA) * 16}px)`,
+            transition: "opacity 0.4s, transform 0.4s",
+            maxWidth: "min(900px, 92vw)",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.2,
+            textShadow: "0 4px 30px rgba(0,0,0,0.5)",
+            fontFamily: "Space Grotesk, sans-serif"
+          }}
+        >
+          Every drone ever built does one thing.
+        </div>
+        <div
+          style={{
+            marginTop: 18,
+            color: CYAN,
+            fontSize: "clamp(18px, 2.8vw, 32px)",
+            fontWeight: 600,
+            textAlign: "center",
+            opacity: principleB,
+            transform: `translateY(${(1 - principleB) * 16}px)`,
+            transition: "opacity 0.4s, transform 0.4s",
+            maxWidth: "min(900px, 92vw)",
+            letterSpacing: "-0.005em",
+            lineHeight: 1.3,
+            textShadow: "0 4px 30px rgba(34,211,238,0.25)",
+            fontFamily: "Space Grotesk, sans-serif"
+          }}
+        >
+          A power source moves air in controlled directions.
+        </div>
+      </div>
+
+      {/* Closing line */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "14%",
+          left: "50%",
+          transform: `translateX(-50%) translateY(${(1 - closingOpacity) * 18}px)`,
+          color: "#ffffff",
+          fontSize: "clamp(16px, 2vw, 24px)",
+          fontWeight: 600,
+          textAlign: "center",
+          opacity: closingOpacity,
+          pointerEvents: "none",
+          letterSpacing: "-0.005em",
+          maxWidth: "min(700px, 90vw)",
+          textShadow: "0 4px 24px rgba(0,0,0,0.5)",
+          transition: "opacity 0.4s, transform 0.4s",
+          fontFamily: "Space Grotesk, sans-serif"
+        }}
+      >
+        You just had your first Nakshatr session.
+      </div>
+
+      {/* Stage indicator pill */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "rgba(8,14,30,0.7)",
+          border: "1px solid rgba(34,211,238,0.3)",
+          backdropFilter: "blur(8px)",
+          borderRadius: 999,
+          padding: "8px 18px",
+          color: "#cbd5e1",
+          fontSize: 11,
+          letterSpacing: "0.25em",
+          fontFamily: "JetBrains Mono, monospace",
+          textTransform: "uppercase",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          pointerEvents: "none",
+          fontWeight: 500,
+        }}
+      >
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 999,
+            background: CYAN,
+            boxShadow: `0 0 8px ${CYAN}`,
+            animation: "sda-pulse 1.6s infinite",
+          }}
+        />
+        {stageLabel}
+      </div>
+
+      {/* Progress bar line */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 2,
+          background: "rgba(255,255,255,0.06)",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${progress * 100}%`,
+            background: `linear-gradient(90deg, ${ACCENT}, ${CYAN})`,
+            boxShadow: `0 0 10px ${CYAN}`,
+            transition: "width 0.1s linear",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------
    Annotation card (DJI / Skydio style)
@@ -734,6 +804,7 @@ function CalloutCard({
             letterSpacing: "-0.01em",
             lineHeight: 1.15,
             marginBottom: 8,
+            fontFamily: "Space Grotesk, sans-serif"
           }}
         >
           {callout.title}
@@ -809,6 +880,7 @@ function CalloutCard({
           letterSpacing: "-0.01em",
           lineHeight: 1.15,
           marginBottom: 10,
+          fontFamily: "Space Grotesk, sans-serif"
         }}
       >
         {callout.title}

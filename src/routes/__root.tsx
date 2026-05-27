@@ -17,15 +17,15 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-blue-900">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-blue-900">Page not found</h2>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 className="text-7xl font-bold text-primary font-display">404</h1>
+        <h2 className="mt-4 text-xl font-semibold text-foreground font-display">Page not found</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+            className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 font-mono tracking-wider text-xs uppercase"
           >
             Go home
           </Link>
@@ -41,21 +41,21 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold text-blue-900">This page didn't load</h1>
-        <p className="mt-2 text-sm text-gray-600">Something went wrong. Try again.</p>
+        <h1 className="text-xl font-semibold text-primary font-display">This page didn't load</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Something went wrong. Try again.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+            className="rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 font-mono tracking-wider text-xs uppercase cursor-pointer"
           >
             Try again
           </button>
           <a
             href="/"
-            className="rounded-full border-2 border-blue-600 px-5 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+            className="rounded-full border border-blue-600 px-5 py-2 text-sm font-semibold text-blue-400 hover:bg-blue-950/30 font-mono tracking-wider text-xs uppercase"
           >
             Go home
           </a>
@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;550;700&display=swap",
       },
     ],
   }),
@@ -109,7 +109,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col bg-white">
+      <div className="min-h-screen flex flex-col bg-background text-foreground font-sans">
         <Navbar />
         <main className="flex-1">
           <Outlet />

@@ -25,7 +25,7 @@ export function FloatingActions() {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Back to top"
-          className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white p-2.5 sm:p-3 rounded-md shadow-md transition-transform hover:scale-110"
+          className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-40 bg-primary hover:bg-blue-700 text-white p-2.5 sm:p-3 rounded-md shadow-md transition-transform hover:scale-110 cursor-pointer"
         >
           <ArrowUp size={18} className="sm:hidden" />
           <ArrowUp size={20} className="hidden sm:block" />
