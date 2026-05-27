@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Rocket, HardHat, Globe2, TrendingUp,
@@ -75,16 +76,39 @@ const pillars = [
   { icon: Brain, text: "Understand the root, master every variant" },
   { icon: CheckCircle2, text: "Demonstrate competence, not memory" },
 ];function HomePage() {
+  const [telemetry, setTelemetry] = useState({
+    pitch: "0.0",
+    yaw: "0.0",
+    roll: "0.0",
+    alt: "124.80",
+    freq: "5.750",
+    esc: "98",
+  });
+
+  useEffect(() => {
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        setTelemetry(customEvent.detail);
+      }
+    };
+    window.addEventListener("drone-telemetry-update", handleUpdate);
+    return () => window.removeEventListener("drone-telemetry-update", handleUpdate);
+  }, []);
+
   return (
     <div>
       {/* Hero */}
-      <section className="bg-background bg-dot-grid border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
+      <section className="bg-background bg-dot-grid border-b border-border relative overflow-hidden">
+        {/* Futuristic glowing ambient background gradients */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(59,130,246,0.06),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(34,211,238,0.06),transparent_50%)] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
           <div>
             <motion.span
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-blue-950/40 border border-blue-900/60 text-blue-400 text-[10px] sm:text-xs font-mono font-semibold px-2.5 sm:px-3 py-1.5 rounded mb-4 sm:mb-5 tracking-widest uppercase"
+              className="inline-flex items-center gap-2 bg-blue-955 border border-blue-900/60 text-blue-400 text-[10px] sm:text-xs font-mono font-semibold px-2.5 sm:px-3 py-1.5 rounded mb-4 sm:mb-5 tracking-widest uppercase shadow-sm"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="hidden xs:inline">SYSTEM ACTIVE · </span>DGCA · UGC ALIGNED
@@ -119,24 +143,61 @@ const pillars = [
               </Link>
               <Link
                 to="/universities"
-                className="border border-blue-500 text-blue-400 hover:bg-blue-950/30 px-5 sm:px-6 py-2.5 rounded-md font-semibold font-mono text-xs sm:text-sm uppercase tracking-wider transition-all"
+                className="border border-blue-500 text-blue-400 hover:bg-blue-955/30 px-5 sm:px-6 py-2.5 rounded-md font-semibold font-mono text-xs sm:text-sm uppercase tracking-wider transition-all"
               >
                 Partner With Us
               </Link>
             </motion.div>
           </div>
 
-          <div className="relative flex justify-center items-center order-first lg:order-last">
+          <div className="relative flex justify-center items-center order-first lg:order-last min-h-[380px] xs:min-h-[450px] sm:min-h-[520px] md:min-h-[600px] lg:min-h-[700px] w-full">
             <div className="absolute bottom-2 sm:bottom-4 w-3/4 h-6 sm:h-8 bg-blue-500/10 blur-3xl rounded-full" />
+            
+            {/* Animated High-Tech Scanning Target (Radar Reticle Overlays) */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-40">
+              <div className="w-80 h-80 rounded-full border border-dashed border-blue-500/20 animate-[spin_40s_linear_infinite]" />
+              <div className="absolute w-64 h-64 rounded-full border border-dashed border-cyan-500/15 animate-[spin_20s_linear_infinite_reverse]" />
+              <div className="absolute w-[90%] h-[1px] bg-gradient-to-r from-transparent via-blue-500/10 to-transparent" />
+              <div className="absolute h-[90%] w-[1px] bg-gradient-to-b from-transparent via-blue-500/10 to-transparent" />
+            </div>
+
+            {/* Top-Left Telemetry Floating Widget */}
+            <div className="absolute top-8 left-0 z-20 border border-blue-500/20 bg-zinc-950/80 p-3 rounded font-mono text-[9px] text-blue-400 tracking-wider backdrop-blur-md shadow-lg hidden sm:block min-w-[130px]">
+              <div className="flex items-center gap-1.5 font-bold mb-1 uppercase text-[10px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping" />
+                Telemetry Log
+              </div>
+              <div className="space-y-0.5 opacity-80 select-none">
+                <div>PITCH: {telemetry.pitch}°</div>
+                <div>YAW: {telemetry.yaw}°</div>
+                <div>ROLL: {telemetry.roll}°</div>
+                <div>ALT: {telemetry.alt} M</div>
+              </div>
+            </div>
+
+            {/* Bottom-Right System Status Widget */}
+            <div className="absolute bottom-8 right-0 z-20 border border-emerald-500/20 bg-zinc-950/80 p-3 rounded font-mono text-[9px] text-emerald-400 tracking-wider backdrop-blur-md shadow-lg hidden sm:block min-w-[145px]">
+              <div className="flex items-center gap-1.5 font-bold mb-1 uppercase text-[10px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Calibration State
+              </div>
+              <div className="space-y-0.5 opacity-80 select-none">
+                <div>ESC SENSOR: {telemetry.esc}%</div>
+                <div>GYRO STATE: ACTIVE</div>
+                <div>FREQ: {telemetry.freq} GHZ</div>
+                <div>SYS ID: NK-DRN-2026</div>
+              </div>
+            </div>
+
             <motion.div
-              className="w-full max-w-[640px]"
+              className="w-full max-w-[640px] z-10"
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
             >
               <DroneGLB
-                className="h-[300px] xs:h-[360px] sm:h-[420px] md:h-[480px] lg:h-[560px]"
-                scale={1.8}
+                className="h-[380px] xs:h-[450px] sm:h-[520px] md:h-[600px] lg:h-[700px]"
+                scale={2.2}
               />
             </motion.div>
           </div>
@@ -276,9 +337,6 @@ const pillars = [
                     <h3 className="text-base sm:text-lg font-bold text-foreground mt-4 leading-snug font-display transition-colors duration-300 group-hover:text-primary">{n.title}</h3>
                     <p className="text-muted-foreground text-sm mt-2 leading-relaxed">{n.desc}</p>
                   </div>
-                  <a className="text-primary font-semibold text-xs font-mono uppercase mt-5 sm:mt-6 inline-flex items-center gap-1.5 transition-colors duration-300 group-hover:text-blue-400 cursor-pointer relative z-10">
-                    Read More <ArrowRight size={12} />
-                  </a>
                 </article>
               </Reveal>
             ))}

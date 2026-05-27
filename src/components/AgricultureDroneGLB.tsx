@@ -121,6 +121,19 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
     groupRef.current.rotation.x = current.current.y * Math.PI * 0.25;
     groupRef.current.position.y = Math.sin(t * 0.9) * 0.08;
     groupRef.current.position.x = current.current.x * 0.25;
+
+    // Dispatch telemetry values to sync widgets in real-time
+    const event = new CustomEvent("drone-telemetry-update", {
+      detail: {
+        pitch: (groupRef.current.rotation.x * (180 / Math.PI)).toFixed(1),
+        yaw: ((groupRef.current.rotation.y * (180 / Math.PI)) % 360).toFixed(1),
+        roll: (current.current.x * -22).toFixed(1),
+        alt: (124.8 + groupRef.current.position.y * 10).toFixed(2),
+        freq: (5.75 + Math.abs(current.current.x) * 0.12).toFixed(3),
+        esc: Math.floor(98 + Math.abs(current.current.y) * 2),
+      }
+    });
+    window.dispatchEvent(event);
   });
 
   return (

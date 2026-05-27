@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, useGLTF, ContactShadows } from "@react-three/drei";
+import { Environment, useGLTF, ContactShadows, Sparkles } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
@@ -167,6 +167,42 @@ function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }
 /* ------------------------------------------------------------------
    Cinematic scene with scroll-driven camera (Lag-Free)
    ------------------------------------------------------------------ */
+function LaserScanDisk() {
+  const groupRef = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    const t = state.clock.elapsedTime;
+    // Sweep vertically up and down from y = -0.6 to y = 0.8
+    groupRef.current.position.y = Math.sin(t * 1.3) * 0.7 + 0.1;
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Laser ring outer boundary */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[1.35, 1.37, 64]} />
+        <meshBasicMaterial
+          color="#22d3ee"
+          transparent
+          opacity={0.55}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      {/* Laser ring soft inner disk */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.01, 1.35, 64]} />
+        <meshBasicMaterial
+          color="#22d3ee"
+          transparent
+          opacity={0.06}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 function Scene({ 
   progressRef, 
   activeIndexRef 
@@ -248,6 +284,22 @@ function Scene({
       <pointLight position={[-6, 2, -4]} intensity={2.0} color={CYAN} />
       <pointLight position={[6, -1, 4]} intensity={1.4} color={ACCENT} />
       <pointLight position={[0, 5, 0]} intensity={0.8} color="#ffffff" />
+
+      {/* 3D Cyber Grid */}
+      <gridHelper args={[24, 24, CYAN, "rgba(34, 211, 238, 0.08)"]} position={[0, -1.39, 0]} />
+
+      {/* Atmospheric GPU Sparkles */}
+      <Sparkles
+        count={55}
+        scale={6}
+        size={1.6}
+        speed={0.4}
+        color={CYAN}
+        opacity={0.65}
+      />
+
+      {/* Sweeping Active Diagnostic Laser Scan */}
+      <LaserScanDisk />
 
       <Suspense fallback={null}>
         <Environment preset="city" />

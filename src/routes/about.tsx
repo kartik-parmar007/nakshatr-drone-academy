@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar, MapPin, Award, BookOpen, Shield, ShieldCheck,
   User, Plane, FlaskConical, BarChart3, Landmark, GraduationCap,
   Mail, Phone,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { DroneGLB } from "@/components/DroneGLB";
+import { AgricultureDroneGLB } from "@/components/AgricultureDroneGLB";
 
 const DroneVector = ({ className = "" }: { className?: string }) => (
   <svg
@@ -57,24 +59,195 @@ const facts = [
   { icon: Shield, label: "Regulatory", value: "DGCA Compliant" },
   { icon: ShieldCheck, label: "Insurance", value: "Fully Covered" },
 ];
+
+const FLEET_DRONES = [
+  {
+    id: "NK-1",
+    name: "NK-1 Academy Trainer",
+    type: "Multirotor Training Quadcopter",
+    desc: "Designed for high-stability piloting, hands-on mechanical assembly training, and regulatory type-certified license flights.",
+    specs: [
+      { label: "Empty Weight", value: "1.4 kg" },
+      { label: "Max Takeoff Weight", value: "2.2 kg" },
+      { label: "Max Endurance", value: "22 mins" },
+      { label: "Flight Controller", value: "Pixhawk 6C" },
+      { label: "Max Wind Resistance", value: "10 m/s" },
+      { label: "Signal Frequency", value: "2.4 GHz / 5.8 GHz" },
+    ],
+  },
+  {
+    id: "AG-1",
+    name: "AG-1 Precision Sprayer",
+    type: "Heavy-Lift Hexacopter",
+    desc: "Heavy-payload industrial UAV designed for automated waypoint spraying, multispectral crop health mapping, and agronomy surveys.",
+    specs: [
+      { label: "Empty Weight", value: "14.5 kg" },
+      { label: "Max Takeoff Weight", value: "28.5 kg" },
+      { label: "Payload Capacity", value: "10 Litres" },
+      { label: "Max Endurance", value: "18 mins (Full Load)" },
+      { label: "Positioning Accuracy", value: "RTK Centimeter-Level" },
+      { label: "Signal Frequency", value: "5.8 GHz" },
+    ],
+  }
+];
+
 function AboutPage() {
   const [form, setForm] = useState({ name: "", email: "", org: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [selectedDrone, setSelectedDrone] = useState(0);
+  const [telemetry, setTelemetry] = useState({
+    pitch: "0.0",
+    yaw: "0.0",
+    roll: "0.0",
+    alt: "124.80",
+    freq: "5.750",
+    esc: "98",
+  });
+
+  useEffect(() => {
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        setTelemetry(customEvent.detail);
+      }
+    };
+    window.addEventListener("drone-telemetry-update", handleUpdate);
+    return () => window.removeEventListener("drone-telemetry-update", handleUpdate);
+  }, []);
 
   return (
     <div>
-      {/* Story */}
-      <section className="bg-background py-20 border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Story & Interactive 3D Fleet Dashboard */}
+      <section className="bg-background py-16 sm:py-20 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground text-center uppercase tracking-tight font-display">
               About Nakshatr Technologies
             </h1>
-            <p className="text-muted-foreground text-center mt-4 max-w-3xl mx-auto text-sm font-mono">
+            <p className="text-muted-foreground text-center mt-3 max-w-3xl mx-auto text-sm font-mono uppercase">
               [ INDIA'S FIRST UNIVERSITY-EMBEDDED DRONE COMPANY · ESTABLISHED JUNE 2024 ]
             </p>
           </Reveal>
 
+          {/* Interactive Fleet Dashboard Grid */}
+          <div className="mt-14 sm:mt-16 grid lg:grid-cols-12 gap-8 items-stretch">
+            {/* Specs / Controls column */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+              <Reveal>
+                <div className="text-primary font-mono text-xs font-bold tracking-widest uppercase mb-2">
+                  [ ACTIVE TRAINING FLEET ]
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground font-display tracking-tight uppercase leading-none">
+                  DGCA-Compliant Training Fleet
+                </h2>
+                <p className="text-muted-foreground text-sm leading-relaxed mt-3">
+                  Nakshatr Drone Academy deploys industrial-grade hardware for all educational pathways. Students get hands-on experience with multirotor trainers and heavy-lift agricultural spraying assets.
+                </p>
+              </Reveal>
+
+              {/* Selector Tabs */}
+              <div className="flex gap-2">
+                {FLEET_DRONES.map((d, idx) => (
+                  <button
+                    key={d.id}
+                    onClick={() => setSelectedDrone(idx)}
+                    className={`flex-1 font-mono text-[10px] sm:text-xs uppercase tracking-wider py-3.5 px-4 rounded border transition-all cursor-pointer font-bold ${
+                      selectedDrone === idx
+                        ? "bg-primary border-primary text-white shadow-lg shadow-blue-500/10"
+                        : "bg-zinc-950/60 border-border text-muted-foreground hover:text-foreground hover:bg-zinc-950/90"
+                    }`}
+                  >
+                    {d.id} · {d.name.split(" ")[0]}
+                  </button>
+                ))}
+              </div>
+
+              {/* Specs and Description Panel */}
+              <div className="tech-card rounded-md p-6 bg-zinc-950/20 relative overflow-hidden flex-1 flex flex-col justify-between">
+                <div className="cyber-scanline" />
+                <div className="absolute top-3 right-4 font-mono text-[8px] text-blue-500/50 select-none uppercase">
+                  FLEET-SPEC-V2
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground font-display">{FLEET_DRONES[selectedDrone].name}</h3>
+                  <div className="text-[10px] uppercase font-mono tracking-wider text-primary font-semibold mt-1">
+                    {FLEET_DRONES[selectedDrone].type}
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed mt-3.5 bg-zinc-950/40 border border-border p-3.5 rounded-md font-sans">
+                    {FLEET_DRONES[selectedDrone].desc}
+                  </p>
+                </div>
+
+                <div className="w-full h-[1px] bg-border my-5" />
+
+                {/* Technical Parameters List */}
+                <div className="grid grid-cols-2 gap-3.5 font-mono text-xs">
+                  {FLEET_DRONES[selectedDrone].specs.map((s) => (
+                    <div key={s.label} className="border-b border-border/60 pb-2">
+                      <span className="text-[8px] uppercase tracking-widest text-muted-foreground/70 font-bold block mb-0.5">{s.label}</span>
+                      <span className="text-foreground font-bold font-sans text-xs">{s.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 3D Viewer Container */}
+            <div className="lg:col-span-7 tech-card rounded-lg bg-zinc-950/10 min-h-[380px] xs:min-h-[440px] sm:min-h-[480px] relative overflow-hidden border border-border flex items-center justify-center p-4">
+              <div className="cyber-scanline" />
+              
+              {/* Telemetry CAD HUD Overlay */}
+              <div className="absolute top-4 left-4 z-20 font-mono text-[8px] sm:text-[9px] text-cyan-400 tracking-wider bg-zinc-950/80 p-3 rounded-md border border-cyan-500/25 backdrop-blur-md shadow-md select-none pointer-events-none">
+                <div className="flex items-center gap-1.5 font-bold mb-1 uppercase text-[10px] text-white">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
+                  CAD INSTRUMENTATION
+                </div>
+                <div className="space-y-0.5 opacity-85">
+                  <div>UNIT ID: {FLEET_DRONES[selectedDrone].id}-DRN</div>
+                  <div>PITCH: {telemetry.pitch}°</div>
+                  <div>YAW: {telemetry.yaw}°</div>
+                  <div>ROLL: {telemetry.roll}°</div>
+                  <div>ALT STATUS: {telemetry.alt} M</div>
+                </div>
+              </div>
+
+              {/* Status HUD Overlay (Top Right) */}
+              <div className="absolute top-4 right-4 z-20 font-mono text-[8px] sm:text-[9px] text-emerald-400 tracking-wider bg-zinc-950/80 p-3 rounded-md border border-emerald-500/25 backdrop-blur-md shadow-md select-none pointer-events-none">
+                <div className="flex items-center gap-1.5 font-bold mb-1 uppercase text-[10px] text-white">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  3D RENDER CALIBRATION
+                </div>
+                <div className="space-y-0.5 opacity-85">
+                  <div>ESC REQ: {telemetry.esc}%</div>
+                  <div>LINK STAT: 100%</div>
+                  <div>FREQ RES: {telemetry.freq} GHZ</div>
+                  <div>ENGINE: WEBGL-GPU</div>
+                </div>
+              </div>
+
+              {/* Background scanning circles */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-20">
+                <div className="w-[320px] h-[320px] rounded-full border border-dashed border-blue-500/15 animate-[spin_60s_linear_infinite]" />
+                <div className="absolute w-[240px] h-[240px] rounded-full border border-dashed border-cyan-500/10 animate-[spin_30s_linear_infinite_reverse]" />
+                <div className="absolute w-[90%] h-[1px] bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent" />
+                <div className="absolute h-[90%] w-[1px] bg-gradient-to-b from-transparent via-cyan-500/10 to-transparent" />
+              </div>
+
+              {/* Dynamic 3D model loaders */}
+              <div className="w-full h-[320px] xs:h-[380px] sm:h-[420px] flex justify-center items-center">
+                {selectedDrone === 0 ? (
+                  <DroneGLB className="h-full" scale={1.9} />
+                ) : (
+                  <AgricultureDroneGLB className="h-full" scale={1.9} />
+                )}
+              </div>
+              
+              {/* Interactive Help Hint */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60 select-none pointer-events-none bg-zinc-950/60 border border-border/80 px-3 py-1 rounded">
+                [ Click + Drag to rotate 3D model ]
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -215,10 +388,10 @@ function AboutPage() {
                 <div>
                   <div className="font-bold text-foreground text-sm font-mono uppercase tracking-widest">Phone</div>
                   <a
-                    href="tel:+919737112440"
+                    href="tel:+918320002768"
                     className="text-muted-foreground text-sm mt-0.5 hover:text-primary transition-colors block font-mono"
                   >
-                    +91 97371 12440
+                    +91 83200 02768
                   </a>
                 </div>
               </li>

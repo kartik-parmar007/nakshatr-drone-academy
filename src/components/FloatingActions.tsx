@@ -12,7 +12,7 @@ export function FloatingActions() {
   return (
     <>
       <a
-        href="https://wa.me/919737112440?text=Hi%20Nakshatr%20Technologies%2C%20I%27d%20like%20to%20know%20more."
+        href="https://wa.me/918320002768?text=Hi%20Nakshatr%20Technologies%2C%20I%27d%20like%20to%20know%20more."
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"

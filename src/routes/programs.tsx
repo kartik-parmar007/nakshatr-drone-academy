@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, Clock, Award, Coins, BookOpen, Sparkles, UserCheck } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { DroneGLB } from "@/components/DroneGLB";
 
 const DroneVector = ({ className = "" }: { className?: string }) => (
   <svg
@@ -104,21 +105,43 @@ const programs = [
 function ProgramsPage() {
   return (
     <div>
-      <section className="bg-background py-14 sm:py-20 bg-dot-grid border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Reveal>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground uppercase tracking-tight font-display">
-              Our Drone Education Programs
-            </h1>
-            <p className="text-muted-foreground mt-2 text-xs sm:text-sm font-mono">[ ACADEMIC CURRICULUMS & TECHNICAL MODULES ]</p>
-            <div className="mt-5 sm:mt-6 flex flex-wrap justify-center gap-2 sm:gap-3">
-              {["UGC Aligned", "DGCA Compliant", "MKBU Certified"].map((t) => (
-                <span key={t} className="bg-blue-955 text-blue-400 border border-blue-900/50 font-mono text-[10px] sm:text-xs uppercase px-3 sm:px-4 py-1 sm:py-1.5 rounded font-semibold">
-                  {t}
-                </span>
-              ))}
+      <section className="bg-background bg-dot-grid border-b border-border relative overflow-hidden">
+        {/* Futuristic glowing backdrop */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_30%,rgba(59,130,246,0.06),transparent_60%)] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 grid lg:grid-cols-2 gap-8 items-center relative z-10">
+          <div className="text-left">
+            <Reveal>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground uppercase tracking-tight font-display">
+                Our Drone Education Programs
+              </h1>
+              <p className="text-muted-foreground mt-2 text-xs sm:text-sm font-mono">[ ACADEMIC CURRICULUMS & TECHNICAL MODULES ]</p>
+              <div className="mt-5 sm:mt-6 flex flex-wrap gap-2">
+                {["UGC Aligned", "DGCA Compliant", "MKBU Certified"].map((t) => (
+                  <span key={t} className="bg-blue-955 text-blue-400 border border-blue-900/50 font-mono text-[10px] sm:text-xs uppercase px-3 py-1 rounded font-semibold">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Interactive 3D Specs Drone Viewer */}
+          <div className="relative flex justify-center items-center min-h-[300px] xs:min-h-[360px] sm:min-h-[400px]">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-40">
+              <div className="w-72 h-72 rounded-full border border-dashed border-blue-500/15 animate-[spin_50s_linear_infinite]" />
+              <div className="absolute w-[85%] h-[1px] bg-gradient-to-r from-transparent via-blue-500/10 to-transparent" />
             </div>
-          </Reveal>
+
+            <motion.div
+              className="w-full max-w-[420px] z-10"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <DroneGLB className="h-[280px] xs:h-[320px] sm:h-[360px]" scale={1.8} />
+            </motion.div>
+          </div>
         </div>
       </section>
 
