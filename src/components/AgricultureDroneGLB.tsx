@@ -67,9 +67,14 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
     return root;
   }, [scene, scaleBoost]);
 
+  // Wrapper-scoped pointer tracking (mouse + touch) with requestAnimationFrame throttling
   useEffect(() => {
     const wrap = wrapperRef.current;
     if (!wrap) return;
+
+    let activeFrameId: number | null = null;
+    let pendingX = 0;
+    let pendingY = 0;
 
     const update = (clientX: number, clientY: number) => {
       const rect = wrap.getBoundingClientRect();
@@ -87,12 +92,27 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
       target.current.y = (clientY - rect.top) / rect.height - 0.5;
     };
 
-    const onMouse = (e: MouseEvent) => update(e.clientX, e.clientY);
+    const handleMove = (clientX: number, clientY: number) => {
+      pendingX = clientX;
+      pendingY = clientY;
+      if (activeFrameId === null) {
+        activeFrameId = requestAnimationFrame(() => {
+          update(pendingX, pendingY);
+          activeFrameId = null;
+        });
+      }
+    };
+
+    const onMouse = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
     const onTouch = (e: TouchEvent) => {
       if (e.touches.length === 0) return;
-      update(e.touches[0].clientX, e.touches[0].clientY);
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
     };
     const onLeave = () => {
+      if (activeFrameId !== null) {
+        cancelAnimationFrame(activeFrameId);
+        activeFrameId = null;
+      }
       target.current.x = 0;
       target.current.y = 0;
     };
@@ -101,6 +121,9 @@ function AgriDroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
     window.addEventListener("touchmove", onTouch, { passive: true });
     wrap.addEventListener("mouseleave", onLeave);
     return () => {
+      if (activeFrameId !== null) {
+        cancelAnimationFrame(activeFrameId);
+      }
       window.removeEventListener("mousemove", onMouse);
       window.removeEventListener("touchmove", onTouch);
       wrap.removeEventListener("mouseleave", onLeave);
@@ -147,7 +170,7 @@ function Fallback() {
   return (
     <mesh>
       <boxGeometry args={[0.8, 0.2, 0.8]} />
-      <meshStandardMaterial color="#1d4ed8" wireframe />
+      <meshStandardMaterial color="#00F0FF" wireframe />
     </mesh>
   );
 }
@@ -183,22 +206,18 @@ export function AgricultureDroneGLB({
   return (
     <div ref={wrapperRef} className={className} style={inlineStyle}>
       <Canvas
-        shadows
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
       >
         <CameraRig />
 
-        <ambientLight intensity={0.55} />
+        <ambientLight intensity={0.5} />
         <directionalLight
           position={[5, 7, 5]}
           intensity={1.5}
-          castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
         />
-        <pointLight position={[-3, 2, -2]} intensity={1.0} color="#3b82f6" />
-        <pointLight position={[2, -1, 3]} intensity={0.6} color="#60a5fa" />
+        <pointLight position={[-3, 2, -2]} intensity={2.0} color="#00F0FF" /> {/* Cyan highlights */}
+        <pointLight position={[2, -1, 3]} intensity={1.5} color="#F59E0B" /> {/* Stellar Gold */}
 
         <Suspense fallback={<Fallback />}>
           <AgriDroneMesh scaleBoost={scale} wrapperRef={wrapperRef} />
@@ -207,11 +226,11 @@ export function AgricultureDroneGLB({
 
         <ContactShadows
           position={[0, -1.4, 0]}
-          opacity={0.35}
+          opacity={0.4}
           scale={8}
           blur={2.5}
           far={2.5}
-          color="#0a1628"
+          color="#050506"
         />
       </Canvas>
     </div>

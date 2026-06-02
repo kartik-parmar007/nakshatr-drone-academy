@@ -38,11 +38,11 @@ function Counter({ end, duration = 1.2, suffix = "" }: { end: number; duration?:
       if (!active) return;
       const elapsed = (now - startTime) / 1000;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Easing out cubic curve
       const ease = 1 - Math.pow(1 - progress, 3);
       const current = Math.floor(ease * end);
-      
+
       setCount(current);
 
       if (progress < 1) {
@@ -202,7 +202,7 @@ function HomePage() {
       {/* 1. HERO SECTION */}
       <section className="relative min-h-[92vh] flex items-center justify-center border-b border-[#1C1D24] overflow-hidden pt-20 md:pt-12">
         {/* Compressed high-altitude landscape background image */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center select-none pointer-events-none opacity-45"
           style={{ backgroundImage: `url('/dawn_mountain_landscape.png')` }}
           aria-hidden="true"
@@ -275,7 +275,7 @@ function HomePage() {
             </motion.div>
 
             {/* Quick trust metrics */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -411,7 +411,7 @@ function HomePage() {
                 <Reveal key={track.title} delay={idx * 0.1}>
                   <div className={`tech-card group h-full rounded-xl p-6 sm:p-8 flex flex-col justify-between border border-[#1C1D24] transition-all duration-500 bg-[#0E0E11] ${track.glowClass}`}>
                     <div className="cyber-scanline" />
-                    
+
                     <div>
                       {/* Top Header Card */}
                       <div className="flex justify-between items-center mb-6">
@@ -426,7 +426,7 @@ function HomePage() {
                       <h3 className="text-xl sm:text-2xl font-bold font-display text-[#E2E8F0] tracking-tight group-hover:text-white transition-colors">
                         {track.title}
                       </h3>
-                      
+
                       <p className="mt-4 text-sm text-[#94A3B8] leading-relaxed">
                         {track.desc}
                       </p>
@@ -444,7 +444,7 @@ function HomePage() {
                           </li>
                         ))}
                       </ul>
-                      
+
                       <Link
                         to="/programs"
                         className="mt-8 group/link inline-flex items-center gap-1.5 font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-widest hover:text-cyan-300 transition-colors"
@@ -469,7 +469,7 @@ function HomePage() {
             <span className="text-xs sm:text-sm font-mono font-bold text-cyan-400 uppercase tracking-[0.2em] block mb-4">
               [ THE NAKSHATR PEDAGOGY ]
             </span>
-            
+
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-display text-[#E2E8F0] leading-[1.1] uppercase max-w-4xl mx-auto tracking-tight">
               We place a drone in a student's hands{" "}
               <span className="text-gradient-stellar drop-shadow-[0_0_20px_rgba(245,158,11,0.1)] font-extrabold block sm:inline">
@@ -534,7 +534,7 @@ function HomePage() {
                 <Reveal key={prog.title} delay={idx * 0.08}>
                   <div className={`tech-card h-full rounded-xl p-6 sm:p-8 flex flex-col justify-between border-t-4 border-[#1C1D24] transition-all duration-500 bg-[#0E0E11] ${prog.accentClass}`}>
                     <div className="cyber-scanline" />
-                    
+
                     <div>
                       {/* Header containing ID, Category tag, and Badge */}
                       <div className="flex justify-between items-center mb-6">
@@ -599,7 +599,7 @@ function HomePage() {
                       {/* Program Scope */}
                       <div className="mb-6">
                         <h4 className="text-[10px] font-mono font-bold text-[#E2E8F0] uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                          <BookOpen className="w-3.5 h-3.5 text-primary shrink-0" /> 
+                          <BookOpen className="w-3.5 h-3.5 text-primary shrink-0" />
                           Program Scope
                         </h4>
                         <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed bg-[#080809]/40 border border-[#1C1D24] p-3 sm:p-4 rounded-lg font-sans">
@@ -616,7 +616,7 @@ function HomePage() {
                     {/* Outcome Box */}
                     <div className="bg-[#080809] border border-[#1C1D24] rounded-lg p-4 mt-auto">
                       <h4 className="text-[10px] font-mono font-bold text-cyan-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-primary shrink-0 animate-pulse" /> 
+                        <Sparkles className="w-3.5 h-3.5 text-primary shrink-0 animate-pulse" />
                         Core Competency Outcome
                       </h4>
                       <p className="text-xs text-[#94A3B8] leading-relaxed font-sans font-medium">
@@ -735,7 +735,7 @@ function HomePage() {
             <div className="inline-flex items-center gap-2 bg-[#0E0E11]/85 border border-[#1C1D24] text-amber-500 px-3.5 py-1.5 rounded-full mb-6 font-mono text-[10px] sm:text-xs uppercase tracking-widest">
               <span>Flight Cohorts Now Enrolling</span>
             </div>
-            
+
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold font-display text-[#E2E8F0] tracking-tight uppercase max-w-4xl mx-auto leading-tight">
               Ready to take control <br className="hidden sm:inline" />
               of the{" "}
