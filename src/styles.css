@@ -35,26 +35,24 @@
 }
 
 :root {
-  --radius: 0.5rem;
-  --background: oklch(0.08 0.01 250); /* Ultra premium dark navy-black space color */
-  --foreground: oklch(0.98 0.005 250); /* Clean readable crisp white */
-  --card: oklch(0.11 0.015 250); /* Sleek charcoal card background */
-  --card-foreground: oklch(0.95 0.005 250);
-  --popover: oklch(0.11 0.015 250);
-  --popover-foreground: oklch(0.95 0.005 250);
-  --primary: oklch(0.6 0.17 250); /* Electric high-tech cobalt blue */
-  --primary-foreground: oklch(0.98 0.005 250);
-  --secondary: oklch(0.15 0.02 250); /* High-tech carbon button background */
-  --secondary-foreground: oklch(0.98 0.005 250);
-  --muted: oklch(0.13 0.015 250);
-  --muted-foreground: oklch(0.65 0.02 250); /* Telemetry soft text color */
-  --accent: oklch(0.17 0.03 250);
-  --accent-foreground: oklch(0.98 0.005 250);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.16 0.02 250); /* Very clean tech-border line */
-  --input: oklch(0.16 0.02 250);
-  --ring: oklch(0.6 0.17 250);
+  --radius: 0.75rem;
+  --background: #080809; /* Deep Space Matte Black */
+  --foreground: #E2E8F0; /* DJI Platinum / Industrial Silver */
+  --card: #0E0E11; /* Dark Carbon Card */
+  --card-foreground: #F1F5F9;
+  --popover: #0E0E11;
+  --popover-foreground: #F1F5F9;
+  --primary: #F59E0B; /* Stellar Gold */
+  --primary-foreground: #080809;
+  --secondary: #1E1F24; /* Slate Carbon */
+  --secondary-foreground: #F8FAFC;
+  --muted: #131418;
+  --muted-foreground: #94A3B8;
+  --accent: #06B6D4; /* Intense Constellation Cyan */
+  --accent-foreground: #080809;
+  --border: #1C1D24; /* Tight Grid line */
+  --input: #1C1D24;
+  --ring: #F59E0B;
 }
 
 @layer base {
@@ -78,39 +76,75 @@
 
   /* Cybernetic high-tech dark scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: oklch(0.08 0.01 250);
+    background: #080809;
   }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.18 0.02 250);
-    border-radius: 4px;
-    border: 1px solid oklch(0.24 0.02 250);
+    background: #1C1D24;
+    border-radius: 9999px;
+    border: 1px solid #272731;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.6 0.17 250);
+    background: var(--color-primary);
   }
 }
 
+/* Constellation grid */
 .bg-dot-grid {
-  background-image: radial-gradient(circle, rgba(59, 130, 246, 0.06) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(circle, rgba(6, 182, 212, 0.05) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
 }
 
 .bg-line-grid {
-  background-size: 40px 40px;
-  background-image: linear-gradient(to right, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-image: linear-gradient(to right, rgba(245, 158, 11, 0.02) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(6, 182, 212, 0.02) 1px, transparent 1px);
 }
 
+/* Premium Gradient Utilities */
+.bg-gradient-stellar {
+  background: linear-gradient(135deg, #F59E0B 0%, #06B6D4 100%);
+}
+
+.bg-gradient-stellar-dark {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+}
+
+.text-gradient-stellar {
+  background: linear-gradient(135deg, #F59E0B 10%, #E2E8F0 50%, #06B6D4 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-stellar-glow {
+  position: relative;
+}
+.border-stellar-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.4), rgba(6, 182, 212, 0.4));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.border-stellar-glow:hover::after {
+  opacity: 1;
+}
+
+/* Cinematic asymmetric tech card */
 .tech-card {
   position: relative;
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
@@ -125,25 +159,25 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(59, 130, 246, 0.08) 30%,
-    rgba(34, 211, 238, 0.15) 50%,
-    rgba(59, 130, 246, 0.08) 70%,
+    rgba(245, 158, 11, 0.05) 30%,
+    rgba(6, 182, 212, 0.12) 50%,
+    rgba(245, 158, 11, 0.05) 70%,
     transparent
   );
-  transform: skewX(-25deg);
+  transform: skewX(-20deg);
   transition: none;
   pointer-events: none;
 }
 
 .tech-card:hover::before {
   left: 150%;
-  transition: left 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: left 1.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tech-card:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.16), 0 0 0 1px rgba(59, 130, 246, 0.25);
-  transform: translateY(-4px) scale(1.015);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 35px rgba(6, 182, 212, 0.12), 0 0 0 1px rgba(245, 158, 11, 0.2);
+  transform: translateY(-4px);
 }
 
 /* Cybernetic diagnostic pulsing scanline */
@@ -153,14 +187,14 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-primary), var(--color-ring), transparent);
+  background: linear-gradient(90deg, transparent, #F59E0B, #06B6D4, transparent);
   opacity: 0;
   pointer-events: none;
 }
 
 .tech-card:hover .cyber-scanline {
-  animation: cyber-scan 2.0s linear infinite;
-  opacity: 0.75;
+  animation: cyber-scan 2.5s linear infinite;
+  opacity: 0.8;
 }
 
 @keyframes cyber-scan {
@@ -171,24 +205,46 @@
 
 @keyframes float-drone {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-18px); }
+  50% { transform: translateY(-12px); }
 }
 .animate-float-drone {
-  animation: float-drone 4s ease-in-out infinite;
+  animation: float-drone 5s ease-in-out infinite;
 }
 
 @keyframes drone-wobble {
-  0%, 100% { transform: translateY(0px) rotate(-1deg); }
-  50% { transform: translateY(-10px) rotate(4deg); }
+  0%, 100% { transform: translateY(0px) rotate(-0.5deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
 }
 .animate-drone-wobble {
-  animation: drone-wobble 4.5s ease-in-out infinite;
+  animation: drone-wobble 5.5s ease-in-out infinite;
 }
 
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in-up {
-  animation: fade-in-up 0.7s ease-out both;
+  animation: fade-in-up 0.6s ease-out both;
 }
+
+/* Custom premium glow animations */
+.glow-pulse-gold {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  animation: pulse-gold 3s infinite alternate;
+}
+
+@keyframes pulse-gold {
+  0% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.15); }
+  100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+}
+
+.glow-pulse-cyan {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+  animation: pulse-cyan 3s infinite alternate;
+}
+
+@keyframes pulse-cyan {
+  0% { box-shadow: 0 0 8px rgba(6, 182, 212, 0.15); }
+  100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); }
+}
+

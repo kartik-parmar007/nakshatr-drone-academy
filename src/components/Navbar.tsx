@@ -34,7 +34,7 @@ export function Navbar() {
             className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col leading-none">
-            <span className="text-base sm:text-lg font-bold text-primary tracking-wider font-display uppercase transition-colors group-hover:text-blue-400">NAKSHATR</span>
+            <span className="text-base sm:text-lg font-bold text-primary tracking-wider font-display uppercase transition-colors group-hover:text-cyan-400">NAKSHATR</span>
             <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
               Technologies LLP
             </span>
@@ -59,7 +59,7 @@ export function Navbar() {
         <div className="hidden md:block">
           <Link
             to="/programs"
-            className="bg-primary hover:bg-blue-700 text-white text-xs font-bold font-mono tracking-wider px-5 py-2.5 rounded transition-all shadow-sm shadow-blue-500/10 hover:shadow-blue-500/30 uppercase"
+            className="bg-primary hover:bg-amber-600 text-black text-xs font-bold font-mono tracking-wider px-5 py-2.5 rounded transition-all shadow-sm shadow-amber-500/10 hover:shadow-amber-500/30 uppercase"
           >
             Apply Now
           </Link>
@@ -89,7 +89,7 @@ export function Navbar() {
           <Link
             to="/programs"
             onClick={() => setOpen(false)}
-            className="bg-primary text-white text-center font-bold font-mono text-xs tracking-wider py-3.5 rounded mt-2 uppercase"
+            className="bg-primary text-black text-center font-bold font-mono text-xs tracking-wider py-3.5 rounded mt-2 uppercase"
           >
             Apply Now
           </Link>
