@@ -1,203 +1,67 @@
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, useGLTF, ContactShadows } from "@react-three/drei";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import * as THREE from "three";
+import { lazy, Suspense, useEffect, useState, useRef } from "react";
+import { useProgress } from "@react-three/drei";
 
-/**
- * DroneGLB
- * --------
- * Responsive 3D drone hero. Fills its parent container (use Tailwind classes
- * on the wrapper to control responsive sizing).
- *
- * - Auto-fits the GLB regardless of native scale.
- * - Camera position adapts to canvas aspect ratio so the drone never gets
- *   cut off on narrow / tall mobile screens.
- * - Smooth cursor + touch tracking with strong rotation range.
- * - Client-only render (SSR-safe).
- */
+const LazyDroneCanvas = lazy(() => import("./DroneCanvas"));
 
-interface DroneSceneProps {
-  scaleBoost?: number;
-  wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
-}
-
-function CameraRig() {
-  const { camera, size } = useThree();
-
-  useEffect(() => {
-    const aspect = size.width / size.height;
-    
-    // Adjust distance and FOV dynamically to allow a huge scale boost
-    // while strictly preventing any top/bottom cropping.
-    let dist = 4.4;
-    let fov = 38;
-    
-    if (aspect < 1) {
-      // Narrow screens: pull back further so the horizontal span of the large drone fits
-      dist = 5.2 / aspect;
-      fov = 42;
-    } else if (aspect < 1.4) {
-      dist = 4.6;
-      fov = 38;
-    } else {
-      // Wide screens: keep the drone massive but vertically safe
-      dist = 4.0;
-      fov = 36;
-    }
-
-    camera.position.set(dist * 0.85, dist * 0.36, dist);
-    if ("fov" in camera) {
-      (camera as THREE.PerspectiveCamera).fov = fov;
-      (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
-    }
-    camera.lookAt(0, 0, 0);
-  }, [camera, size.width, size.height]);
-
-  return null;
-}
-
-function DroneMesh({ scaleBoost = 1, wrapperRef }: DroneSceneProps) {
-  const { scene } = useGLTF("/models/drone.glb");
-  const groupRef = useRef<THREE.Group>(null);
-  const target = useRef({ x: 0, y: 0 });
-  const current = useRef({ x: 0, y: 0 });
-
-  // Auto-normalize the model: clone, recenter, rescale so longest edge fills
-  // a known world size regardless of how the GLB was authored.
-  const fitted = useMemo(() => {
-    const root = scene.clone(true);
-    const box = new THREE.Box3().setFromObject(root);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const fitScale = (2.6 / maxDim) * scaleBoost;
-    root.position.sub(center).multiplyScalar(fitScale);
-    root.scale.setScalar(fitScale);
-
-    root.traverse((obj) => {
-      const mesh = obj as THREE.Mesh;
-      if (mesh.isMesh) {
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        const m = mesh.material as THREE.MeshStandardMaterial;
-        if (m && "metalness" in m) {
-          m.metalness = Math.min(1, (m.metalness ?? 0.5) + 0.15);
-          m.roughness = Math.max(0.15, (m.roughness ?? 0.6) - 0.1);
-          m.envMapIntensity = 1.5;
-          m.needsUpdate = true;
-        }
-      }
-    });
-    return root;
-  }, [scene, scaleBoost]);
-
-  // Wrapper-scoped pointer tracking (mouse + touch) with requestAnimationFrame throttling
-  useEffect(() => {
-    const wrap = wrapperRef.current;
-    if (!wrap) return;
-
-    let activeFrameId: number | null = null;
-    let pendingX = 0;
-    let pendingY = 0;
-
-    const update = (clientX: number, clientY: number) => {
-      const rect = wrap.getBoundingClientRect();
-      const inside =
-        clientX >= rect.left &&
-        clientX <= rect.right &&
-        clientY >= rect.top &&
-        clientY <= rect.bottom;
-      if (!inside) {
-        target.current.x = 0;
-        target.current.y = 0;
-        return;
-      }
-      target.current.x = (clientX - rect.left) / rect.width - 0.5;
-      target.current.y = (clientY - rect.top) / rect.height - 0.5;
-    };
-
-    const handleMove = (clientX: number, clientY: number) => {
-      pendingX = clientX;
-      pendingY = clientY;
-      if (activeFrameId === null) {
-        activeFrameId = requestAnimationFrame(() => {
-          update(pendingX, pendingY);
-          activeFrameId = null;
-        });
-      }
-    };
-
-    const onMouse = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
-    const onTouch = (e: TouchEvent) => {
-      if (e.touches.length === 0) return;
-      handleMove(e.touches[0].clientX, e.touches[0].clientY);
-    };
-    const onLeave = () => {
-      if (activeFrameId !== null) {
-        cancelAnimationFrame(activeFrameId);
-        activeFrameId = null;
-      }
-      target.current.x = 0;
-      target.current.y = 0;
-    };
-
-    window.addEventListener("mousemove", onMouse);
-    window.addEventListener("touchmove", onTouch, { passive: true });
-    wrap.addEventListener("mouseleave", onLeave);
-    return () => {
-      if (activeFrameId !== null) {
-        cancelAnimationFrame(activeFrameId);
-      }
-      window.removeEventListener("mousemove", onMouse);
-      window.removeEventListener("touchmove", onTouch);
-      wrap.removeEventListener("mouseleave", onLeave);
-    };
-  }, [wrapperRef]);
-
-  useFrame((state) => {
-    if (!groupRef.current) return;
-    const t = state.clock.elapsedTime;
-
-    // Smooth cursor follow
-    current.current.x += (target.current.x - current.current.x) * 0.1;
-    current.current.y += (target.current.y - current.current.y) * 0.1;
-
-    // Idle yaw drift
-    const baseY = (groupRef.current.userData.baseY ?? 0) + 0.0035;
-    groupRef.current.userData.baseY = baseY;
-
-    groupRef.current.rotation.y = baseY + current.current.x * Math.PI * 0.45;
-    groupRef.current.rotation.x = current.current.y * Math.PI * 0.25;
-    groupRef.current.position.y = Math.sin(t * 0.9) * 0.07;
-    groupRef.current.position.x = current.current.x * 0.2;
-
-    // Dispatch telemetry values to sync widgets in real-time
-    const event = new CustomEvent("drone-telemetry-update", {
-      detail: {
-        pitch: (groupRef.current.rotation.x * (180 / Math.PI)).toFixed(1),
-        yaw: ((groupRef.current.rotation.y * (180 / Math.PI)) % 360).toFixed(1),
-        roll: (current.current.x * -18).toFixed(1),
-        alt: (124.8 + groupRef.current.position.y * 10).toFixed(2),
-        freq: (5.75 + Math.abs(current.current.x) * 0.1).toFixed(3),
-        esc: Math.floor(98 + Math.abs(current.current.y) * 2),
-      }
-    });
-    window.dispatchEvent(event);
-  });
+export function TelemetricLoader({ message = "INITIALIZING CAD LINK" }: { message?: string }) {
+  const { progress } = useProgress();
+  const percent = Math.floor(progress || 0);
 
   return (
-    <group ref={groupRef}>
-      <primitive object={fitted} />
-    </group>
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/20 backdrop-blur-[2px] font-mono text-[10px] tracking-[0.25em] text-cyan-400 select-none">
+      <div className="relative w-16 h-16 mb-6">
+        {/* Animated HUD outer brackets */}
+        <div className="absolute inset-0 border border-cyan-500/20 rounded-full animate-[spin_3s_linear_infinite]" />
+        <div className="absolute inset-2 border border-dashed border-cyan-400/40 rounded-full animate-[spin_8s_linear_infinite_reverse]" />
+        {/* Glowing progress ring */}
+        <svg className="absolute inset-0 w-full h-full -rotate-90">
+          <circle
+            cx="32"
+            cy="32"
+            r="28"
+            className="stroke-cyan-500/10 fill-none"
+            strokeWidth="2"
+          />
+          <circle
+            cx="32"
+            cy="32"
+            r="28"
+            className="stroke-cyan-400 fill-none transition-all duration-300"
+            strokeWidth="2"
+            strokeDasharray={2 * Math.PI * 28}
+            strokeDashoffset={2 * Math.PI * 28 * (1 - percent / 100)}
+          />
+        </svg>
+        {/* Center blinking light */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+      </div>
+      <div className="flex items-center gap-1.5 font-bold uppercase animate-pulse">
+        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+        {message}: {percent}%
+      </div>
+      <div className="text-[8px] text-muted-foreground/60 mt-1 uppercase tracking-[0.2em] font-semibold">
+        SYS-LINK: ACTIVE · SECURE LAYER
+      </div>
+    </div>
   );
 }
 
-function Fallback() {
+export function TelemetrySpinner({ message = "INITIALIZING CAD MODEL" }: { message?: string }) {
   return (
-    <mesh>
-      <boxGeometry args={[0.8, 0.2, 0.8]} />
-      <meshStandardMaterial color="#1d4ed8" wireframe />
-    </mesh>
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/20 backdrop-blur-[2px] font-mono text-[10px] tracking-[0.25em] text-cyan-400 select-none">
+      <div className="relative w-12 h-12 mb-4">
+        <div className="absolute inset-0 border border-cyan-500/20 rounded-full animate-[spin_3s_linear_infinite]" />
+        <div className="absolute inset-2 border border-dashed border-cyan-400/40 rounded-full animate-[spin_8s_linear_infinite_reverse]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+      </div>
+      <div className="flex items-center gap-1.5 font-bold uppercase animate-pulse">
+        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+        {message}...
+      </div>
+      <div className="text-[8px] text-muted-foreground/60 mt-1 uppercase tracking-[0.2em] font-semibold">
+        SYS-LINK: ACTIVE · SECURE LAYER
+      </div>
+    </div>
   );
 }
 
@@ -208,7 +72,6 @@ export function DroneGLB({
 }: {
   className?: string;
   scale?: number;
-  /** Optional fixed height. Prefer using Tailwind classes via `className`. */
   height?: number | string;
 }) {
   const [mounted, setMounted] = useState(false);
@@ -216,7 +79,6 @@ export function DroneGLB({
 
   useEffect(() => {
     setMounted(true);
-    useGLTF.preload("/models/drone.glb");
   }, []);
 
   const inlineStyle: React.CSSProperties = {
@@ -227,39 +89,18 @@ export function DroneGLB({
   };
 
   if (!mounted) {
-    return <div className={className} style={inlineStyle} />;
+    return (
+      <div className={className} style={inlineStyle}>
+        <TelemetrySpinner message="BOOTING SENSORS" />
+      </div>
+    );
   }
 
   return (
     <div ref={wrapperRef} className={className} style={inlineStyle}>
-      <Canvas
-        dpr={[1, 1.5]} // optimized DPR for retina displays to reduce GPU pixel fill rate stutters
-        gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
-      >
-        <CameraRig />
-
-        <ambientLight intensity={0.55} />
-        <directionalLight
-          position={[5, 7, 5]}
-          intensity={1.5}
-        />
-        <pointLight position={[-3, 2, -2]} intensity={2.0} color="#06B6D4" /> {/* Constellation Cyan */}
-        <pointLight position={[3, -1, 3]} intensity={1.8} color="#F59E0B" /> {/* Stellar Gold */}
-
-        <Suspense fallback={<Fallback />}>
-          <DroneMesh scaleBoost={scale} wrapperRef={wrapperRef} />
-          <Environment preset="city" />
-        </Suspense>
-
-        <ContactShadows
-          position={[0, -1.3, 0]}
-          opacity={0.5} // slightly enhanced soft shadow depth
-          scale={7}
-          blur={2.4}
-          far={2.4}
-          color="#030712"
-        />
-      </Canvas>
+      <Suspense fallback={<TelemetricLoader message="STREAMING CAD MODEL" />}>
+        <LazyDroneCanvas scale={scale} wrapperRef={wrapperRef} />
+      </Suspense>
     </div>
   );
 }

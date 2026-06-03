@@ -8,8 +8,11 @@ export function Footer() {
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
             <img
-              src="/Logo_Main_1.png"
+              src="/Logo_Main_1.webp"
               alt="Nakshatr Logo"
+              width={46}
+              height={40}
+              loading="lazy"
               className="h-10 w-auto object-contain"
             />
             <div className="flex flex-col leading-none">

@@ -113,7 +113,8 @@ const CALLOUTS: Callout[] = [
    The real drone model (Highly Optimized)
    ------------------------------------------------------------------ */
 function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }) {
-  const { scene } = useGLTF("/models/drone.glb");
+  const { scene } = useGLTF("/models/drone_draco.glb", "/draco/");
+  const { gl, camera } = useThree();
   const ref = useRef<THREE.Group>(null);
 
   // Center + scale-normalize once
@@ -133,6 +134,7 @@ function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }
       if (mesh.isMesh) {
         mesh.castShadow = false;
         mesh.receiveShadow = false;
+        mesh.frustumCulled = true; // Enable frustum culling to skip rendering hidden parts
         const m = mesh.material as THREE.MeshStandardMaterial;
         if (m && "metalness" in m) {
           m.metalness = Math.min(1, (m.metalness ?? 0.5) + 0.15);
@@ -144,6 +146,28 @@ function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }
     });
     return root;
   }, [scene]);
+
+  // Pre-warm WebGL: Compile shaders and upload textures immediately to GPU during file ingestion
+  useEffect(() => {
+    if (normalized) {
+      normalized.traverse((obj) => {
+        const mesh = obj as THREE.Mesh;
+        if (mesh.isMesh) {
+          // Pre-compile geometry / shader program
+          gl.compile(mesh, camera);
+          
+          // Pre-warm texture uploads
+          const mat = mesh.material as THREE.MeshStandardMaterial;
+          if (mat) {
+            if (mat.map) gl.initTexture(mat.map);
+            if (mat.normalMap) gl.initTexture(mat.normalMap);
+            if (mat.roughnessMap) gl.initTexture(mat.roughnessMap);
+            if (mat.metalnessMap) gl.initTexture(mat.metalnessMap);
+          }
+        }
+      });
+    }
+  }, [normalized, gl, camera]);
 
   useFrame((state) => {
     if (!ref.current) return;
@@ -379,7 +403,7 @@ export function ScrollDroneAnimation() {
   useEffect(() => {
     setMounted(true);
     // Preload GLB on the client only.
-    useGLTF.preload("/models/drone.glb");
+    useGLTF.preload("/models/drone_draco.glb", "/draco/");
   }, []);
 
   useEffect(() => {
@@ -506,8 +530,18 @@ function ScrollOverlays({
   progressRef: React.RefObject<number>;
   activeIndexRef: React.RefObject<number>;
 }) {
-  const [progress, setProgress] = useState(0);
+  // Only keep activeIndex state since it updates very rarely (only when slide transitions happen)
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const introEyebrowRef = useRef<HTMLDivElement>(null);
+  const introTitleRef = useRef<HTMLDivElement>(null);
+  const calloutWrapperRef = useRef<HTMLDivElement>(null);
+  const counterStripRef = useRef<HTMLDivElement>(null);
+  const principleARef = useRef<HTMLDivElement>(null);
+  const principleBRef = useRef<HTMLDivElement>(null);
+  const closingRef = useRef<HTMLDivElement>(null);
+  const stageLabelTextRef = useRef<HTMLSpanElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   // Monitor progress ref and update active elements on scroll ticks
   useEffect(() => {
@@ -519,39 +553,79 @@ function ScrollOverlays({
       const currentProgress = progressRef.current ?? 0;
       const currentActiveIndex = activeIndexRef.current ?? 0;
       
-      // Only trigger a React state change when values actually shift by significant delta,
-      // avoiding useless text updates on small scroll micro-steps.
-      setProgress(currentProgress);
-      setActiveIndex(currentActiveIndex);
+      // Update activeIndex state only if it actually changes!
+      setActiveIndex((prev) => {
+        if (prev !== currentActiveIndex) {
+          return currentActiveIndex;
+        }
+        return prev;
+      });
+
+      // Compute visual properties directly to update the DOM
+      const tourActive = currentProgress >= 0.10 && currentProgress < 0.78;
+      const tourP = clamp01((currentProgress - 0.10) / 0.68);
+      const activeFloat = tourP * CALLOUTS.length;
+      const localT = activeFloat - currentActiveIndex;
+
+      // Fade card in/out at the seam between callouts
+      const cardOpacity = tourActive
+        ? clamp01(map(localT, 0, 0.15, 0, 1)) * (1 - clamp01(map(localT, 0.85, 1, 0, 1)))
+        : 0;
+
+      const introOpacity = clamp01(map(currentProgress, 0.0, 0.05, 1, 1)) * (1 - clamp01(map(currentProgress, 0.07, 0.10, 0, 1)));
+      const principleA = clamp01(map(currentProgress, 0.78, 0.81, 0, 1)) * (1 - clamp01(map(currentProgress, 0.86, 0.88, 0, 1)));
+      const principleB = clamp01(map(currentProgress, 0.81, 0.84, 0, 1)) * (1 - clamp01(map(currentProgress, 0.86, 0.88, 0, 1)));
+      const closingOpacity = clamp01(map(currentProgress, 0.90, 0.95, 0, 1));
+      const currentStageLabel = stageFor(currentProgress, currentActiveIndex);
+
+      // Direct DOM mutation
+      if (introEyebrowRef.current) {
+        introEyebrowRef.current.style.opacity = String(introOpacity);
+      }
+      if (introTitleRef.current) {
+        introTitleRef.current.style.opacity = String(introOpacity);
+      }
+      if (calloutWrapperRef.current) {
+        calloutWrapperRef.current.style.opacity = String(cardOpacity);
+        calloutWrapperRef.current.style.transform = `translateY(${(1 - cardOpacity) * 16}px)`;
+      }
+      if (counterStripRef.current) {
+        counterStripRef.current.style.opacity = tourActive ? "1" : "0";
+      }
+      if (principleARef.current) {
+        principleARef.current.style.opacity = String(principleA);
+        principleARef.current.style.transform = `translateY(${(1 - principleA) * 16}px)`;
+      }
+      if (principleBRef.current) {
+        principleBRef.current.style.opacity = String(principleB);
+        principleBRef.current.style.transform = `translateY(${(1 - principleB) * 16}px)`;
+      }
+      if (closingRef.current) {
+        closingRef.current.style.opacity = String(closingOpacity);
+        closingRef.current.style.transform = `translateX(-50%) translateY(${(1 - closingOpacity) * 18}px)`;
+      }
+      if (stageLabelTextRef.current) {
+        stageLabelTextRef.current.textContent = currentStageLabel;
+      }
+      if (progressBarRef.current) {
+        progressBarRef.current.style.width = `${currentProgress * 100}%`;
+      }
       
       raf = requestAnimationFrame(tick);
     };
     
     tick();
     return () => cancelAnimationFrame(raf);
-  }, [sectionRef]);
+  }, [sectionRef, progressRef, activeIndexRef]);
 
-  /* Compute stage opacities */
-  const tourActive = progress >= 0.10 && progress < 0.78;
-  const tourP = clamp01((progress - 0.10) / 0.68);
-  const activeFloat = tourP * CALLOUTS.length;
-  const localT = activeFloat - activeIndex;
-
-  // Fade card in/out at the seam between callouts
-  const cardOpacity = tourActive
-    ? clamp01(map(localT, 0, 0.15, 0, 1)) * (1 - clamp01(map(localT, 0.85, 1, 0, 1)))
-    : 0;
-
-  const introOpacity = clamp01(map(progress, 0.0, 0.05, 1, 1)) * (1 - clamp01(map(progress, 0.07, 0.10, 0, 1)));
-  const principleA = clamp01(map(progress, 0.78, 0.81, 0, 1)) * (1 - clamp01(map(progress, 0.86, 0.88, 0, 1)));
-  const principleB = clamp01(map(progress, 0.81, 0.84, 0, 1)) * (1 - clamp01(map(progress, 0.86, 0.88, 0, 1)));
-  const closingOpacity = clamp01(map(progress, 0.90, 0.95, 0, 1));
-  const stageLabel = stageFor(progress, activeIndex);
+  // Compute stage opacities for the initial render fallback only
+  const tourActive = activeIndexRef.current !== null && activeIndexRef.current >= 0;
 
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Top eyebrow */}
       <div
+        ref={introEyebrowRef}
         style={{
           position: "absolute",
           top: "5%",
@@ -563,7 +637,7 @@ function ScrollOverlays({
           fontFamily: "Space Grotesk, sans-serif",
           fontWeight: 600,
           textTransform: "uppercase",
-          opacity: introOpacity,
+          opacity: 1,
           transition: "opacity 0.4s",
           pointerEvents: "none",
           textAlign: "center",
@@ -575,6 +649,7 @@ function ScrollOverlays({
 
       {/* Intro title */}
       <div
+        ref={introTitleRef}
         style={{
           position: "absolute",
           top: "12%",
@@ -587,7 +662,7 @@ function ScrollOverlays({
           lineHeight: 1.2,
           textAlign: "center",
           maxWidth: "min(900px, 90vw)",
-          opacity: introOpacity,
+          opacity: 1,
           transition: "opacity 0.5s",
           pointerEvents: "none",
           letterSpacing: "-0.01em",
@@ -610,18 +685,28 @@ function ScrollOverlays({
       </div>
 
       {/* Side annotation card (component callout) */}
-      {tourActive && (
+      <div
+        ref={calloutWrapperRef}
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: 0,
+          transition: "transform 0.1s ease-out",
+        }}
+      >
         <CalloutCard
           callout={CALLOUTS[activeIndex]}
-          opacity={cardOpacity}
+          opacity={1}
           index={activeIndex}
           total={CALLOUTS.length}
           isMobile={viewport.isMobile || viewport.isTablet}
         />
-      )}
+      </div>
 
       {/* Component counter strip (top right) */}
       <div
+        ref={counterStripRef}
         style={{
           position: "absolute",
           top: viewport.isMobile ? 14 : 24,
@@ -633,7 +718,7 @@ function ScrollOverlays({
           display: "flex",
           alignItems: "center",
           gap: 10,
-          opacity: tourActive ? 1 : 0,
+          opacity: 0,
           transition: "opacity 0.4s",
           pointerEvents: "none",
           background: "rgba(8,14,30,0.5)",
@@ -664,13 +749,14 @@ function ScrollOverlays({
         }}
       >
         <div
+          ref={principleARef}
           style={{
             color: "#ffffff",
             fontSize: "clamp(22px, 3.6vw, 44px)",
             fontWeight: 700,
             textAlign: "center",
-            opacity: principleA,
-            transform: `translateY(${(1 - principleA) * 16}px)`,
+            opacity: 0,
+            transform: "translateY(16px)",
             transition: "opacity 0.4s, transform 0.4s",
             maxWidth: "min(900px, 92vw)",
             letterSpacing: "-0.01em",
@@ -682,14 +768,15 @@ function ScrollOverlays({
           Every drone ever built does one thing.
         </div>
         <div
+          ref={principleBRef}
           style={{
             marginTop: 18,
             color: CYAN,
             fontSize: "clamp(18px, 2.8vw, 32px)",
             fontWeight: 600,
             textAlign: "center",
-            opacity: principleB,
-            transform: `translateY(${(1 - principleB) * 16}px)`,
+            opacity: 0,
+            transform: "translateY(16px)",
             transition: "opacity 0.4s, transform 0.4s",
             maxWidth: "min(900px, 92vw)",
             letterSpacing: "-0.005em",
@@ -704,16 +791,17 @@ function ScrollOverlays({
 
       {/* Closing line */}
       <div
+        ref={closingRef}
         style={{
           position: "absolute",
           bottom: "14%",
           left: "50%",
-          transform: `translateX(-50%) translateY(${(1 - closingOpacity) * 18}px)`,
+          transform: "translateX(-50%) translateY(18px)",
           color: "#ffffff",
           fontSize: "clamp(16px, 2vw, 24px)",
           fontWeight: 600,
           textAlign: "center",
-          opacity: closingOpacity,
+          opacity: 0,
           pointerEvents: "none",
           letterSpacing: "-0.005em",
           maxWidth: "min(700px, 90vw)",
@@ -759,7 +847,7 @@ function ScrollOverlays({
             animation: "sda-pulse 1.6s infinite",
           }}
         />
-        {stageLabel}
+        <span ref={stageLabelTextRef}>STAGE 01: READY FOR TAKEOFF</span>
       </div>
 
       {/* Progress bar line */}
@@ -774,9 +862,10 @@ function ScrollOverlays({
         }}
       >
         <div
+          ref={progressBarRef}
           style={{
             height: "100%",
-            width: `${progress * 100}%`,
+            width: "0%",
             background: `linear-gradient(90deg, ${ACCENT}, ${CYAN})`,
             boxShadow: `0 0 10px ${CYAN}`,
             transition: "width 0.1s linear",
