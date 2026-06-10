@@ -8,6 +8,7 @@ const links = [
   { to: "/programs", label: "Programs" },
   { to: "/universities", label: "Universities" },
   { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -60,7 +61,7 @@ export function Navbar() {
 
         <div className="hidden md:block">
           <Link
-            to="/programs"
+            to="/contact"
             className="bg-primary hover:bg-amber-600 text-black text-xs font-bold font-mono tracking-wider px-5 py-2.5 rounded transition-all shadow-sm shadow-amber-500/10 hover:shadow-amber-500/30 uppercase"
           >
             Apply Now
@@ -89,7 +90,7 @@ export function Navbar() {
             </Link>
           ))}
           <Link
-            to="/programs"
+            to="/contact"
             onClick={() => setOpen(false)}
             className="bg-primary text-black text-center font-bold font-mono text-xs tracking-wider py-3.5 rounded mt-2 uppercase"
           >

@@ -3,42 +3,17 @@ import { Environment, useGLTF, ContactShadows, Sparkles } from "@react-three/dre
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-/**
- * ScrollDroneAnimation — Premium cinematic scroll experience
- * ----------------------------------------------------------
- * Built around the real /models/drone.glb. Because that asset is a single
- * fused mesh (one node, one mesh), we cannot fake a parts explosion. Instead
- * we do what premium drone manufacturers do: a cinematic camera tour with
- * annotation callouts, exactly like the DJI / Skydio product pages.
- *
- * 6 stages mapped to a 600vh pinned scroll section:
- *   0.00–0.10  Title + assembled drone slowly rotating
- *   0.10–0.78  Component tour: camera pans/zooms across the drone, one
- *              component highlighted at a time with a glowing line + card
- *   0.78–0.88  Root principle reveal (two stacked lines)
- *   0.88–1.00  Closing line, drone settles, gentle hover
- *
- * Drone never breaks apart. Camera + lighting + annotations do all the work.
- */
-
 const NAVY = "#0a1628";
 const NAVY_2 = "#0f1d3a";
 const CYAN = "#22d3ee";
 const ACCENT = "#3b82f6";
 
-/* ------------------------------------------------------------------
-   Component callouts — each describes WHERE on the drone we focus
-   and WHAT to display in the floating card.
-   ------------------------------------------------------------------ */
 type Callout = {
   id: string;
   title: string;
   desc: string;
-  /** Camera position relative to the drone for this beat. */
   cam: [number, number, number];
-  /** Direction the annotation card sits (in screen-relative offset px). */
   cardOffset: { x: number; y: number };
-  /** World-space anchor on the drone (in normalized model units). */
   anchor: [number, number, number];
 };
 
