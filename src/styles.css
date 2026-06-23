@@ -197,36 +197,6 @@
   transform: translateY(-4px);
 }
 
-/* Cybernetic diagnostic pulsing scanline */
-.cyber-scanline {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #3B82F6, #60A5FA, transparent);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.tech-card:hover .cyber-scanline {
-  animation: cyber-scan 2.5s linear infinite;
-  opacity: 0.8;
-}
-
-@keyframes cyber-scan {
-  0% {
-    top: 0%;
-  }
-
-  50% {
-    top: 100%;
-  }
-
-  100% {
-    top: 0%;
-  }
-}
 
 @keyframes float-drone {
 

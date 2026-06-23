@@ -19,6 +19,7 @@ const tacticalTracks = [
     icon: Navigation,
     title: "Commercial Drone Piloting",
     badge: "DGCA PATHWAY",
+    image: "/course_pilot_track.png",
     accent: "from-blue-400 to-blue-600",
     glowClass: "hover:border-blue-500/40",
     desc: "Elite pilot certifications, multirotor tactical operations, autonomous drone routing, and full DGCA regulatory compliance.",
@@ -28,6 +29,7 @@ const tacticalTracks = [
     icon: Video,
     title: "Cinematography & Creative Arts",
     badge: "AERIAL CINEMA",
+    image: "/course_cinema_track.png",
     accent: "from-purple-500 to-indigo-600",
     glowClass: "hover:border-purple-500/40",
     desc: "Advanced high-speed camera tracking, dynamic drone orbits, professional cinematography rigs, and post-production color-grading.",
@@ -37,6 +39,7 @@ const tacticalTracks = [
     icon: Cpu,
     title: "UAV Engineering & Mapping",
     badge: "ROBOTICS & GIS",
+    image: "/course_engineering_track.png",
     accent: "from-emerald-500 to-teal-600",
     glowClass: "hover:border-emerald-500/40",
     desc: "Disassemble, solder, program, and calibrate autonomous carbon-frame multicopters. Configure advanced ArduPilot parameters.",
@@ -67,35 +70,7 @@ const pillars = [
 
 
 
-const heroSectors = [
-  {
-    icon: Navigation,
-    label: "COMMERCIAL FLIGHT",
-    tag: "DGCA PATHWAY",
-    stat: "500+ hrs",
-    statLabel: "Simulation hours",
-    bar: 78,
-    desc: "BVLOS ops, pre-flight protocols, multi-rotor certifications & airspace compliance.",
-  },
-  {
-    icon: Cpu,
-    label: "UAV ENGINEERING",
-    tag: "ROBOTICS & GIS",
-    stat: "12 builds",
-    statLabel: "Per cohort",
-    bar: 91,
-    desc: "Carbon-frame assembly, ArduPilot, ESC calibration, autonomous waypoint systems.",
-  },
-  {
-    icon: Video,
-    label: "AERIAL CINEMA",
-    tag: "CREATIVE OPS",
-    stat: "4K / 120fps",
-    statLabel: "Camera rig spec",
-    bar: 64,
-    desc: "High-speed chasing, 3-axis gimbals, color pipelines & cinematic orbit tracking.",
-  },
-];
+
 
 function HomePage() {
 
@@ -169,7 +144,7 @@ function HomePage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="mt-7 text-base sm:text-lg text-[#7A8499] leading-relaxed max-w-xl font-sans"
+              className="mt-7 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl font-sans"
             >
               Precision commercial flight training. Autonomous UAV engineering. Industrial-grade certification programs built for real-world deployment.
             </motion.p>
@@ -201,67 +176,7 @@ function HomePage() {
           </div>
         </div>
 
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        {/* Bottom sector cards — pinned to the foot of the hero */}
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <div className="relative z-20 mt-auto border-t border-white/[0.05] bg-transparent">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]">
-              {heroSectors.map((s, i) => {
-                const Icon = s.icon;
-                return (
-                  <motion.div
-                    key={s.label}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.55, delay: 0.55 + i * 0.1 }}
-                    className="group flex flex-col gap-4 px-6 py-7 hover:bg-white/[0.02] transition-colors duration-300 cursor-default"
-                  >
-                    {/* card header */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-sm bg-blue-950/60 border border-blue-800/30 flex items-center justify-center group-hover:border-blue-500/40 transition-colors duration-300">
-                          <Icon className="w-4 h-4 text-blue-400" />
-                        </div>
-                        <span className="text-[9px] font-mono font-bold text-[#5A6472] uppercase tracking-[0.2em]">{s.tag}</span>
-                      </div>
-                      <span className="text-[9px] font-mono text-blue-400/60 uppercase tracking-widest">0{i + 1}</span>
-                    </div>
 
-                    {/* label */}
-                    <div>
-                      <h3 className="text-sm font-bold font-display text-white uppercase tracking-tight group-hover:text-blue-200 transition-colors duration-300">{s.label}</h3>
-                      <p className="mt-1.5 text-[11px] text-[#5A6472] leading-relaxed font-sans">{s.desc}</p>
-                    </div>
-
-                    {/* stat + progress bar */}
-                    <div className="mt-auto">
-                      <div className="flex justify-between items-baseline mb-1.5">
-                        <span className="text-xs font-mono font-semibold text-white">{s.stat}</span>
-                        <span className="text-[9px] font-mono text-[#5A6472] uppercase">{s.statLabel}</span>
-                      </div>
-                      <div className="h-[2px] w-full bg-white/[0.06] rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${s.bar}%` }}
-                          transition={{ duration: 1.2, delay: 0.8 + i * 0.15, ease: "easeOut" }}
-                        />
-                      </div>
-                    </div>
-
-                    <Link
-                      to="/programs"
-                      className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-blue-400 uppercase tracking-widest hover:text-white transition-colors mt-1"
-                    >
-                      EXPLORE TRACK <ChevronRight className="w-3 h-3" />
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* 3. TACTICAL COURSE SHOWCASE */}
@@ -287,10 +202,20 @@ function HomePage() {
               const TrackIcon = track.icon;
               return (
                 <Reveal key={track.title} delay={idx * 0.1}>
-                  <div className={`tech-card animate-hud-hover-float h-full rounded-lg p-6 sm:p-8 flex flex-col justify-between border border-[#222328] bg-[#16171A] hud-card-corners ${track.glowClass}`}>
+                  <div className={`tech-card animate-hud-hover-float h-full rounded-lg p-6 sm:p-8 flex flex-col justify-between border border-[#222328] bg-[#16171A] group hud-card-corners ${track.glowClass}`}>
                     <div className="cyber-scanline" />
                     
                     <div>
+                      {/* Course Track Visual */}
+                      <div className="h-[170px] w-full rounded overflow-hidden relative mb-6 border border-[#222328]/60 bg-[#0c0d0f] shadow-inner">
+                        <img 
+                          src={track.image} 
+                          alt={track.title} 
+                          className="w-full h-full object-cover transition-transform duration-750 group-hover:scale-[1.04] select-none pointer-events-none opacity-85"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#16171A] via-transparent to-transparent pointer-events-none" />
+                      </div>
+
                       {/* Top Header Card */}
                       <div className="flex justify-between items-center mb-6 select-none">
                         <div className={`p-3 rounded bg-gradient-to-br ${track.accent} text-[#050506]`}>

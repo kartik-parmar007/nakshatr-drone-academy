@@ -1,5 +1,5 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { Clock, Award, Coins, BookOpen, Sparkles, UserCheck } from "lucide-react";
+import { Clock, Award, Coins, BookOpen, Sparkles, UserCheck, CheckCircle2, ChevronRight } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 
 const DroneVector = ({ className = "" }: { className?: string }) => (
@@ -29,73 +29,74 @@ export const Route = createLazyFileRoute("/programs")({
 
 const programs = [
   {
-    id: "COURSE 01",
-    border: "from-amber-500 to-yellow-600",
+    id: "PROGRAM 01",
+    badge: "IMMEDIATE",
+    badgeType: "immediate",
     title: "Hardware Mastery SEC",
     type: "Skill Enhancement Course (UGC Credit-Bearing)",
     typeShort: "UGC SEC",
-    duration: "30 Days (90 Hours)",
+    duration: "90 Hours • 30 Days",
     durationDetail: "3 Hours per Session",
-    fee: "₹15,000 per student",
+    fee: "₹15,000",
+    margin: "~60% margin",
+    bullets: [
+      "Reverse-engineering pedagogy",
+      "All disciplines welcome",
+      "University credit-linked",
+      "Nakshatr provides everything"
+    ],
     credits: "3 to 4 Credits",
-    creditsDetail: "subject to university determination",
-    eligibility: "Open to all — any discipline — no prerequisite",
-    eligibilityShort: "Open to all (No prereq)",
-    covers: "Reverse-engineering pedagogy. Students disassemble, understand, and rebuild a complete drone from component level. Five phases — Wonder, Deconstruction, Understanding, Reconstruction, Confidence. Ends with controlled flight familiarisation.",
-    outcome: "Student can independently assemble, troubleshoot, and operate a multirotor drone system.",
-    accentClass: "border-t-[#00F0FF]/60 hover:border-t-[#00F0FF] shadow-cyan-500/5"
+    eligibility: "Open to all disciplines — zero aerospace background required.",
+    covers: "Disassemble, inspect, wire, calibrate, and rebuild physical multirotor drone frames. Learn ESC velocity parameters, speed controller telemetry, and receiver mapping. Ends with controlled flight logging sessions.",
+    outcome: "Students independently build, configure, and troubleshoot structural drone systems.",
+    accentClass: "border-t-[#3B82F6]/60 hover:border-t-[#3B82F6] shadow-blue-500/5 hover:border-blue-500/30"
   },
   {
-    id: "COURSE 02",
-    border: "from-cyan-500 to-blue-600",
+    id: "PROGRAM 02",
+    badge: "IMMEDIATE",
+    badgeType: "immediate",
     title: "Software Mastery SEC",
     type: "Skill Enhancement Course (UGC Credit-Bearing)",
     typeShort: "UGC SEC",
-    duration: "30 Days (60 Hours)",
+    duration: "60 Hours • 30 Days",
     durationDetail: "2 Hours per Session",
-    fee: "₹12,000 per student",
+    fee: "₹12,000",
+    margin: "~75% margin",
+    bullets: [
+      "Mission planning to AI autonomy",
+      "Software-first interaction",
+      "University credit-linked",
+      "Highest margin program"
+    ],
     credits: "2 to 3 Credits",
-    creditsDetail: "subject to university determination",
-    eligibility: "Open to all — any discipline — no prerequisite",
-    eligibilityShort: "Open to all (No prereq)",
-    covers: "Eight modules — Software Foundations, Mission Planning, Simulation, GIS and Mapping, Data Processing, Computer Vision, Autonomy and AI Applications, Mini Capstone Project. Platforms include Mission Planner, QGroundControl, Agisoft Metashape, QGIS.",
-    outcome: "Student can plan autonomous missions, process aerial imagery, and work with GIS and simulation environments.",
-    accentClass: "border-t-purple-500 hover:border-t-purple-400 shadow-purple-500/5"
+    eligibility: "Open to all disciplines — basic computer literacy required.",
+    covers: "Configure autonomous navigation parameters, build 3D GIS mapping orthomosaics, simulate complex flight failures, and interface AI computer vision tracking systems. Includes QGroundControl and Mission Planner workflows.",
+    outcome: "Students design automated waypoints, extract geospatial mapping products, and run synthetic flights.",
+    accentClass: "border-t-purple-500 hover:border-t-purple-400 shadow-purple-500/5 hover:border-purple-500/30"
   },
   {
-    id: "COURSE 03",
-    border: "from-purple-500 to-indigo-600",
-    title: "Integrated Combo Pathway",
-    type: "Skill Enhancement Course (UGC Credit-Bearing)",
-    typeShort: "UGC SEC Combo",
-    duration: "150 Hours total",
-    durationDetail: "Hardware & Software Combined",
-    fee: "₹25,000 per student",
-    credits: "5 to 6 Credits",
-    creditsDetail: "subject to university determination",
-    eligibility: "Open to all — any discipline — no prerequisite",
-    eligibilityShort: "Open to all (No prereq)",
-    covers: "Complete Hardware Mastery SEC followed by complete Software Mastery SEC. Full hardware and software competency in one pathway.",
-    outcome: "Student holds comprehensive drone technology competency across both the physical and software dimensions of the field.",
-    accentClass: "border-t-emerald-500 hover:border-t-emerald-400 shadow-emerald-500/5"
-  },
-  {
-    id: "COURSE 04",
-    border: "from-emerald-500 to-teal-600",
+    id: "PROGRAM 03",
+    badge: "MONTH 4+",
+    badgeType: "delayed",
     title: "Industry Ready Program",
     type: "Professional Certification Program (Non-Credit — DGCA Pathway)",
     typeShort: "DGCA Pathway",
-    duration: "30 Days (90 Hours)",
-    durationDetail: "3 Hours per Session",
-    fee: "₹22,000 per student",
+    duration: "Post-RPTO Approval",
+    durationDetail: "Tailored Flight Cohort",
+    fee: "₹22,000",
+    margin: "~70% margin",
+    bullets: [
+      "Hardware + Software + DGCA RPC",
+      "Govt-recognized pilot license",
+      "Direct job eligibility",
+      "RPTO in 2-3 months"
+    ],
     credits: "Non-credit",
-    creditsDetail: "DGCA Certificate Readiness",
-    eligibility: "Fully independent program — open to all applicants including external candidates — no prerequisite of any kind — prior completion of any SEC course is not required",
-    eligibilityShort: "Open to all (Zero prereq)",
-    covers: "Four layers — Ground (regulatory framework, Drone Rules 2021, airspace, operator responsibilities), Hands On (simulator training, pre-flight protocol, transmitter mastery), Operations (real-world flight training on DGCA type-certified drones, risk assessment, professional operational sequences), Professional Readiness (DGCA mock examinations, industry awareness, professional pathways). Leads to DGCA Remote Pilot Certificate examination eligibility.",
-    outcome: "Student is prepared to sit for and pass the DGCA Remote Pilot Certificate examination and enter the drone sector workforce.",
-    accentClass: "border-t-cyan-500 hover:border-t-cyan-400 shadow-cyan-500/5"
-  },
+    eligibility: "Class 10 minimum — medical fitness standard required.",
+    covers: "Ground school training (airspace regulations, drone law 2021) followed by intensive multi-rotor flight training on type-certified UAV platforms. Prep for DGCA remote pilot license examinations.",
+    outcome: "Students graduate ready to obtain their government pilot certificate and fly commercial missions.",
+    accentClass: "border-t-emerald-500 hover:border-t-emerald-400 shadow-emerald-500/5 hover:border-emerald-500/30"
+  }
 ];
 
 function ProgramsPage() {
@@ -124,93 +125,81 @@ function ProgramsPage() {
           </div>
         </div>
 
-        {/* Direct 4 programs grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+        {/* Direct 3 programs grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {programs.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08} className="h-full">
               <div className={`tech-card animate-hud-hover-float group rounded-lg p-6 sm:p-8 h-full relative overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-500 bg-[#16171A] border-t-4 border-[#222328] hud-card-corners ${p.accentClass}`}>
-                <div className="cyber-scanline" />
                 <DroneVector className="absolute -bottom-6 -right-6 w-28 h-28 text-[#00F0FF] opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
                 
                 <div className="flex flex-col h-full justify-between relative z-10">
                   <div>
-                    {/* ID & Course Tag Header */}
+                    {/* Header: ID + Status Badge */}
                     <div className="flex justify-between items-center mb-5 gap-2 select-none">
-                      <span className="font-mono text-[10px] sm:text-xs text-[#00F0FF] font-bold uppercase tracking-widest">{p.id}</span>
-                      <span className="bg-[#050506] text-[#00F0FF] border border-[#222328] font-mono text-[9px] uppercase px-3 py-1 rounded-full font-bold whitespace-nowrap">
-                        {p.typeShort}
+                      <span className="font-mono text-[10px] sm:text-xs text-[#8A94A6] font-bold uppercase tracking-widest">{p.id}</span>
+                      <span className={`border font-mono text-[9px] uppercase px-3 py-1 rounded font-bold whitespace-nowrap tracking-wider ${
+                        p.badgeType === "immediate"
+                          ? "text-emerald-400 bg-emerald-950/40 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]"
+                          : "text-amber-400 bg-amber-950/40 border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
+                      }`}>
+                        {p.badge}
                       </span>
                     </div>
 
-                    {/* Course Title & Type */}
-                    <h3 className="text-2xl font-bold font-display text-white tracking-tight leading-tight transition-colors duration-300 group-hover:text-[#00F0FF]">{p.title}</h3>
-                    <p className="text-muted-foreground font-mono mt-1.5 text-[10px] uppercase tracking-wider">{p.type}</p>
+                    {/* Course Title & Duration */}
+                    <h3 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight leading-tight transition-colors duration-300 group-hover:text-blue-400">{p.title}</h3>
+                    <p className="text-[#8A94A6] font-mono mt-1.5 text-[10px] uppercase tracking-wider">{p.duration}</p>
                     
-                    <div className="w-full h-[1px] bg-[#222328] my-5" />
+                    <div className="w-full h-[1px] bg-[#222328] my-4" />
 
-                    {/* Technical Specifications Grid */}
-                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 border border-[#222328] bg-[#050506]/75 rounded p-4 mb-6 font-mono text-xs select-none">
-                      <div className="flex flex-col gap-1 xs:border-r border-b xs:border-b-0 border-[#222328] pb-3 xs:pb-0 xs:pr-2">
-                        <span className="text-[9px] uppercase tracking-widest text-[#8A94A6]/60 font-bold block">DURATION</span>
-                        <span className="text-white font-bold font-sans flex items-center gap-1.5 mt-1">
-                          <Clock size={14} className="text-[#00F0FF] shrink-0" />
-                          <div className="flex flex-col leading-none">
-                            <span className="text-xs">{p.duration}</span>
-                            {p.durationDetail && <span className="text-[9px] text-[#8A94A6] font-normal mt-0.5">{p.durationDetail}</span>}
-                          </div>
-                        </span>
-                      </div>
-                      
-                      <div className="flex flex-col gap-1 border-b xs:border-b-0 border-[#222328] pb-3 xs:pb-0 xs:pl-2">
-                        <span className="text-[9px] uppercase tracking-widest text-[#8A94A6]/60 font-bold block">CREDIT VALUE</span>
-                        <span className="text-white font-bold font-sans flex items-center gap-1.5 mt-1">
-                          <Award size={14} className="text-[#00F0FF] shrink-0" />
-                          <div className="flex flex-col leading-none">
-                            <span className="text-xs">{p.credits}</span>
-                            {p.creditsDetail && <span className="text-[9px] text-[#8A94A6] font-normal mt-0.5">{p.creditsDetail}</span>}
-                          </div>
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col gap-1 xs:border-r border-[#222328] pt-3 xs:pr-2 border-b xs:border-b-0 pb-3 xs:pb-0">
-                        <span className="text-[9px] uppercase tracking-widest text-[#8A94A6]/60 font-bold block">EXPECTED FEE</span>
-                        <span className="text-white font-bold font-sans flex items-center gap-1.5 mt-1">
-                          <Coins size={14} className="text-[#00F0FF] shrink-0" />
-                          <span className="text-xs">{p.fee}</span>
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col gap-1 pt-3 xs:pl-2">
-                        <span className="text-[9px] uppercase tracking-widest text-[#8A94A6]/60 font-bold block">ELIGIBILITY</span>
-                        <span className="text-white font-bold font-sans flex items-center gap-1.5 mt-1" title={p.eligibility}>
-                          <UserCheck size={14} className="text-[#00F0FF] shrink-0" />
-                          <span className="text-xs truncate max-w-[120px] sm:max-w-none">{p.eligibilityShort}</span>
+                    {/* Cost & Margin Section */}
+                    <div className="flex flex-col mb-6 bg-[#050506]/55 border border-[#222328] p-4 rounded select-none">
+                      <span className="text-[9px] font-mono text-[#8A94A6] uppercase tracking-widest">EXPECTED COURSE FEE</span>
+                      <div className="flex items-baseline gap-2 mt-1">
+                        <span className="text-3xl font-extrabold text-white tracking-tight font-display">{p.fee}</span>
+                        <span className={`text-[10px] font-semibold font-mono border px-2 py-0.5 rounded ${
+                          p.badgeType === "immediate"
+                            ? "text-emerald-400 bg-emerald-950/40 border-emerald-500/20"
+                            : "text-amber-400 bg-amber-950/40 border-amber-500/20"
+                        }`}>
+                          {p.margin}
                         </span>
                       </div>
                     </div>
 
-                    {/* Scope / What it covers */}
+                    {/* Feature Bullets (Checkmarks) */}
                     <div className="mb-6">
-                      <h4 className="text-xs font-bold text-white uppercase tracking-widest font-mono mb-2 flex items-center gap-1.5 select-none">
-                        <BookOpen size={15} className="text-[#00F0FF]" /> Program Scope & Pedagogy
+                      <ul className="space-y-3">
+                        {p.bullets.map((bullet) => (
+                          <li key={bullet} className="flex items-start gap-2.5 text-xs text-white/90">
+                            <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${
+                              p.badgeType === "immediate" ? "text-emerald-400" : "text-amber-400"
+                            }`} />
+                            <span className="font-sans leading-tight">{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Technical details accordion / scope */}
+                    <div className="w-full h-[1px] bg-[#222328] my-4" />
+
+                    <div className="mb-4">
+                      <h4 className="text-[10px] font-bold text-white uppercase tracking-widest font-mono mb-1.5 flex items-center gap-1.5 select-none">
+                        <BookOpen size={13} className="text-[#00F0FF]" /> Course Overview
                       </h4>
-                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed bg-[#050506]/50 border border-[#222328] p-4 rounded font-sans">
+                      <p className="text-[11px] text-[#8A94A6] leading-relaxed font-sans">
                         {p.covers}
                       </p>
-                    </div>
-
-                    {/* Detailed Eligibility Info */}
-                    <div className="text-[9px] text-muted-foreground/75 font-mono uppercase bg-[#050506]/30 border border-[#222328] p-3 rounded mb-6 leading-relaxed">
-                      <strong>Full Eligibility:</strong> {p.eligibility}
                     </div>
                   </div>
 
                   {/* Outcome Box */}
-                  <div className="bg-[#050506] border border-[#222328] rounded p-4 mt-auto">
-                    <h4 className="text-xs font-bold text-white uppercase tracking-widest font-mono mb-1.5 flex items-center gap-1.5 select-none">
-                      <Sparkles size={14} className="text-[#00F0FF] shrink-0 animate-pulse" /> Core Competency Outcome
+                  <div className="bg-[#050506] border border-[#222328] rounded p-3 mt-auto">
+                    <h4 className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-widest font-mono mb-1 flex items-center gap-1 select-none">
+                      <Sparkles size={12} className="text-[#00F0FF] shrink-0" /> Target Competency
                     </h4>
-                    <p className="text-xs text-[#8A94A6] font-medium leading-relaxed font-sans">
+                    <p className="text-[10px] text-[#8A94A6] leading-relaxed font-sans">
                       {p.outcome}
                     </p>
                   </div>
@@ -218,6 +207,29 @@ function ProgramsPage() {
               </div>
             </Reveal>
           ))}
+        </div>
+
+        {/* Partnership status banner at bottom */}
+        <div className="mt-12 border border-[#222328] bg-[#16171A]/40 backdrop-blur-sm p-4 sm:p-5 rounded-lg flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4 font-mono text-xs max-w-7xl mx-auto shadow-2xl relative select-none">
+          <div className="absolute top-0 left-4 -translate-y-1/2 bg-[#050506] px-2 text-[#00F0FF] text-[9px] uppercase tracking-widest font-bold">
+            [ PARTNERSHIP PIPELINE MODEL ]
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center md:justify-start w-full md:w-auto">
+            <div>
+              <span className="text-[#8A94A6] uppercase tracking-wider block text-[10px]">University Contributes</span>
+              <span className="text-white font-bold uppercase mt-1 block">Space only</span>
+            </div>
+            <div className="h-px sm:h-8 w-full sm:w-px bg-white/[0.08]" />
+            <div>
+              <span className="text-[#8A94A6] uppercase tracking-wider block text-[10px]">Nakshatr Contributes</span>
+              <span className="text-[#00F0FF] font-bold uppercase mt-1 block">Everything else</span>
+            </div>
+          </div>
+          <div className="h-px md:h-8 w-full md:w-px bg-white/[0.08]" />
+          <div className="bg-[#00F0FF]/10 border border-[#00F0FF]/30 px-5 py-3 rounded text-center w-full md:w-auto">
+            <span className="text-[#8A94A6] uppercase tracking-wider text-[10px] block">University Earnings</span>
+            <span className="text-[#00F0FF] font-extrabold text-sm uppercase mt-0.5 block tracking-wide">10% of ALL revenues</span>
+          </div>
         </div>
 
       </div>
@@ -228,7 +240,7 @@ function ProgramsPage() {
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-white uppercase tracking-tight">Public Batches Available</h2>
             <p className="mt-3 text-[#8A94A6] text-xs sm:text-sm font-mono">[ OPEN ENROLMENT · NO AEROSPACE EXPERIENCE PREREQUISITE ]</p>
             <Link
-              to="/about"
+              to="/contact"
               className="group relative btn-hud-glow inline-block mt-8 bg-[#00F0FF] hover:bg-[#0077FF] text-[#050506] font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-10 py-3.5 rounded shadow-[0_0_20px_rgba(0,240,255,0.2)] hud-pulse-border"
             >
               Apply Now
@@ -239,3 +251,4 @@ function ProgramsPage() {
     </div>
   );
 }
+export default ProgramsPage;
