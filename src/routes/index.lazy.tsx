@@ -48,12 +48,12 @@ const tacticalTracks = [
 ];
 
 const useCases = [
-  { icon: Sprout, title: "Precision Agriculture", desc: "Thermal crop mapping, target spraying, and precision yield diagnostics." },
-  { icon: Building2, title: "Industrial Infrastructure", desc: "Structural integrity mapping of bridges, massive cell towers, and active construction sites." },
-  { icon: Shield, title: "Elite Defence", desc: "Tactical surveillance, real-time perimeter reconnaissance, and autonomous swarm flight." },
-  { icon: Package, title: "Autonomous Logistics", desc: "Last-mile medical delivery systems and automated cargo transport." },
-  { icon: Map, title: "Photogrammetry & GIS", desc: "Highly accurate terrain modelling, volumetric calculations, and 3D land scans." },
-  { icon: LifeBuoy, title: "Emergency Response", desc: "Rapid disaster analysis, search and rescue operations, and live feed updates." }
+  { icon: Sprout, title: "Precision Agriculture", image: "/industry_agriculture.png", desc: "Thermal crop mapping, target spraying, and precision yield diagnostics." },
+  { icon: Building2, title: "Industrial Infrastructure", image: "/industry_infrastructure.png", desc: "Structural integrity mapping of bridges, massive cell towers, and active construction sites." },
+  { icon: Shield, title: "Elite Defence", image: "/industry_defense.png", desc: "Tactical surveillance, real-time perimeter reconnaissance, and autonomous swarm flight." },
+  { icon: Package, title: "Autonomous Logistics", image: "/matte_black_drone_hero.png", desc: "Last-mile medical delivery systems and automated cargo transport." },
+  { icon: Map, title: "Photogrammetry & GIS", image: "/university_drone_mapping.png", desc: "Highly accurate terrain modelling, volumetric calculations, and 3D land scans." },
+  { icon: LifeBuoy, title: "Emergency Response", image: "/dawn_mountain_landscape.png", desc: "Rapid disaster analysis, search and rescue operations, and live feed updates." }
 ];
 
 const audiences = [
@@ -73,6 +73,13 @@ const pillars = [
 
 
 function HomePage() {
+  const [heroBg, setHeroBg] = useState("/industrial_drone_hero.png");
+
+  const bgOptions = [
+    { id: "industrial", url: "/industrial_drone_hero.png", label: "Industrial Flight", desc: "Heavy commercial operations" },
+    { id: "stealth", url: "/matte_black_drone_hero.png", label: "Tactical Stealth", desc: "Surveillance & reconnaissance" },
+    { id: "dawn", url: "/dawn_mountain_landscape.png", label: "BVLOS High-Alt", desc: "Long-range research" }
+  ];
 
   return (
     <div className="bg-[#050506] text-white overflow-hidden">
@@ -84,8 +91,8 @@ function HomePage() {
 
         {/* ── Full-bleed background ── */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none select-none"
-          style={{ backgroundImage: `url('/industrial_drone_hero.png')` }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none select-none transition-all duration-700 ease-in-out"
+          style={{ backgroundImage: `url('${heroBg}')` }}
           aria-hidden="true"
         />
         {/* dark overlays: deep base + radial vignette */}
@@ -170,6 +177,32 @@ function HomePage() {
                 Partner With Us
                 <ChevronRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
+            </motion.div>
+
+            {/* Background switcher control */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.45 }}
+              className="mt-12 border-t border-[#1E2028] pt-6 max-w-xl"
+            >
+              <span className="text-[9px] font-mono text-blue-400/80 tracking-widest uppercase block mb-3 font-bold select-none">// SELECT FLIGHT SCENARIO</span>
+              <div className="grid grid-cols-3 gap-3">
+                {bgOptions.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => setHeroBg(opt.url)}
+                    className={`text-left p-3 rounded-sm border transition-all duration-300 backdrop-blur-sm cursor-pointer ${
+                      heroBg === opt.url
+                        ? "border-blue-500 bg-blue-950/20 shadow-[0_0_15px_rgba(59,130,246,0.15)] text-blue-100"
+                        : "border-[#222328]/60 bg-[#0c0d0f]/40 hover:border-white/10 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <div className="text-[10px] font-bold uppercase tracking-tight">{opt.label}</div>
+                    <div className="text-[9px] text-[#5A6472] mt-0.5 font-sans leading-none">{opt.desc}</div>
+                  </button>
+                ))}
+              </div>
             </motion.div>
 
 
@@ -267,47 +300,81 @@ function HomePage() {
       {/* 4. THE NAKSHATR PHILOSOPHY */}
       <section className="bg-[#16171A] py-20 sm:py-28 relative overflow-hidden border-b border-[#222328]">
         <div className="absolute inset-0 bg-hud-radar opacity-15 pointer-events-none" />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Reveal>
-            <span className="text-xs sm:text-sm font-mono font-bold text-blue-400 uppercase tracking-[0.3em] block mb-4 select-none">
-              [ THE FLIGHT PEDAGOGY ]
-            </span>
-            
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white leading-[1.1] uppercase max-w-4xl mx-auto tracking-tight">
-              We place a drone in a student's hands{" "}
-              <span className="text-gradient-blue font-extrabold block sm:inline drop-shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                before a single lecture
-              </span>{" "}
-              is delivered
-            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              
+              {/* Left Side: Pedagogy content */}
+              <div className="lg:col-span-7 text-left">
+                <span className="text-xs sm:text-sm font-mono font-bold text-blue-400 uppercase tracking-[0.3em] block mb-4 select-none">
+                  [ THE FLIGHT PEDAGOGY ]
+                </span>
+                
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white leading-[1.1] uppercase tracking-tight">
+                  We place a drone in a student's hands{" "}
+                  <span className="text-gradient-blue font-extrabold block sm:inline drop-shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+                    before a single lecture
+                  </span>{" "}
+                  is delivered
+                </h2>
 
-            <div className="w-16 h-1 bg-blue-500 mx-auto my-8 rounded-full" />
+                <div className="w-16 h-1 bg-blue-500 my-6 rounded-full" />
 
-            <p className="text-[#8A94A6] text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-              Our reverse-engineering pedagogy ensures absolute mechanical understanding. Disassemble completely, map core wiring telemetry, inspect speed controllers, and calibrate rotors physically.
-            </p>
+                <p className="text-[#8A94A6] text-base leading-relaxed max-w-2xl font-sans">
+                  Our reverse-engineering pedagogy ensures absolute mechanical understanding. Disassemble completely, map core wiring telemetry, inspect speed controllers, and calibrate rotors physically.
+                </p>
 
-            <ul className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-left max-w-4xl mx-auto">
-              {pillars.map((p, idx) => {
-                const PillarIcon = p.icon;
-                return (
-                  <li key={p.text} className="tech-card animate-hud-hover-float bg-[#050506] border border-[#222328] p-6 rounded flex flex-col justify-between h-full relative group hud-card-corners">
-                    <div className="cyber-scanline" />
-                    <div>
-                      <div className="w-10 h-10 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center text-blue-400 mb-5 shadow-inner select-none">
-                        <PillarIcon className="w-5 h-5" />
-                      </div>
-                      <span className="font-mono text-[9px] text-[#8A94A6] font-bold block mb-1 uppercase tracking-widest select-none">
-                        TACTICAL PILLAR 0{idx + 1}
-                      </span>
-                      <span className="text-sm sm:text-base font-semibold text-white font-display">
-                        {p.text}
-                      </span>
+                <ul className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+                  {pillars.map((p, idx) => {
+                    const PillarIcon = p.icon;
+                    return (
+                      <li key={p.text} className="tech-card animate-hud-hover-float bg-[#050506] border border-[#222328] p-5 rounded flex flex-col justify-between h-full relative group hud-card-corners">
+                        <div className="cyber-scanline" />
+                        <div>
+                          <div className="w-9 h-9 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center text-blue-400 mb-4 shadow-inner select-none">
+                            <PillarIcon className="w-4.5 h-4.5" />
+                          </div>
+                          <span className="font-mono text-[8px] text-[#8A94A6] font-bold block mb-1 uppercase tracking-widest select-none">
+                            PILLAR 0{idx + 1}
+                          </span>
+                          <span className="text-xs font-semibold text-white font-display leading-tight block">
+                            {p.text}
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Right Side: High-fidelity image and telemetry HUD visual */}
+              <div className="lg:col-span-5 relative group">
+                <div className="rounded-xl overflow-hidden border border-[#222328] bg-[#0c0d0f] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-blue-500/40 relative">
+                  <div className="h-[340px] sm:h-[400px] w-full rounded-lg overflow-hidden relative bg-[#07080a]">
+                    <img 
+                      src="/university_drone_mapping.png" 
+                      alt="Philosophy flight mapping" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 select-none pointer-events-none"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d0f] via-transparent to-transparent pointer-events-none" />
+                    
+                    {/* Laser scan line overlay */}
+                    <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent opacity-0 group-hover:opacity-100 pointer-events-none animate-scan z-10" />
+
+                    {/* HUD frame highlights */}
+                    <div className="absolute top-4 left-4 bg-[#050506]/95 border border-[#222328] text-blue-400 font-mono text-[9px] px-2.5 py-1 rounded-sm uppercase tracking-wider font-bold flex items-center gap-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] animate-pulse" />
+                      FLIGHT MAPPING &amp; GIS
                     </div>
-                  </li>
-                );
-              })}
-            </ul>
+                    
+                    <div className="absolute bottom-4 right-4 bg-[#050506]/95 border border-[#222328] text-white/70 font-mono text-[9px] px-2.5 py-1 rounded-sm uppercase tracking-wider">
+                      COHORT_LABS // BHAVNAGAR
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </Reveal>
         </div>
       </section>
@@ -335,21 +402,34 @@ function HomePage() {
               const UseIcon = u.icon;
               return (
                 <Reveal key={u.title} delay={idx * 0.05}>
-                  <div className="tech-card animate-hud-hover-float group bg-[#16171A] border border-[#222328] rounded p-6 sm:p-7 flex flex-col justify-between h-full hover:border-blue-500/30 transition-all duration-300 hud-card-corners">
+                  <div className="tech-card animate-hud-hover-float group bg-[#16171A] border border-[#222328] rounded p-6 sm:p-7 flex flex-col justify-between h-full hover:border-blue-500/30 transition-all duration-300 hud-card-corners relative overflow-hidden min-h-[200px]">
                     <div className="cyber-scanline" />
-                    <div>
+                    
+                    {/* Background image visual overlay with smooth dark transition */}
+                    {u.image && (
+                      <>
+                        <div className="absolute inset-0 bg-[#16171A]/85 group-hover:bg-[#16171A]/90 transition-colors duration-300 z-1 pointer-events-none" />
+                        <img 
+                          src={u.image} 
+                          alt={u.title} 
+                          className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-[0.08] group-hover:scale-105 transition-all duration-500 pointer-events-none"
+                        />
+                      </>
+                    )}
+
+                    <div className="relative z-10">
                       <div className="flex justify-between items-start mb-5 select-none">
-                        <div className="p-2.5 rounded bg-[#050506] border border-[#222328] text-blue-400 group-hover:text-blue-400 transition-colors">
+                        <div className="p-2.5 rounded bg-[#050506]/90 border border-[#222328] text-blue-400 group-hover:text-blue-300 transition-colors">
                            <UseIcon className="w-5.5 h-5.5" />
                         </div>
-                        <span className="font-mono text-[9px] text-[#8A94A6] font-bold bg-[#050506] border border-[#222328] px-2.5 py-0.5 rounded tracking-widest uppercase">
+                        <span className="font-mono text-[9px] text-[#8A94A6] font-bold bg-[#050506]/90 border border-[#222328] px-2.5 py-0.5 rounded tracking-widest uppercase">
                           SEC-0{idx + 1}
                         </span>
                       </div>
-                      <h3 className="text-base sm:text-lg font-bold font-display text-white tracking-tight group-hover:text-blue-400 transition-colors">
+                      <h3 className="text-base sm:text-lg font-bold font-display text-white tracking-tight group-hover:text-blue-400 transition-colors uppercase">
                         {u.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-[#8A94A6] mt-3.5 leading-relaxed font-sans">
+                      <p className="text-xs sm:text-sm text-[#8A94A6] mt-3.5 leading-relaxed font-sans group-hover:text-slate-300 transition-colors">
                         {u.desc}
                       </p>
                     </div>
@@ -384,16 +464,29 @@ function HomePage() {
               const AudIcon = aud.icon;
               return (
                 <Reveal key={aud.title} delay={idx * 0.08}>
-                  <div className="tech-card animate-hud-hover-float group bg-[#050506] border border-[#222328] rounded p-6 sm:p-8 flex flex-col items-center text-center justify-between h-full hover:border-blue-500/30 transition-all duration-300 hud-card-corners">
+                  <div className="tech-card animate-hud-hover-float group bg-[#050506] border border-[#222328] rounded p-6 sm:p-8 flex flex-col items-center text-center justify-between h-full hover:border-[#00F0FF]/30 transition-all duration-300 hud-card-corners relative overflow-hidden">
                     <div className="cyber-scanline" />
-                    <div className="flex flex-col items-center w-full">
-                      <div className="w-12 h-12 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center text-blue-400 mb-6 shadow-inner select-none">
+                    
+                    {/* Faint blueprint grid backdrop */}
+                    <div className="absolute inset-0 bg-hud-grid opacity-[0.04] pointer-events-none" />
+                    
+                    {/* Status LED in top right */}
+                    <div className="absolute top-4 right-4 flex items-center gap-1 text-[8px] font-mono text-[#8A94A6] select-none uppercase">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+                      </span>
+                      SYS_SEC
+                    </div>
+
+                    <div className="flex flex-col items-center w-full relative z-10">
+                      <div className="w-12 h-12 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center text-blue-400 mb-6 shadow-inner select-none group-hover:border-blue-500/30 transition-colors duration-300">
                         <AudIcon className="w-6 h-6" />
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight transition-colors group-hover:text-blue-200">
                         {aud.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-[#8A94A6] mt-4 leading-relaxed max-w-xs font-sans">
+                      <p className="text-xs sm:text-sm text-[#8A94A6] mt-4 leading-relaxed max-w-xs font-sans group-hover:text-slate-300 transition-colors">
                         {aud.desc}
                       </p>
                     </div>
