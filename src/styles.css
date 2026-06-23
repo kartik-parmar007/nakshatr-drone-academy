@@ -45,21 +45,21 @@
   --card-foreground: #F1F5F9;
   --popover: #0E0E11;
   --popover-foreground: #F1F5F9;
-  --primary: #F59E0B;
-  /* Stellar Gold */
+  --primary: #3B82F6;
+  /* Cobalt / Steel Blue */
   --primary-foreground: #080809;
   --secondary: #1E1F24;
   /* Slate Carbon */
   --secondary-foreground: #F8FAFC;
   --muted: #131418;
   --muted-foreground: #94A3B8;
-  --accent: #06B6D4;
-  /* Intense Constellation Cyan */
+  --accent: #60A5FA;
+  /* Light Cobalt Blue */
   --accent-foreground: #080809;
   --border: #1C1D24;
   /* Tight Grid line */
   --input: #1C1D24;
-  --ring: #F59E0B;
+  --ring: #3B82F6;
 }
 
 @layer base {
@@ -104,27 +104,34 @@
 
 /* Constellation grid */
 .bg-dot-grid {
-  background-image: radial-gradient(circle, rgba(6, 182, 212, 0.05) 1.2px, transparent 1.2px);
+  background-image: radial-gradient(circle, rgba(59, 130, 246, 0.05) 1.2px, transparent 1.2px);
   background-size: 32px 32px;
 }
 
 .bg-line-grid {
   background-size: 50px 50px;
-  background-image: linear-gradient(to right, rgba(245, 158, 11, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(6, 182, 212, 0.02) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
 }
 
 /* Premium Gradient Utilities */
 .bg-gradient-stellar {
-  background: linear-gradient(135deg, #F59E0B 0%, #06B6D4 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
 }
 
 .bg-gradient-stellar-dark {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(29, 78, 216, 0.15) 100%);
 }
 
 .text-gradient-stellar {
-  background: linear-gradient(135deg, #F59E0B 10%, #E2E8F0 50%, #06B6D4 90%);
+  background: linear-gradient(135deg, #60A5FA 10%, #E2E8F0 50%, #3B82F6 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #60A5FA 10%, #E2E8F0 50%, #3B82F6 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -138,7 +145,7 @@
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.4), rgba(6, 182, 212, 0.4));
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(96, 165, 250, 0.4));
   border-radius: inherit;
   z-index: -1;
   opacity: 0.5;
@@ -170,9 +177,9 @@
   height: 100%;
   background: linear-gradient(90deg,
       transparent,
-      rgba(245, 158, 11, 0.05) 30%,
-      rgba(6, 182, 212, 0.12) 50%,
-      rgba(245, 158, 11, 0.05) 70%,
+      rgba(59, 130, 246, 0.05) 30%,
+      rgba(96, 165, 250, 0.12) 50%,
+      rgba(59, 130, 246, 0.05) 70%,
       transparent);
   transform: skewX(-20deg);
   transition: none;
@@ -185,8 +192,8 @@
 }
 
 .tech-card:hover {
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 0 35px rgba(6, 182, 212, 0.12), 0 0 0 1px rgba(245, 158, 11, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 35px rgba(59, 130, 246, 0.12), 0 0 0 1px rgba(59, 130, 246, 0.2);
   transform: translateY(-4px);
 }
 
@@ -197,7 +204,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #F59E0B, #06B6D4, transparent);
+  background: linear-gradient(90deg, transparent, #3B82F6, #60A5FA, transparent);
   opacity: 0;
   pointer-events: none;
 }
@@ -271,31 +278,31 @@
 
 /* Custom premium glow animations */
 .glow-pulse-gold {
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
   animation: pulse-gold 3s infinite alternate;
 }
 
 @keyframes pulse-gold {
   0% {
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.15);
   }
 
   100% {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
   }
 }
 
 .glow-pulse-cyan {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.2);
   animation: pulse-cyan 3s infinite alternate;
 }
 
 @keyframes pulse-cyan {
   0% {
-    box-shadow: 0 0 8px rgba(6, 182, 212, 0.15);
+    box-shadow: 0 0 8px rgba(96, 165, 250, 0.15);
   }
 
   100% {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
   }
 }
