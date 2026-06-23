@@ -204,7 +204,7 @@ function HomePage() {
         {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
         {/* Bottom sector cards — pinned to the foot of the hero */}
         {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <div className="relative z-20 mt-auto border-t border-white/[0.07] bg-[#080A0F]/75 backdrop-blur-md">
+        <div className="relative z-20 mt-auto border-t border-white/[0.05] bg-transparent">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]">
               {heroSectors.map((s, i) => {
