@@ -70,7 +70,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Nakshatr Technologies LLP — India's First University-Embedded Drone Company" },
+      { title: "Nakshatr Technologies — India's First University-Embedded Drone Company" },
       {
         name: "description",
         content:

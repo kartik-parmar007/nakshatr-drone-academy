@@ -18,7 +18,7 @@ export function Footer() {
             <div className="flex flex-col leading-none">
               <span className="text-xl font-bold text-foreground font-display tracking-wider">NAKSHATR</span>
               <span className="text-[8px] text-primary font-mono uppercase tracking-widest mt-1">
-                Technologies LLP
+                Technologies
               </span>
             </div>
           </div>
@@ -80,7 +80,7 @@ export function Footer() {
             DGCA COMPLIANT &nbsp;|&nbsp; UGC ALIGNED &nbsp;|&nbsp; MKBU CERTIFIED
           </div>
           <div className="text-muted-foreground/60 text-[10px] font-mono">
-            © {new Date().getFullYear()} Nakshatr Technologies LLP. All rights reserved.
+            © {new Date().getFullYear()} Nakshatr Technologies. All rights reserved.
           </div>
         </div>
       </div>

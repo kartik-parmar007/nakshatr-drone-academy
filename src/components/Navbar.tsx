@@ -39,7 +39,7 @@ export function Navbar() {
           <div className="flex flex-col leading-none">
             <span className="text-base sm:text-lg font-bold text-primary tracking-wider font-display uppercase transition-colors group-hover:text-cyan-400">NAKSHATR</span>
             <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
-              Technologies LLP
+              Technologies
             </span>
           </div>
         </Link>
