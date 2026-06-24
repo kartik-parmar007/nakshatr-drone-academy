@@ -102,7 +102,7 @@ function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }
     const scale = 2.4 / maxDim; // normalized so the drone fits in ~2.4 world units
     root.position.sub(center).multiplyScalar(scale);
     root.scale.setScalar(scale);
-    
+
     // Boost material polish (No shadow casting setup to optimize performance)
     root.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
@@ -130,7 +130,7 @@ function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }
         if (mesh.isMesh) {
           // Pre-compile geometry / shader program
           gl.compile(mesh, camera);
-          
+
           // Pre-warm texture uploads
           const mat = mesh.material as THREE.MeshStandardMaterial;
           if (mat) {
@@ -168,7 +168,7 @@ function DroneModelGLB({ progressRef }: { progressRef: React.RefObject<number> }
    ------------------------------------------------------------------ */
 function LaserScanDisk() {
   const groupRef = useRef<THREE.Group>(null);
-  
+
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
@@ -181,31 +181,21 @@ function LaserScanDisk() {
       {/* Laser ring outer boundary */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[1.35, 1.37, 64]} />
-        <meshBasicMaterial
-          color="#22d3ee"
-          transparent
-          opacity={0.55}
-          side={THREE.DoubleSide}
-        />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.55} side={THREE.DoubleSide} />
       </mesh>
       {/* Laser ring soft inner disk */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.01, 1.35, 64]} />
-        <meshBasicMaterial
-          color="#22d3ee"
-          transparent
-          opacity={0.06}
-          side={THREE.DoubleSide}
-        />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.06} side={THREE.DoubleSide} />
       </mesh>
     </group>
   );
 }
 
-function Scene({ 
-  progressRef, 
-  activeIndexRef 
-}: { 
+function Scene({
+  progressRef,
+  activeIndexRef,
+}: {
   progressRef: React.RefObject<number>;
   activeIndexRef: React.RefObject<number>;
 }) {
@@ -215,9 +205,9 @@ function Scene({
 
   useFrame(() => {
     const progress = progressRef.current ?? 0;
-    
+
     // Calculate activeIndex smoothly inside useFrame
-    const tourP = Math.max(0, Math.min(1, (progress - 0.10) / 0.68));
+    const tourP = Math.max(0, Math.min(1, (progress - 0.1) / 0.68));
     const activeFloat = tourP * CALLOUTS.length;
     const activeIndex = Math.min(CALLOUTS.length - 1, Math.floor(activeFloat));
     activeIndexRef.current = activeIndex;
@@ -226,7 +216,7 @@ function Scene({
     let cam: THREE.Vector3Tuple = [0, 1.8, 4.2];
     let look: THREE.Vector3Tuple = [0, 0, 0];
 
-    if (progress < 0.10) {
+    if (progress < 0.1) {
       // Intro: orbit slowly
       const a = progress * 6;
       cam = [Math.sin(a) * 4.5, 1.6 + progress * 0.4, Math.cos(a) * 4.5];
@@ -252,7 +242,7 @@ function Scene({
       ];
     } else if (progress < 0.88) {
       // Principle: pull back, frame the drone center
-      const t = (progress - 0.78) / 0.10;
+      const t = (progress - 0.78) / 0.1;
       cam = [Math.sin(t * 1.5) * 4.5, 2.0, 5.5 - t * 0.5];
     } else {
       // Closing: front-on hero shot
@@ -276,10 +266,7 @@ function Scene({
 
       {/* Optimized Three-point lighting (No shadow maps) */}
       <ambientLight intensity={0.5} />
-      <directionalLight
-        position={[6, 8, 5]}
-        intensity={2.0}
-      />
+      <directionalLight position={[6, 8, 5]} intensity={2.0} />
       <pointLight position={[-6, 2, -4]} intensity={2.0} color={CYAN} />
       <pointLight position={[6, -1, 4]} intensity={1.4} color={ACCENT} />
       <pointLight position={[0, 5, 0]} intensity={0.8} color="#ffffff" />
@@ -288,14 +275,7 @@ function Scene({
       <gridHelper args={[24, 24, CYAN, "rgba(34, 211, 238, 0.08)"]} position={[0, -1.39, 0]} />
 
       {/* Atmospheric GPU Sparkles */}
-      <Sparkles
-        count={55}
-        scale={6}
-        size={1.6}
-        speed={0.4}
-        color={CYAN}
-        opacity={0.65}
-      />
+      <Sparkles count={55} scale={6} size={1.6} speed={0.4} color={CYAN} opacity={0.65} />
 
       {/* Sweeping Active Diagnostic Laser Scan */}
       <LaserScanDisk />
@@ -321,21 +301,21 @@ function Scene({
   );
 }
 
-function ActiveAnchorRing({ 
-  progressRef, 
-  activeIndexRef 
-}: { 
+function ActiveAnchorRing({
+  progressRef,
+  activeIndexRef,
+}: {
   progressRef: React.RefObject<number>;
   activeIndexRef: React.RefObject<number>;
 }) {
   const ref = useRef<THREE.Mesh>(null);
   const target = useRef(new THREE.Vector3(0, 0, 0));
-  
+
   useFrame((state) => {
     if (!ref.current) return;
     const progress = progressRef.current ?? 0;
     const index = activeIndexRef.current ?? 0;
-    const visible = progress >= 0.10 && progress < 0.78;
+    const visible = progress >= 0.1 && progress < 0.78;
     const callout = CALLOUTS[Math.max(0, Math.min(CALLOUTS.length - 1, index))];
     target.current.set(...callout.anchor);
     ref.current.position.lerp(target.current, 0.15);
@@ -344,7 +324,7 @@ function ActiveAnchorRing({
     const pulse = 0.85 + Math.sin(t * 3.5) * 0.08;
     ref.current.scale.setScalar(visible ? pulse : 0.001);
   });
-  
+
   return (
     <mesh ref={ref}>
       <ringGeometry args={[0.22, 0.28, 48]} />
@@ -359,7 +339,9 @@ function ActiveAnchorRing({
 function ease(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
-function clamp01(v: number) { return Math.max(0, Math.min(1, v)); }
+function clamp01(v: number) {
+  return Math.max(0, Math.min(1, v));
+}
 function map(v: number, a: number, b: number, oa: number, ob: number) {
   if (b === a) return oa;
   return oa + ((v - a) / (b - a)) * (ob - oa);
@@ -398,19 +380,19 @@ export function ScrollDroneAnimation() {
     const el = sectionRef.current;
     if (!el) return;
     let raf = 0;
-    
+
     const update = () => {
       const rect = el.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
       const p = Math.max(0, Math.min(1, -rect.top / total));
       progressRef.current = p;
     };
-    
+
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(update);
     };
-    
+
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -466,13 +448,21 @@ export function ScrollDroneAnimation() {
         {/* Vignette styling overlay */}
         <div
           style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: "radial-gradient(ellipse at center, transparent 45%, rgba(5,8,20,0.6) 100%)",
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            background:
+              "radial-gradient(ellipse at center, transparent 45%, rgba(5,8,20,0.6) 100%)",
           }}
         />
 
         {/* Throttled dynamic text/HTML card overlay component (isolated state re-renders) */}
-        <ScrollOverlays sectionRef={sectionRef} viewport={viewport} progressRef={progressRef} activeIndexRef={activeIndexRef} />
+        <ScrollOverlays
+          sectionRef={sectionRef}
+          viewport={viewport}
+          progressRef={progressRef}
+          activeIndexRef={activeIndexRef}
+        />
 
         <style>{`
           @keyframes sda-pulse {
@@ -494,12 +484,12 @@ export default ScrollDroneAnimation;
 /* ------------------------------------------------------------------
    Throttled overlays for high-performance HTML text changes
    ------------------------------------------------------------------ */
-function ScrollOverlays({ 
-  sectionRef, 
+function ScrollOverlays({
+  sectionRef,
   viewport,
   progressRef,
-  activeIndexRef
-}: { 
+  activeIndexRef,
+}: {
   sectionRef: React.RefObject<HTMLElement | null>;
   viewport: { w: number; isMobile: boolean; isTablet: boolean };
   progressRef: React.RefObject<number>;
@@ -523,11 +513,11 @@ function ScrollOverlays({
     const el = sectionRef.current;
     if (!el) return;
     let raf = 0;
-    
+
     const tick = () => {
       const currentProgress = progressRef.current ?? 0;
       const currentActiveIndex = activeIndexRef.current ?? 0;
-      
+
       // Update activeIndex state only if it actually changes!
       setActiveIndex((prev) => {
         if (prev !== currentActiveIndex) {
@@ -537,8 +527,8 @@ function ScrollOverlays({
       });
 
       // Compute visual properties directly to update the DOM
-      const tourActive = currentProgress >= 0.10 && currentProgress < 0.78;
-      const tourP = clamp01((currentProgress - 0.10) / 0.68);
+      const tourActive = currentProgress >= 0.1 && currentProgress < 0.78;
+      const tourP = clamp01((currentProgress - 0.1) / 0.68);
       const activeFloat = tourP * CALLOUTS.length;
       const localT = activeFloat - currentActiveIndex;
 
@@ -547,10 +537,16 @@ function ScrollOverlays({
         ? clamp01(map(localT, 0, 0.15, 0, 1)) * (1 - clamp01(map(localT, 0.85, 1, 0, 1)))
         : 0;
 
-      const introOpacity = clamp01(map(currentProgress, 0.0, 0.05, 1, 1)) * (1 - clamp01(map(currentProgress, 0.07, 0.10, 0, 1)));
-      const principleA = clamp01(map(currentProgress, 0.78, 0.81, 0, 1)) * (1 - clamp01(map(currentProgress, 0.86, 0.88, 0, 1)));
-      const principleB = clamp01(map(currentProgress, 0.81, 0.84, 0, 1)) * (1 - clamp01(map(currentProgress, 0.86, 0.88, 0, 1)));
-      const closingOpacity = clamp01(map(currentProgress, 0.90, 0.95, 0, 1));
+      const introOpacity =
+        clamp01(map(currentProgress, 0.0, 0.05, 1, 1)) *
+        (1 - clamp01(map(currentProgress, 0.07, 0.1, 0, 1)));
+      const principleA =
+        clamp01(map(currentProgress, 0.78, 0.81, 0, 1)) *
+        (1 - clamp01(map(currentProgress, 0.86, 0.88, 0, 1)));
+      const principleB =
+        clamp01(map(currentProgress, 0.81, 0.84, 0, 1)) *
+        (1 - clamp01(map(currentProgress, 0.86, 0.88, 0, 1)));
+      const closingOpacity = clamp01(map(currentProgress, 0.9, 0.95, 0, 1));
       const currentStageLabel = stageFor(currentProgress, currentActiveIndex);
 
       // Direct DOM mutation
@@ -585,10 +581,10 @@ function ScrollOverlays({
       if (progressBarRef.current) {
         progressBarRef.current.style.width = `${currentProgress * 100}%`;
       }
-      
+
       raf = requestAnimationFrame(tick);
     };
-    
+
     tick();
     return () => cancelAnimationFrame(raf);
   }, [sectionRef, progressRef, activeIndexRef]);
@@ -652,7 +648,7 @@ function ScrollOverlays({
             letterSpacing: "0.25em",
             marginTop: 14,
             textTransform: "uppercase",
-            fontFamily: "JetBrains Mono, monospace"
+            fontFamily: "JetBrains Mono, monospace",
           }}
         >
           Scroll to explore
@@ -703,9 +699,7 @@ function ScrollOverlays({
           backdropFilter: "blur(8px)",
         }}
       >
-        <span style={{ color: CYAN }}>
-          {String(activeIndex + 1).padStart(2, "0")}
-        </span>
+        <span style={{ color: CYAN }}>{String(activeIndex + 1).padStart(2, "0")}</span>
         <span>/</span>
         <span>{String(CALLOUTS.length).padStart(2, "0")}</span>
       </div>
@@ -737,7 +731,7 @@ function ScrollOverlays({
             letterSpacing: "-0.01em",
             lineHeight: 1.2,
             textShadow: "0 4px 30px rgba(0,0,0,0.5)",
-            fontFamily: "Space Grotesk, sans-serif"
+            fontFamily: "Space Grotesk, sans-serif",
           }}
         >
           Every drone ever built does one thing.
@@ -757,7 +751,7 @@ function ScrollOverlays({
             letterSpacing: "-0.005em",
             lineHeight: 1.3,
             textShadow: "0 4px 30px rgba(34,211,238,0.25)",
-            fontFamily: "Space Grotesk, sans-serif"
+            fontFamily: "Space Grotesk, sans-serif",
           }}
         >
           A power source moves air in controlled directions.
@@ -782,7 +776,7 @@ function ScrollOverlays({
           maxWidth: "min(700px, 90vw)",
           textShadow: "0 4px 24px rgba(0,0,0,0.5)",
           transition: "opacity 0.4s, transform 0.4s",
-          fontFamily: "Space Grotesk, sans-serif"
+          fontFamily: "Space Grotesk, sans-serif",
         }}
       >
         You just had your first Nakshatr session.
@@ -890,8 +884,7 @@ function CalloutCard({
           opacity,
           transition: "opacity 0.4s, transform 0.4s",
           pointerEvents: "none",
-          boxShadow:
-            `0 30px 80px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,211,238,0.08), 0 0 30px rgba(34,211,238,0.08)`,
+          boxShadow: `0 30px 80px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,211,238,0.08), 0 0 30px rgba(34,211,238,0.08)`,
         }}
       >
         <div
@@ -907,7 +900,9 @@ function CalloutCard({
             marginBottom: 8,
           }}
         >
-          <span>▍ {String(index + 1).padStart(2, "0")} · {callout.id}</span>
+          <span>
+            ▍ {String(index + 1).padStart(2, "0")} · {callout.id}
+          </span>
           <span style={{ color: "rgba(255,255,255,0.4)" }}>
             of {String(total).padStart(2, "0")}
           </span>
@@ -920,7 +915,7 @@ function CalloutCard({
             letterSpacing: "-0.01em",
             lineHeight: 1.15,
             marginBottom: 8,
-            fontFamily: "Space Grotesk, sans-serif"
+            fontFamily: "Space Grotesk, sans-serif",
           }}
         >
           {callout.title}
@@ -984,9 +979,7 @@ function CalloutCard({
         <span>
           ▍ {String(index + 1).padStart(2, "0")} · {callout.id}
         </span>
-        <span style={{ color: "rgba(255,255,255,0.4)" }}>
-          of {String(total).padStart(2, "0")}
-        </span>
+        <span style={{ color: "rgba(255,255,255,0.4)" }}>of {String(total).padStart(2, "0")}</span>
       </div>
       <div
         style={{
@@ -996,7 +989,7 @@ function CalloutCard({
           letterSpacing: "-0.01em",
           lineHeight: 1.15,
           marginBottom: 10,
-          fontFamily: "Space Grotesk, sans-serif"
+          fontFamily: "Space Grotesk, sans-serif",
         }}
       >
         {callout.title}
@@ -1026,7 +1019,7 @@ function CalloutCard({
 }
 
 function stageFor(p: number, activeIndex: number) {
-  if (p < 0.10) return "01 · Approach";
+  if (p < 0.1) return "01 · Approach";
   if (p < 0.78) return `02 · Component ${String(activeIndex + 1).padStart(2, "0")}`;
   if (p < 0.88) return "03 · Root Principle";
   return "04 · Synthesis";

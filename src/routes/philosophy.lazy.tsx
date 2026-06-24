@@ -2,8 +2,19 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Plane, Wind, Combine, Helicopter, PlaneLanding,
-  Box, Cog, Cpu, Gamepad2, Satellite, Radio, Battery, Fan,
+  Plane,
+  Wind,
+  Combine,
+  Helicopter,
+  PlaneLanding,
+  Box,
+  Cog,
+  Cpu,
+  Gamepad2,
+  Satellite,
+  Radio,
+  Battery,
+  Fan,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { ScrollDroneAnimation } from "@/components/ScrollDroneAnimation";
@@ -38,18 +49,42 @@ const types = [
   { icon: Wind, name: "Fixed Wing", desc: "Aeroplane-style. Long range, high efficiency." },
   { icon: Combine, name: "Hybrid VTOL", desc: "Vertical takeoff + fixed-wing cruise." },
   { icon: Helicopter, name: "Single Rotor", desc: "Heavy-lift, longer endurance helicopters." },
-  { icon: PlaneLanding, name: "Fixed Wing Hybrid", desc: "Combines lift rotors with fixed-wing flight." },
+  {
+    icon: PlaneLanding,
+    name: "Fixed Wing Hybrid",
+    desc: "Combines lift rotors with fixed-wing flight.",
+  },
 ];
 
 const components = [
   { icon: Box, name: "Frame", fn: "Carries every other part and absorbs the stresses of flight." },
-  { icon: Cog, name: "Motors", fn: "Convert electrical energy into the rotational thrust that lifts the drone." },
+  {
+    icon: Cog,
+    name: "Motors",
+    fn: "Convert electrical energy into the rotational thrust that lifts the drone.",
+  },
   { icon: Cpu, name: "ESC", fn: "Electronic Speed Controllers regulate motor RPM with precision." },
-  { icon: Gamepad2, name: "Flight Controller", fn: "The brain — fuses sensor data and commands every motor." },
-  { icon: Satellite, name: "GPS Module", fn: "Tracks position globally for navigation and return-to-home." },
+  {
+    icon: Gamepad2,
+    name: "Flight Controller",
+    fn: "The brain — fuses sensor data and commands every motor.",
+  },
+  {
+    icon: Satellite,
+    name: "GPS Module",
+    fn: "Tracks position globally for navigation and return-to-home.",
+  },
   { icon: Radio, name: "Receiver", fn: "Receives pilot commands from the transmitter wirelessly." },
-  { icon: Battery, name: "LiPo Battery", fn: "High-density chemistry that powers the entire system." },
-  { icon: Fan, name: "Propellers", fn: "Aerofoils that turn motor rotation into directional airflow." },
+  {
+    icon: Battery,
+    name: "LiPo Battery",
+    fn: "High-density chemistry that powers the entire system.",
+  },
+  {
+    icon: Fan,
+    name: "Propellers",
+    fn: "Aerofoils that turn motor rotation into directional airflow.",
+  },
 ];
 
 const steps = [
@@ -69,10 +104,12 @@ function PhilosophyPage() {
       <ScrollDroneAnimation />
 
       {/* What is a drone */}
-      <section className="bg-background py-14 sm:py-16 lg:py-20 border-b border-border">
+      <section className="bg-background py-10 sm:py-12 lg:py-14 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground text-center uppercase tracking-tight font-display">What is a Drone?</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground text-center uppercase tracking-tight font-display">
+              What is a Drone?
+            </h1>
             <p className="text-muted-foreground text-center mt-3 max-w-2xl mx-auto text-xs sm:text-sm font-mono">
               [ AERIAL KINEMATICS & WING CONFIGURATIONS ]
             </p>
@@ -91,8 +128,12 @@ function PhilosophyPage() {
                     CFG-0{i + 1}
                   </div>
                   <t.icon className="text-primary mb-3" size={28} />
-                  <h3 className="font-bold text-foreground font-display transition-colors duration-300 group-hover:text-primary">{t.name}</h3>
-                  <p className="text-muted-foreground text-xs sm:text-sm mt-1.5 leading-relaxed">{t.desc}</p>
+                  <h3 className="font-bold text-foreground font-display transition-colors duration-300 group-hover:text-primary">
+                    {t.name}
+                  </h3>
+                  <p className="text-muted-foreground text-xs sm:text-sm mt-1.5 leading-relaxed">
+                    {t.desc}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -101,10 +142,12 @@ function PhilosophyPage() {
       </section>
 
       {/* Components flip cards */}
-      <section className="bg-background py-14 sm:py-16 lg:py-20 border-b border-border bg-dot-grid">
+      <section className="bg-background py-10 sm:py-12 lg:py-14 border-b border-border bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">Disassemble to Assemble</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">
+              Disassemble to Assemble
+            </h2>
             <p className="text-muted-foreground text-center mt-3 max-w-xl mx-auto text-xs sm:text-sm font-mono">
               [ SYSTEM SCHEMATICS & COMPONENT IDENTIFICATION ]
             </p>
@@ -120,10 +163,12 @@ function PhilosophyPage() {
       </section>
 
       {/* Assembly steps */}
-      <section className="bg-background py-14 sm:py-16 lg:py-20 border-b border-border">
+      <section className="bg-background py-10 sm:py-12 lg:py-14 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">Assembly Sequence</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">
+              Assembly Sequence
+            </h2>
             <p className="text-muted-foreground text-center mt-3 max-w-xl mx-auto text-xs sm:text-sm font-mono">
               [ COMPLIANCE CHECKLIST & HARDWARE INTEGRATION FLOW ]
             </p>
@@ -138,8 +183,12 @@ function PhilosophyPage() {
                     <div className="w-10 h-10 rounded border border-primary bg-zinc-955 text-primary font-mono font-bold flex items-center justify-center text-sm shadow-sm relative z-10">
                       0{i + 1}
                     </div>
-                    <h3 className="mt-4 font-bold text-foreground font-display transition-colors duration-300 group-hover:text-primary text-sm sm:text-base relative z-10">{s}</h3>
-                    <p className="text-muted-foreground text-[11px] sm:text-xs mt-1.5 leading-relaxed relative z-10">Standard procedure executed and verified before next step.</p>
+                    <h3 className="mt-4 font-bold text-foreground font-display transition-colors duration-300 group-hover:text-primary text-sm sm:text-base relative z-10">
+                      {s}
+                    </h3>
+                    <p className="text-muted-foreground text-[11px] sm:text-xs mt-1.5 leading-relaxed relative z-10">
+                      Standard procedure executed and verified before next step.
+                    </p>
                   </div>
                   {i < steps.length - 1 && (
                     <div className="w-8 sm:w-12 border-t border-dashed border-border mt-16 shrink-0" />
@@ -152,12 +201,12 @@ function PhilosophyPage() {
       </section>
 
       {/* Root principle */}
-      <section className="bg-background py-14 sm:py-16 lg:py-20 bg-line-grid border-b border-border">
+      <section className="bg-background py-10 sm:py-12 lg:py-14 bg-line-grid border-b border-border">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Reveal>
             <p className="text-foreground text-lg sm:text-xl md:text-3xl italic font-bold leading-relaxed font-display">
-              "Every drone ever built moves air to achieve controlled flight.
-              Understand this — understand all drones."
+              "Every drone ever built moves air to achieve controlled flight. Understand this —
+              understand all drones."
             </p>
             <p className="text-primary font-mono text-[10px] sm:text-xs uppercase tracking-widest mt-4">
               [ FUNDAMENTAL RULE OF UAV KINEMATICS ]
@@ -197,10 +246,14 @@ function FlipCard({ component: c, index }: { component: Component; index: number
             PART-0{index + 1}
           </div>
           <c.icon className="text-primary mb-3" size={32} />
-          <h3 className="font-bold text-foreground font-display transition-colors duration-300 group-hover:text-primary">{c.name}</h3>
-          <p className="text-[9px] font-mono text-primary uppercase mt-1 tracking-widest relative z-10">[ TAP TO SPEC ]</p>
+          <h3 className="font-bold text-foreground font-display transition-colors duration-300 group-hover:text-primary">
+            {c.name}
+          </h3>
+          <p className="text-[9px] font-mono text-primary uppercase mt-1 tracking-widest relative z-10">
+            [ TAP TO SPEC ]
+          </p>
         </div>
-        
+
         {/* Back Side */}
         <div
           className="absolute inset-0 bg-blue-955/20 border border-blue-900/60 rounded-md p-6 flex flex-col items-center justify-center text-foreground text-center text-sm shadow-md"
@@ -209,7 +262,9 @@ function FlipCard({ component: c, index }: { component: Component; index: number
           <div className="absolute top-2 left-3 font-mono text-[8px] text-primary select-none uppercase tracking-wider">
             SPECIFICATION
           </div>
-          <p className="font-medium text-muted-foreground leading-relaxed text-xs sm:text-sm">{c.fn}</p>
+          <p className="font-medium text-muted-foreground leading-relaxed text-xs sm:text-sm">
+            {c.fn}
+          </p>
         </div>
       </motion.div>
     </div>

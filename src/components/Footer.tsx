@@ -16,7 +16,9 @@ export function Footer() {
               className="h-10 w-auto object-contain"
             />
             <div className="flex flex-col leading-none">
-              <span className="text-xl font-bold text-foreground font-display tracking-wider">NAKSHATR</span>
+              <span className="text-xl font-bold text-foreground font-display tracking-wider">
+                NAKSHATR
+              </span>
               <span className="text-[8px] text-primary font-mono uppercase tracking-widest mt-1">
                 Technologies
               </span>
@@ -28,25 +30,70 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="font-bold text-foreground text-xs font-mono uppercase tracking-widest mb-4">Explore</h4>
+          <h4 className="font-bold text-foreground text-xs font-mono uppercase tracking-widest mb-4">
+            Explore
+          </h4>
           <ul className="space-y-2 text-xs uppercase tracking-wider font-mono">
-            <li><Link to="/" className="text-muted-foreground hover:text-primary transition-colors">Home</Link></li>
-            <li><Link to="/philosophy" className="text-muted-foreground hover:text-primary transition-colors">Philosophy</Link></li>
-            <li><Link to="/programs" className="text-muted-foreground hover:text-primary transition-colors">Programs</Link></li>
+            <li>
+              <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/philosophy"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Philosophy
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/programs"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Programs
+              </Link>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-bold text-foreground text-xs font-mono uppercase tracking-widest mb-4">Company</h4>
+          <h4 className="font-bold text-foreground text-xs font-mono uppercase tracking-widest mb-4">
+            Company
+          </h4>
           <ul className="space-y-2 text-xs uppercase tracking-wider font-mono">
-            <li><Link to="/universities" className="text-muted-foreground hover:text-primary transition-colors">Universities</Link></li>
-            <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">About</Link></li>
-            <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
+            <li>
+              <Link
+                to="/universities"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Universities
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                About
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-bold text-foreground text-xs font-mono uppercase tracking-widest mb-4">Reach Us</h4>
+          <h4 className="font-bold text-foreground text-xs font-mono uppercase tracking-widest mb-4">
+            Reach Us
+          </h4>
           <ul className="space-y-3 text-xs">
             <li className="flex items-start gap-2.5 text-muted-foreground">
               <MapPin size={16} className="mt-0.5 text-primary shrink-0" />
@@ -63,10 +110,7 @@ export function Footer() {
             </li>
             <li className="flex items-start gap-2.5 text-muted-foreground font-mono">
               <Phone size={16} className="mt-0.5 text-primary shrink-0" />
-              <a
-                href="tel:+918320002768"
-                className="hover:text-primary transition-colors"
-              >
+              <a href="tel:+918320002768" className="hover:text-primary transition-colors">
                 +91 83200 02768
               </a>
             </li>

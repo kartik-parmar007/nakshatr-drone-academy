@@ -132,8 +132,7 @@ const BOOK_CONTENT: Record<
 
 const DEFAULT_BOOK = {
   title: "FREE DRONE PILOT GUIDE 2026",
-  description:
-    "Select your profile above to get a personalised drone roadmap built just for you.",
+  description: "Select your profile above to get a personalised drone roadmap built just for you.",
   bullets: [
     "DGCA Certification Roadmap",
     "Career & Business Pathways",
@@ -213,7 +212,9 @@ function CustomSelect({
           aria-haspopup="listbox"
           aria-expanded={open}
         >
-          <span className={selected ? "text-foreground" : ""}>{selected ? selected.label : placeholder}</span>
+          <span className={selected ? "text-foreground" : ""}>
+            {selected ? selected.label : placeholder}
+          </span>
           <ChevronDown
             size={14}
             className={`text-muted-foreground transition-transform duration-200 ${open ? "rotate-180 text-primary" : ""}`}
@@ -324,9 +325,8 @@ function ContactPage() {
 
             <p className="mt-6 text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
               Select your profile, fill out the simple form below, and get your{" "}
-              <span className="text-primary font-semibold">Free Drone Roadmap</span>.{" "}
-              Our team will call you back within{" "}
-              <span className="text-accent font-semibold">24 hours</span>.
+              <span className="text-primary font-semibold">Free Drone Roadmap</span>. Our team will
+              call you back within <span className="text-accent font-semibold">24 hours</span>.
             </p>
 
             {/* HUD status strip */}
@@ -345,7 +345,6 @@ function ContactPage() {
       <section className="py-16 sm:py-20 bg-background bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-5 gap-10 xl:gap-14 items-start">
-
             {/* ── LEFT PANEL: FREE BONUS BOOK ── */}
             <div className="lg:col-span-2">
               <Reveal>
@@ -401,13 +400,19 @@ function ContactPage() {
                             className="text-[11px] font-black font-display uppercase leading-tight text-foreground transition-all duration-500"
                             style={{ letterSpacing: "-0.01em" }}
                           >
-                            {profile ? BOOK_CONTENT[profile].title.split(" ").slice(0, 3).join(" ") : "FREE DRONE"}
+                            {profile
+                              ? BOOK_CONTENT[profile].title.split(" ").slice(0, 3).join(" ")
+                              : "FREE DRONE"}
                           </div>
                           <div className="text-[9px] font-mono font-bold uppercase tracking-widest text-primary mt-1 transition-all duration-500">
-                            {profile ? BOOK_CONTENT[profile].title.split(" ").slice(3, 6).join(" ") : "PILOT GUIDE"}
+                            {profile
+                              ? BOOK_CONTENT[profile].title.split(" ").slice(3, 6).join(" ")
+                              : "PILOT GUIDE"}
                           </div>
                           <div className="text-[9px] font-mono uppercase tracking-widest text-primary/70 transition-all duration-500">
-                            {profile ? BOOK_CONTENT[profile].title.split(" ").slice(6).join(" ") || "2026" : "2026"}
+                            {profile
+                              ? BOOK_CONTENT[profile].title.split(" ").slice(6).join(" ") || "2026"
+                              : "2026"}
                           </div>
 
                           <div className="mt-4 h-px bg-border/60" />
@@ -444,17 +449,23 @@ function ContactPage() {
 
                     {/* Bullet features */}
                     <ul className="mt-5 space-y-2.5">
-                      {(profile ? BOOK_CONTENT[profile].bullets : DEFAULT_BOOK.bullets).map((item) => (
-                        <li key={item} className="flex items-center gap-2.5 text-xs text-muted-foreground font-mono">
-                          <ArrowRight size={10} className="text-primary shrink-0" />
-                          {item}
-                        </li>
-                      ))}
+                      {(profile ? BOOK_CONTENT[profile].bullets : DEFAULT_BOOK.bullets).map(
+                        (item) => (
+                          <li
+                            key={item}
+                            className="flex items-center gap-2.5 text-xs text-muted-foreground font-mono"
+                          >
+                            <ArrowRight size={10} className="text-primary shrink-0" />
+                            {item}
+                          </li>
+                        ),
+                      )}
                     </ul>
 
                     {/* Info bar */}
                     <div className="mt-6 bg-zinc-950/60 border border-border rounded p-3 font-mono text-[9px] uppercase tracking-wider text-muted-foreground/60">
-                      <span className="text-primary/70">●</span> Delivered instantly after form submission
+                      <span className="text-primary/70">●</span> Delivered instantly after form
+                      submission
                     </div>
                   </div>
                 </div>
@@ -486,7 +497,8 @@ function ContactPage() {
                       <span className="text-primary font-semibold">24 hours</span>. Your free{" "}
                       <span className="text-accent font-semibold">
                         {profile ? BOOK_CONTENT[profile].title : DEFAULT_BOOK.title}
-                      </span>{" "}is on its way.
+                      </span>{" "}
+                      is on its way.
                     </p>
                     <div className="mt-6 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50 relative z-10">
                       FORM-ID: NDA-{Date.now().toString(36).toUpperCase()}
@@ -758,7 +770,8 @@ function ContactPage() {
                       <div
                         className="absolute inset-0 rounded-lg blur-xl opacity-30 pointer-events-none"
                         style={{
-                          background: "linear-gradient(135deg, rgba(245,158,11,0.4) 0%, rgba(6,182,212,0.2) 100%)",
+                          background:
+                            "linear-gradient(135deg, rgba(245,158,11,0.4) 0%, rgba(6,182,212,0.2) 100%)",
                         }}
                       />
                       <button
@@ -854,7 +867,9 @@ function ContactPage() {
                       {item.value}
                     </a>
                   ) : (
-                    <div className="text-sm font-mono text-muted-foreground relative z-10">{item.value}</div>
+                    <div className="text-sm font-mono text-muted-foreground relative z-10">
+                      {item.value}
+                    </div>
                   )}
                 </div>
               </Reveal>

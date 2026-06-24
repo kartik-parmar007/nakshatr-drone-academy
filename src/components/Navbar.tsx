@@ -40,7 +40,9 @@ export function Navbar() {
             className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col leading-none">
-            <span className="text-base sm:text-lg font-bold text-blue-400 tracking-wider font-display uppercase transition-colors group-hover:text-blue-300">NAKSHATR</span>
+            <span className="text-base sm:text-lg font-bold text-blue-400 tracking-wider font-display uppercase transition-colors group-hover:text-blue-300">
+              NAKSHATR
+            </span>
             <span className="text-[8px] text-white/40 uppercase tracking-widest font-mono mt-0.5">
               Technologies
             </span>
