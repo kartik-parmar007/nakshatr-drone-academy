@@ -40,7 +40,6 @@ const programs = [
   {
     id: "PROGRAM 01",
     badge: "IMMEDIATE",
-    badgeType: "immediate",
     title: "Hardware Mastery SEC",
     type: "Skill Enhancement Course (UGC Credit-Bearing)",
     typeShort: "UGC SEC",
@@ -59,13 +58,16 @@ const programs = [
     covers:
       "Disassemble, inspect, wire, calibrate, and rebuild physical multirotor drone frames. Learn ESC velocity parameters, speed controller telemetry, and receiver mapping. Ends with controlled flight logging sessions.",
     outcome: "Students independently build, configure, and troubleshoot structural drone systems.",
-    accentClass:
-      "border-t-[#3B82F6]/60 hover:border-t-[#3B82F6] shadow-blue-500/5 hover:border-blue-500/30",
+    theme: {
+      accentClass: "border-t-blue-500 hover:border-t-blue-400 shadow-blue-500/5 hover:border-blue-500/30",
+      badgeClass: "text-blue-400 bg-blue-950/40 border-blue-500/30 shadow-[0_0_12px_rgba(59,130,246,0.15)]",
+      feeMarginClass: "text-blue-400 bg-blue-950/40 border-blue-500/20",
+      checkClass: "text-blue-400",
+    },
   },
   {
     id: "PROGRAM 02",
     badge: "IMMEDIATE",
-    badgeType: "immediate",
     title: "Software Mastery SEC",
     type: "Skill Enhancement Course (UGC Credit-Bearing)",
     typeShort: "UGC SEC",
@@ -85,13 +87,16 @@ const programs = [
       "Configure autonomous navigation parameters, build 3D GIS mapping orthomosaics, simulate complex flight failures, and interface AI computer vision tracking systems. Includes QGroundControl and Mission Planner workflows.",
     outcome:
       "Students design automated waypoints, extract geospatial mapping products, and run synthetic flights.",
-    accentClass:
-      "border-t-purple-500 hover:border-t-purple-400 shadow-purple-500/5 hover:border-purple-500/30",
+    theme: {
+      accentClass: "border-t-blue-500 hover:border-t-blue-400 shadow-blue-500/5 hover:border-blue-500/30",
+      badgeClass: "text-blue-400 bg-blue-950/40 border-blue-500/30 shadow-[0_0_12px_rgba(59,130,246,0.15)]",
+      feeMarginClass: "text-blue-400 bg-blue-950/40 border-blue-500/20",
+      checkClass: "text-blue-400",
+    },
   },
   {
     id: "PROGRAM 03",
     badge: "MONTH 4+",
-    badgeType: "delayed",
     title: "Industry Ready Program",
     type: "Professional Certification Program (Non-Credit — DGCA Pathway)",
     typeShort: "DGCA Pathway",
@@ -111,8 +116,12 @@ const programs = [
       "Ground school training (airspace regulations, drone law 2021) followed by intensive multi-rotor flight training on type-certified UAV platforms. Prep for DGCA remote pilot license examinations.",
     outcome:
       "Students graduate ready to obtain their government pilot certificate and fly commercial missions.",
-    accentClass:
-      "border-t-emerald-500 hover:border-t-emerald-400 shadow-emerald-500/5 hover:border-emerald-500/30",
+    theme: {
+      accentClass: "border-t-blue-500 hover:border-t-blue-400 shadow-blue-500/5 hover:border-blue-500/30",
+      badgeClass: "text-blue-400 bg-blue-950/40 border-blue-500/30 shadow-[0_0_12px_rgba(59,130,246,0.15)]",
+      feeMarginClass: "text-blue-400 bg-blue-950/40 border-blue-500/20",
+      checkClass: "text-blue-400",
+    },
   },
 ];
 
@@ -121,17 +130,17 @@ function ProgramsPage() {
     <div className="bg-[#050506] text-white min-h-screen pt-24 pb-14 relative">
       {/* Dynamic aviation HUD constellation grid background */}
       <div className="absolute inset-0 bg-hud-grid opacity-35 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(0,240,255,0.03),transparent_65%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(59,130,246,0.03),transparent_65%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Minimalist center-aligned header */}
         <div className="text-center max-w-3xl mx-auto mb-10 select-none relative p-4 sm:p-6 rounded bg-[#16171A]/20 border border-[#222328]/30 backdrop-blur-sm hud-brackets">
-          <span className="text-xs font-mono font-bold text-[#00F0FF] uppercase tracking-[0.3em] block mb-3">
+          <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-[0.3em] block mb-3">
             [ FORMAL CURRICULUMS ]
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white uppercase tracking-tight">
             Our Drone{" "}
-            <span className="text-gradient-hud font-extrabold drop-shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+            <span className="text-gradient-blue font-extrabold drop-shadow-[0_0_15px_rgba(59,130,246,0.2)]">
               Education Programs
             </span>
           </h1>
@@ -139,7 +148,7 @@ function ProgramsPage() {
             {["UGC Aligned", "DGCA Compliant", "MKBU Certified"].map((t) => (
               <span
                 key={t}
-                className="bg-[#16171A] text-[#00F0FF] border border-[#222328] font-mono text-[9px] uppercase px-3 py-1.5 rounded-full font-bold shadow-[0_0_12px_rgba(0,240,255,0.05)]"
+                className="bg-[#16171A] text-blue-400 border border-[#222328] font-mono text-[9px] uppercase px-3 py-1.5 rounded-full font-bold shadow-[0_0_12px_rgba(59,130,246,0.08)]"
               >
                 {t}
               </span>
@@ -152,9 +161,9 @@ function ProgramsPage() {
           {programs.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08} className="h-full">
               <div
-                className={`tech-card animate-hud-hover-float group rounded-lg p-5 sm:p-6 h-full relative overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-500 bg-[#16171A] border-t-4 border-[#222328] hud-card-corners ${p.accentClass}`}
+                className={`tech-card animate-hud-hover-float group rounded-lg p-5 sm:p-6 h-full relative overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-500 bg-[#16171A] border-t-4 border-[#222328] hud-card-corners ${p.theme.accentClass}`}
               >
-                <DroneVector className="absolute -bottom-6 -right-6 w-28 h-28 text-[#00F0FF] opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+                <DroneVector className="absolute -bottom-6 -right-6 w-28 h-28 text-blue-500 opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
 
                 <div className="flex flex-col h-full justify-between relative z-10">
                   <div>
@@ -164,11 +173,7 @@ function ProgramsPage() {
                         {p.id}
                       </span>
                       <span
-                        className={`border font-mono text-[9px] uppercase px-3 py-1 rounded font-bold whitespace-nowrap tracking-wider ${
-                          p.badgeType === "immediate"
-                            ? "text-emerald-400 bg-emerald-950/40 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]"
-                            : "text-amber-400 bg-amber-950/40 border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
-                        }`}
+                        className={`border font-mono text-[9px] uppercase px-3 py-1 rounded font-bold whitespace-nowrap tracking-wider ${p.theme.badgeClass}`}
                       >
                         {p.badge}
                       </span>
@@ -194,11 +199,7 @@ function ProgramsPage() {
                           {p.fee}
                         </span>
                         <span
-                          className={`text-[10px] font-semibold font-mono border px-2 py-0.5 rounded ${
-                            p.badgeType === "immediate"
-                              ? "text-emerald-400 bg-emerald-950/40 border-emerald-500/20"
-                              : "text-amber-400 bg-amber-950/40 border-amber-500/20"
-                          }`}
+                          className={`text-[10px] font-semibold font-mono border px-2 py-0.5 rounded ${p.theme.feeMarginClass}`}
                         >
                           {p.margin}
                         </span>
@@ -214,9 +215,7 @@ function ProgramsPage() {
                             className="flex items-start gap-2.5 text-xs text-white/90"
                           >
                             <CheckCircle2
-                              className={`w-4 h-4 shrink-0 mt-0.5 ${
-                                p.badgeType === "immediate" ? "text-emerald-400" : "text-amber-400"
-                              }`}
+                              className={`w-4.5 h-4.5 shrink-0 mt-0.5 ${p.theme.checkClass}`}
                             />
                             <span className="font-sans leading-tight">{bullet}</span>
                           </li>
@@ -229,7 +228,7 @@ function ProgramsPage() {
 
                     <div className="mb-4">
                       <h4 className="text-[10px] font-bold text-white uppercase tracking-widest font-mono mb-1.5 flex items-center gap-1.5 select-none">
-                        <BookOpen size={13} className="text-[#00F0FF]" /> Course Overview
+                        <BookOpen size={13} className="text-blue-400" /> Course Overview
                       </h4>
                       <p className="text-[11px] text-[#8A94A6] leading-relaxed font-sans">
                         {p.covers}
@@ -239,8 +238,8 @@ function ProgramsPage() {
 
                   {/* Outcome Box */}
                   <div className="bg-[#050506] border border-[#222328] rounded p-3 mt-auto">
-                    <h4 className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-widest font-mono mb-1 flex items-center gap-1 select-none">
-                      <Sparkles size={12} className="text-[#00F0FF] shrink-0" /> Target Competency
+                    <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest font-mono mb-1 flex items-center gap-1 select-none">
+                      <Sparkles size={12} className="text-blue-400 shrink-0" /> Target Competency
                     </h4>
                     <p className="text-[10px] text-[#8A94A6] leading-relaxed font-sans">
                       {p.outcome}
@@ -254,7 +253,7 @@ function ProgramsPage() {
 
         {/* Partnership status banner at bottom */}
         <div className="mt-12 border border-[#222328] bg-[#16171A]/40 backdrop-blur-sm p-4 sm:p-5 rounded-lg flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4 font-mono text-xs max-w-7xl mx-auto shadow-2xl relative select-none">
-          <div className="absolute top-0 left-4 -translate-y-1/2 bg-[#050506] px-2 text-[#00F0FF] text-[9px] uppercase tracking-widest font-bold">
+          <div className="absolute top-0 left-4 -translate-y-1/2 bg-[#050506] px-2 text-blue-400 text-[9px] uppercase tracking-widest font-bold">
             [ PARTNERSHIP PIPELINE MODEL ]
           </div>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center md:justify-start w-full md:w-auto">
@@ -269,15 +268,15 @@ function ProgramsPage() {
               <span className="text-[#8A94A6] uppercase tracking-wider block text-[10px]">
                 Nakshatr Contributes
               </span>
-              <span className="text-[#00F0FF] font-bold uppercase mt-1 block">Everything else</span>
+              <span className="text-blue-400 font-bold uppercase mt-1 block">Everything else</span>
             </div>
           </div>
           <div className="h-px md:h-8 w-full md:w-px bg-white/[0.08]" />
-          <div className="bg-[#00F0FF]/10 border border-[#00F0FF]/30 px-5 py-3 rounded text-center w-full md:w-auto">
+          <div className="bg-blue-500/10 border border-blue-500/30 px-5 py-3 rounded text-center w-full md:w-auto">
             <span className="text-[#8A94A6] uppercase tracking-wider text-[10px] block">
               University Earnings
             </span>
-            <span className="text-[#00F0FF] font-extrabold text-sm uppercase mt-0.5 block tracking-wide">
+            <span className="text-blue-400 font-extrabold text-sm uppercase mt-0.5 block tracking-wide">
               10% of ALL revenues
             </span>
           </div>
@@ -295,7 +294,7 @@ function ProgramsPage() {
             </p>
             <Link
               to="/contact"
-              className="group relative btn-hud-glow inline-block mt-8 bg-[#00F0FF] hover:bg-[#0077FF] text-[#050506] font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-10 py-3.5 rounded shadow-[0_0_20px_rgba(0,240,255,0.2)] hud-pulse-border"
+              className="group relative btn-hud-glow inline-block mt-8 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-10 py-3.5 rounded shadow-[0_0_20px_rgba(59,130,246,0.25)] border border-blue-600"
             >
               Apply Now
             </Link>

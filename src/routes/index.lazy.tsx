@@ -155,7 +155,7 @@ function HomePage() {
       <section className="relative min-h-screen flex flex-col border-b border-[#1E2028] overflow-hidden">
         {/* ── Full-bleed background ── */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none select-none"
+          className="absolute inset-0 bg-cover bg-[position:80%_center] sm:bg-center bg-no-repeat pointer-events-none select-none"
           style={{ backgroundImage: "url('/industrial_drone_hero.png')" }}
           aria-hidden="true"
         />
@@ -386,7 +386,7 @@ function HomePage() {
                     </div>
 
                     <div className="absolute bottom-4 right-4 bg-[#050506]/95 border border-[#222328] text-white/70 font-mono text-[9px] px-2.5 py-1 rounded-sm uppercase tracking-wider">
-                      COHORT_LABS // BHAVNAGAR
+                      COHORT LABS - BHAVNAGAR
                     </div>
                   </div>
                 </div>
@@ -475,15 +475,6 @@ function HomePage() {
 
                     {/* Faint blueprint grid backdrop */}
                     <div className="absolute inset-0 bg-hud-grid opacity-[0.04] pointer-events-none" />
-
-                    {/* Status LED in top right */}
-                    <div className="absolute top-4 right-4 flex items-center gap-1 text-[8px] font-mono text-[#8A94A6] select-none uppercase">
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
-                      </span>
-                      SYS_SEC
-                    </div>
 
                     <div className="flex flex-col items-center w-full relative z-10">
                       <div className="w-12 h-12 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center text-blue-400 mb-4 shadow-inner select-none group-hover:border-blue-500/30 transition-colors duration-300">

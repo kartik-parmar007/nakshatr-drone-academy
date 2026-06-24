@@ -630,7 +630,7 @@ function ContactPage() {
                       <div className="cyber-scanline" />
 
                       <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                        INGESTION // QA_LOG
+                        INGESTION - QA_LOG
                       </div>
 
                       <div className="text-blue-400 font-mono text-[10px] font-bold tracking-widest uppercase mb-1">
@@ -892,7 +892,7 @@ function ContactPage() {
                     <div className="cyber-scanline" />
 
                     <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                      STEP-01 // PROFILE
+                      STEP 01 - PROFILE
                     </div>
 
                     <div className="text-blue-400 font-mono text-[10px] font-bold tracking-widest uppercase mb-1">
@@ -988,7 +988,7 @@ function ContactPage() {
                     <div className="cyber-scanline" />
 
                     <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                      STEP-02 // DETAILS
+                      STEP 02 - DETAILS
                     </div>
 
                     <div className="text-blue-400 font-mono text-[10px] font-bold tracking-widest uppercase mb-1">
@@ -1154,7 +1154,7 @@ function ContactPage() {
                       <div className="cyber-scanline" />
 
                       <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                        STEP-03 // INFO
+                        STEP 03 - INFO
                       </div>
 
                       {profile === "student" && (

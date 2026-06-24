@@ -148,17 +148,17 @@ function UniversitiesPage() {
           animation: scan 3s linear infinite;
         }
         .text-gradient-hud-premium {
-          background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 40%, #00F0FF 100%);
+          background: linear-gradient(135deg, #ffffff 0%, #93c5fd 40%, #3b82f6 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
         .hud-glow-btn {
-          box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+          box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
           transition: all 0.3s ease;
         }
         .hud-glow-btn:hover {
-          box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
+          box-shadow: 0 0 35px rgba(59, 130, 246, 0.45);
           transform: translateY(-2px);
         }
       `}</style>
@@ -167,22 +167,22 @@ function UniversitiesPage() {
       <section className="relative flex flex-col items-center justify-center border-b border-[#222328]/60 overflow-hidden pt-24 pb-10 px-4">
         {/* Soft background grid overlay */}
         <div className="absolute inset-0 bg-hud-grid opacity-[0.12] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(0,240,255,0.06),transparent_60%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(59,130,246,0.06),transparent_60%)] pointer-events-none" />
 
         {/* Clean Centered Hero Typography */}
         <div className="max-w-4xl mx-auto text-center relative z-10 mb-10 select-none">
           <Reveal>
-            <div className="inline-flex items-center gap-2 bg-[#16171A] border border-[#222328] text-[#00F0FF] px-4 py-1.5 rounded-full mb-6 font-mono text-[10px] tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(0,240,255,0.05)]">
+            <div className="inline-flex items-center gap-2 bg-[#16171A] border border-[#222328] text-blue-400 px-4 py-1.5 rounded-full mb-6 font-mono text-[10px] tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(59,130,246,0.08)]">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00F0FF] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00F0FF]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
               </span>
               University Partnerships Catalog
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-display text-white leading-[1.1] tracking-tight uppercase">
               Transform Your <br />
-              <span className="text-gradient-hud-premium font-extrabold drop-shadow-[0_0_35px_rgba(0,240,255,0.2)]">
+              <span className="text-gradient-hud-premium font-extrabold drop-shadow-[0_0_35px_rgba(59,130,246,0.25)]">
                 University Ecosystem
               </span>
             </h1>
@@ -196,7 +196,7 @@ function UniversitiesPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <a
                 href="#contact"
-                className="group relative inline-flex items-center justify-center bg-[#00F0FF] hover:bg-[#0077FF] text-[#050506] font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-8 py-4 rounded-md transition-all duration-300 border border-[#00F0FF] hud-glow-btn"
+                className="group relative inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-8 py-4 rounded-md transition-all duration-300 border border-blue-600 hud-glow-btn"
               >
                 Schedule MoU Review
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -215,7 +215,7 @@ function UniversitiesPage() {
         <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 px-2 sm:px-6">
           {/* Card 1: The Lab Facility */}
           <Reveal delay={0.1}>
-            <div className="group rounded-xl overflow-hidden border border-[#222328] bg-[#0c0d0f] transition-all duration-300 hover:border-[#00F0FF]/40 flex flex-col h-full shadow-2xl relative">
+            <div className="group rounded-xl overflow-hidden border border-[#222328] bg-[#0c0d0f] transition-all duration-300 hover:border-blue-500/40 flex flex-col h-full shadow-2xl relative">
               <div className="h-[200px] sm:h-[250px] w-full relative overflow-hidden bg-[#0a0b0d]/50">
                 <div
                   className="absolute inset-0 bg-cover bg-center select-none pointer-events-none transition-transform duration-700 group-hover:scale-105"
@@ -224,15 +224,15 @@ function UniversitiesPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d0f] via-[#0c0d0f]/20 to-transparent" />
 
-                <div className="absolute top-4 left-4 bg-[#050506]/85 border border-[#222328]/80 text-[#00F0FF] font-mono text-[9px] px-3 py-1.5 rounded tracking-wider uppercase font-bold flex items-center gap-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] animate-pulse" />
+                <div className="absolute top-4 left-4 bg-[#050506]/85 border border-[#222328]/80 text-blue-400 font-mono text-[9px] px-3 py-1.5 rounded tracking-wider uppercase font-bold flex items-center gap-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                   Centre of Excellence
                 </div>
               </div>
 
               <div className="p-5 sm:p-6 flex flex-col justify-between flex-grow">
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white uppercase tracking-tight group-hover:text-[#00F0FF] transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white uppercase tracking-tight group-hover:text-blue-400 transition-colors duration-300">
                     Physical Campus Lab
                   </h3>
                   <p className="text-sm text-[#8A94A6] mt-3 leading-relaxed font-sans">
@@ -261,7 +261,7 @@ function UniversitiesPage() {
 
           {/* Card 2: Flight Hardware (Premium Schematic Image + Telemetry Interface) */}
           <Reveal delay={0.2}>
-            <div className="group rounded-xl overflow-hidden border border-[#222328] bg-[#0c0d0f] transition-all duration-300 hover:border-[#00F0FF]/40 flex flex-col h-full shadow-2xl relative">
+            <div className="group rounded-xl overflow-hidden border border-[#222328] bg-[#0c0d0f] transition-all duration-300 hover:border-blue-500/40 flex flex-col h-full shadow-2xl relative">
               <div className="h-[200px] sm:h-[250px] w-full relative overflow-hidden bg-[#07080a] flex items-center justify-center">
                 {/* Drone Background Schematic */}
                 <div className="absolute inset-0 bg-[#050506]/40 mix-blend-multiply pointer-events-none z-1" />
@@ -272,19 +272,19 @@ function UniversitiesPage() {
                 />
 
                 {/* Laser scan line effect */}
-                <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent opacity-0 group-hover:opacity-100 pointer-events-none animate-scan z-10" />
+                <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#3b82f6] to-transparent opacity-0 group-hover:opacity-100 pointer-events-none animate-scan z-10" />
 
                 {/* HUD Overlay */}
-                <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[9px] text-[#00F0FF]/85 select-none z-10">
+                <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[9px] text-blue-400/85 select-none z-10">
                   {/* Top Row */}
                   <div className="flex justify-between items-center w-full">
                     <div className="bg-[#050506]/95 border border-[#222328] px-2 py-1 rounded flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>SYS // ONLINE</span>
+                      <span>SYS ONLINE</span>
                     </div>
 
                     {/* Nakshatr Logo & Brand Overlay */}
-                    <div className="bg-[#050506]/95 border border-[#222328] px-2.5 py-1 rounded flex items-center gap-1.5 shadow-[0_0_10px_rgba(0,240,255,0.05)]">
+                    <div className="bg-[#050506]/95 border border-[#222328] px-2.5 py-1 rounded flex items-center gap-1.5 shadow-[0_0_10px_rgba(59,130,246,0.08)]">
                       <img
                         src="/Logo_Main_1.webp"
                         alt="Nakshatr Logo"
@@ -296,23 +296,23 @@ function UniversitiesPage() {
                     </div>
 
                     <div className="bg-[#050506]/95 border border-[#222328] px-2 py-1 rounded flex items-center gap-1">
-                      <Radio className="w-3 h-3 text-[#00F0FF]/70 animate-pulse" />
-                      <span>FREQ // {liveTelemetry.freq} GHz</span>
+                      <Radio className="w-3 h-3 text-blue-400/70 animate-pulse" />
+                      <span>FREQ: {liveTelemetry.freq} GHz</span>
                     </div>
                   </div>
 
                   {/* Center Crosshair / Target box */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40 group-hover:opacity-80 transition-opacity duration-300">
-                    <div className="relative w-16 h-16 border border-[#00F0FF]/30 rounded-full flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-[#00F0FF] rounded-full" />
-                      <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-[#00F0FF]/30 -translate-x-1/2" />
-                      <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-[#00F0FF]/30 -translate-y-1/2" />
+                    <div className="relative w-16 h-16 border border-blue-500/30 rounded-full flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                      <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-blue-500/30 -translate-x-1/2" />
+                      <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-blue-500/30 -translate-y-1/2" />
 
                       {/* Corners */}
-                      <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-[#00F0FF]" />
-                      <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-[#00F0FF]" />
-                      <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-[#00F0FF]" />
-                      <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-[#00F0FF]" />
+                      <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-blue-500" />
+                      <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-blue-500" />
+                      <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-blue-500" />
+                      <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-blue-500" />
                     </div>
                   </div>
 
@@ -346,14 +346,14 @@ function UniversitiesPage() {
                 </div>
 
                 <div className="absolute bottom-4 right-4 bg-[#050506]/85 border border-[#222328] text-white/90 font-mono text-[9px] px-3 py-1 rounded tracking-wider uppercase flex items-center gap-1.5 select-none pointer-events-none z-20">
-                  <Activity className="w-3.5 h-3.5 text-[#00F0FF]" />
+                  <Activity className="w-3.5 h-3.5 text-blue-400" />
                   Telemetry Dashboard
                 </div>
               </div>
 
               <div className="p-5 sm:p-6 flex flex-col justify-between flex-grow">
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white uppercase tracking-tight group-hover:text-[#00F0FF] transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white uppercase tracking-tight group-hover:text-blue-400 transition-colors duration-300">
                     Industrial Hardware
                   </h3>
                   <p className="text-sm text-[#8A94A6] mt-3 leading-relaxed font-sans">
@@ -389,12 +389,12 @@ function UniversitiesPage() {
           <Reveal>
             <div className="tech-card animate-hud-hover-float group rounded-lg p-6 h-full relative overflow-hidden bg-[#16171A] border border-[#222328] hud-card-corners">
               <div className="cyber-scanline" />
-              <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-[#00F0FF] opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
-              <div className="absolute top-3 right-4 font-mono text-[9px] text-[#00F0FF]/50 select-none uppercase">
+              <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-blue-500 opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-400/50 select-none uppercase">
                 GAP-ANL-09
               </div>
 
-              <h3 className="text-2xl font-bold text-white uppercase tracking-tight font-display transition-colors duration-300 group-hover:text-[#00F0FF] relative z-10">
+              <h3 className="text-2xl font-bold text-white uppercase tracking-tight font-display transition-colors duration-300 group-hover:text-blue-400 relative z-10">
                 The Academic Gap We Close
               </h3>
               <p className="text-[#8A94A6] mt-4 leading-relaxed text-sm relative z-10 font-sans">
@@ -408,17 +408,17 @@ function UniversitiesPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="tech-card animate-hud-hover-float group rounded-lg p-6 h-full relative border-t-4 border-[#222328] bg-[#16171A] hover:border-t-[#00F0FF] flex flex-col justify-center overflow-hidden hud-card-corners">
+            <div className="tech-card animate-hud-hover-float group rounded-lg p-6 h-full relative border-t-4 border-[#222328] bg-[#16171A] hover:border-t-blue-500 flex flex-col justify-center overflow-hidden hud-card-corners">
               <div className="cyber-scanline" />
-              <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-[#00F0FF] opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
-              <div className="absolute top-3 right-4 font-mono text-[9px] text-[#00F0FF]/50 select-none uppercase">
+              <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-blue-500 opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+              <div className="absolute top-3 right-4 font-mono text-[9px] text-blue-400/50 select-none uppercase">
                 CRIT-GAP-METRIC
               </div>
 
-              <div className="text-6xl sm:text-7xl font-extrabold text-[#00F0FF] font-display relative z-10 drop-shadow-[0_0_20px_rgba(0,240,255,0.15)]">
+              <div className="text-6xl sm:text-7xl font-extrabold text-blue-400 font-display relative z-10 drop-shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                 <Counter end={12} suffix="%" />
               </div>
-              <p className="mt-4 text-[#00F0FF] font-bold font-mono text-xs uppercase tracking-widest relative z-10">
+              <p className="mt-4 text-blue-400 font-bold font-mono text-xs uppercase tracking-widest relative z-10">
                 [ DEPLOYMENT READY STATE ]
               </p>
               <p className="mt-2 text-[#8A94A6] text-sm leading-relaxed font-sans relative z-10">
@@ -436,7 +436,7 @@ function UniversitiesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto mb-10 select-none">
-              <span className="text-xs font-mono font-bold text-[#00F0FF] uppercase tracking-[0.3em]">
+              <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-[0.3em]">
                 [ INFRASTRUCTURE CORE ]
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold font-display text-white uppercase mt-4 tracking-tight leading-tight">
@@ -454,14 +454,14 @@ function UniversitiesPage() {
               <Reveal key={b} delay={i * 0.04}>
                 <div className="tech-card animate-hud-hover-float group rounded-lg p-5 flex items-start gap-4 overflow-hidden bg-[#050506] border border-[#222328] hud-card-corners">
                   <div className="cyber-scanline" />
-                  <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-[#00F0FF] opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+                  <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-blue-500 opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
 
-                  <div className="w-10 h-10 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center shrink-0 relative z-10 text-[#00F0FF]">
+                  <div className="w-10 h-10 rounded bg-[#16171A] border border-[#222328] flex items-center justify-center shrink-0 relative z-10 text-blue-400">
                     <Check size={20} />
                   </div>
 
                   <div className="pt-2 relative z-10 select-none">
-                    <h3 className="font-bold text-[#E2E8F0] text-xs sm:text-sm uppercase tracking-wider font-display transition-colors duration-300 group-hover:text-[#00F0FF]">
+                    <h3 className="font-bold text-[#E2E8F0] text-xs sm:text-sm uppercase tracking-wider font-display transition-colors duration-300 group-hover:text-blue-400">
                       {b}
                     </h3>
                   </div>
@@ -478,7 +478,7 @@ function UniversitiesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto mb-10 select-none">
-              <span className="text-xs font-mono font-bold text-[#00F0FF] uppercase tracking-[0.3em]">
+              <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-[0.3em]">
                 [ DEPLOYMENT INGESTION ]
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold font-display text-white uppercase mt-4 tracking-tight leading-tight">
@@ -515,15 +515,15 @@ function UniversitiesPage() {
               <Reveal key={s.n} delay={i * 0.1}>
                 <div className="tech-card animate-hud-hover-float group rounded-lg p-6 text-center h-full relative overflow-hidden bg-[#16171A] border border-[#222328] hud-card-corners">
                   <div className="cyber-scanline" />
-                  <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-[#00F0FF] opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
+                  <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-blue-500 opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
 
-                  <div className="w-10 h-10 rounded border border-[#00F0FF]/35 bg-[#050506] text-[#00F0FF] font-mono font-bold flex items-center justify-center text-sm shadow-sm mx-auto relative z-10 select-none">
+                  <div className="w-10 h-10 rounded border border-blue-500/35 bg-[#050506] text-blue-400 font-mono font-bold flex items-center justify-center text-sm shadow-sm mx-auto relative z-10 select-none">
                     0{s.n}
                   </div>
 
-                  <s.icon className="mx-auto mt-4 text-[#00F0FF] relative z-10" size={28} />
+                  <s.icon className="mx-auto mt-4 text-blue-400 relative z-10" size={28} />
 
-                  <h3 className="mt-4 text-xl font-bold text-white tracking-tight font-display transition-colors duration-300 group-hover:text-[#00F0FF] relative z-10 uppercase">
+                  <h3 className="mt-4 text-xl font-bold text-white tracking-tight font-display transition-colors duration-300 group-hover:text-blue-400 relative z-10 uppercase">
                     {s.title}
                   </h3>
 
@@ -542,18 +542,18 @@ function UniversitiesPage() {
         id="contact"
         className="bg-[#050506] py-12 sm:py-16 relative overflow-hidden border-t border-[#222328]/60"
       >
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] aspect-square rounded-full bg-[#00F0FF]/5 blur-[100px] pointer-events-none animate-pulse" />
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[350px] aspect-square rounded-full bg-[#00F0FF]/5 blur-[100px] pointer-events-none animate-pulse" />
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] aspect-square rounded-full bg-blue-500/5 blur-[100px] pointer-events-none animate-pulse" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[350px] aspect-square rounded-full bg-blue-500/5 blur-[100px] pointer-events-none animate-pulse" />
 
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <Reveal>
-            <div className="inline-flex items-center gap-2 bg-[#16171A] border border-[#222328] text-[#00F0FF] px-3.5 py-1.5 rounded mb-6 font-mono text-[10px] sm:text-xs uppercase tracking-widest select-none hud-brackets">
+            <div className="inline-flex items-center gap-2 bg-[#16171A] border border-[#222328] text-blue-400 px-3.5 py-1.5 rounded mb-6 font-mono text-[10px] sm:text-xs uppercase tracking-widest select-none hud-brackets">
               <span>MoU Submission Port</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white uppercase tracking-tight leading-tight">
               Ready to build a <br />
-              <span className="text-gradient-hud-premium font-extrabold drop-shadow-[0_0_20px_rgba(0,240,255,0.15)]">
+              <span className="text-gradient-hud-premium font-extrabold drop-shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                 Centre of Excellence?
               </span>
             </h2>
