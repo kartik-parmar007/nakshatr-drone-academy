@@ -14,6 +14,8 @@ import {
   BookOpen,
   CheckCircle2,
   ArrowRight,
+  Star,
+  Activity,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 
@@ -253,6 +255,9 @@ function CustomSelect({
 
 /* ---------- Main Page ---------- */
 function ContactPage() {
+  const search = Route.useSearch();
+  const isFeedback = search.type === "feedback";
+
   const [profile, setProfile] = useState<Profile>(null);
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -265,6 +270,24 @@ function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [ticker, setTicker] = useState(0);
 
+  // Feedback form states
+  const [feedbackForm, setFeedbackForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    description: "",
+    rating: 0,
+  });
+  const [feedbackErrors, setFeedbackErrors] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    description: "",
+    rating: "",
+  });
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
+
   // Animated ticker for the HUD
   useEffect(() => {
     const id = setInterval(() => setTicker((v) => (v + 1) % 100), 80);
@@ -275,6 +298,88 @@ function ContactPage() {
     e.preventDefault();
     if (!profile) return;
     setSubmitted(true);
+  };
+
+  const validateFeedback = () => {
+    const errors = { name: "", phone: "", email: "", description: "", rating: "" };
+    let valid = true;
+
+    if (!feedbackForm.name.trim()) {
+      errors.name = "Full Name is required";
+      valid = false;
+    }
+
+    const cleanPhone = feedbackForm.phone.replace(/\D/g, "");
+    if (!feedbackForm.phone) {
+      errors.phone = "Phone Number is required";
+      valid = false;
+    } else if (cleanPhone.length !== 10) {
+      errors.phone = "Phone Number must be exactly 10 digits";
+      valid = false;
+    }
+
+    if (feedbackForm.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(feedbackForm.email)) {
+        errors.email = "Please enter a valid email address";
+        valid = false;
+      }
+    }
+
+    if (!feedbackForm.description.trim()) {
+      errors.description = "Full Description is required";
+      valid = false;
+    }
+
+    if (feedbackForm.rating === 0) {
+      errors.rating = "Rating score is required";
+      valid = false;
+    }
+
+    setFeedbackErrors(errors);
+    return valid;
+  };
+
+  const handleFeedbackSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateFeedback()) {
+      setFeedbackSubmitted(true);
+    }
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setFeedbackForm((f) => ({ ...f, name: val }));
+    if (feedbackErrors.name && val.trim()) {
+      setFeedbackErrors((errs) => ({ ...errs, name: "" }));
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setFeedbackForm((f) => ({ ...f, phone: val }));
+    if (feedbackErrors.phone && val.length === 10) {
+      setFeedbackErrors((errs) => ({ ...errs, phone: "" }));
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setFeedbackForm((f) => ({ ...f, email: val }));
+    if (feedbackErrors.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!val.trim() || emailRegex.test(val)) {
+        setFeedbackErrors((errs) => ({ ...errs, email: "" }));
+      }
+    }
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setFeedbackForm((f) => ({ ...f, description: val }));
+    if (feedbackErrors.description && val.trim()) {
+      setFeedbackErrors((errs) => ({ ...errs, description: "" }));
+    }
   };
 
   const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -318,15 +423,35 @@ function ContactPage() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground uppercase tracking-tight font-display leading-none">
-              <span className="text-gradient-stellar">DEFY GRAVITY.</span>
-              <br />
-              <span>JOIN THE SKIES.</span>
+              {isFeedback ? (
+                <>
+                  <span className="text-gradient-stellar">SHARE EXPERIENCE.</span>
+                  <br />
+                  <span>REFINE FLIGHT.</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-gradient-stellar">DEFY GRAVITY.</span>
+                  <br />
+                  <span>JOIN THE SKIES.</span>
+                </>
+              )}
             </h1>
 
             <p className="mt-6 text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-              Select your profile, fill out the simple form below, and get your{" "}
-              <span className="text-primary font-semibold">Free Drone Roadmap</span>. Our team will
-              call you back within <span className="text-accent font-semibold">24 hours</span>.
+              {isFeedback ? (
+                <>
+                  Your feedback drives our curriculum upgrades, hardware lab adjustments, and
+                  simulated operations. Fill out the operational audit form below.
+                </>
+              ) : (
+                <>
+                  Select your profile, fill out the simple form below, and get your{" "}
+                  <span className="text-primary font-semibold">Free Drone Roadmap</span>. Our team
+                  will call you back within{" "}
+                  <span className="text-accent font-semibold">24 hours</span>.
+                </>
+              )}
             </p>
 
             {/* HUD status strip */}
@@ -345,136 +470,406 @@ function ContactPage() {
       <section className="py-16 sm:py-20 bg-background bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-5 gap-10 xl:gap-14 items-start">
-            {/* ── LEFT PANEL: FREE BONUS BOOK ── */}
-            <div className="lg:col-span-2">
-              <Reveal>
-                <div className="tech-card group rounded-lg p-0 overflow-hidden sticky top-24">
-                  <div className="cyber-scanline" />
+            {/* ── LEFT PANEL: DETAILS CARD ── */}
+            {!isFeedback && (
+              <div className="lg:col-span-2">
+                <Reveal>
+                  <div className="tech-card group rounded-lg p-0 overflow-hidden sticky top-24">
+                    <div className="cyber-scanline" />
 
-                  {/* Book top banner */}
-                  <div
-                    className="relative p-7 pb-0 overflow-hidden"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(6,182,212,0.08) 100%)",
-                    }}
-                  >
-                    {/* Grid lines decoration */}
-                    <div className="absolute inset-0 bg-line-grid opacity-50 pointer-events-none" />
+                    {/* Book top banner */}
+                    <div
+                      className="relative p-7 pb-0 overflow-hidden"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(6,182,212,0.08) 100%)",
+                      }}
+                    >
+                      {/* Grid lines decoration */}
+                      <div className="absolute inset-0 bg-line-grid opacity-50 pointer-events-none" />
 
-                    {/* FREE ACCESS badge */}
-                    <div className="inline-flex items-center gap-1.5 bg-primary text-black text-[9px] font-mono font-black uppercase tracking-widest px-3 py-1 rounded-full mb-5 shadow-lg shadow-amber-500/20 relative z-10">
-                      <Zap size={10} fill="currentColor" />
-                      FREE ACCESS
+                      {/* FREE ACCESS badge */}
+                      <div className="inline-flex items-center gap-1.5 bg-primary text-black text-[9px] font-mono font-black uppercase tracking-widest px-3 py-1 rounded-full mb-5 shadow-lg shadow-amber-500/20 relative z-10">
+                        <Zap size={10} fill="currentColor" />
+                        FREE ACCESS
+                      </div>
+
+                      {/* Book mock-up */}
+                      <div className="relative z-10 flex justify-center mt-2">
+                        <div
+                          className="relative w-52 rounded-md shadow-2xl shadow-black/60 overflow-hidden"
+                          style={{
+                            background: "linear-gradient(160deg, #0E1420 0%, #080B14 100%)",
+                            border: "1px solid rgba(245,158,11,0.35)",
+                          }}
+                        >
+                          {/* Book spine accent */}
+                          <div
+                            className="absolute left-0 top-0 bottom-0 w-1.5"
+                            style={{
+                              background: "linear-gradient(180deg, #F59E0B 0%, #06B6D4 100%)",
+                            }}
+                          />
+
+                          <div className="px-5 pt-7 pb-6 pl-7">
+                            {/* Year badge */}
+                            <div className="text-[8px] font-mono font-bold uppercase tracking-[0.2em] text-cyan-400/80 mb-3">
+                              2026 EDITION
+                            </div>
+
+                            {/* Book icon */}
+                            <div className="w-10 h-10 rounded bg-primary/10 border border-primary/30 flex items-center justify-center mb-4">
+                              <BookOpen size={20} className="text-primary" />
+                            </div>
+
+                            <div
+                              className="text-[11px] font-black font-display uppercase leading-tight text-foreground transition-all duration-500"
+                              style={{ letterSpacing: "-0.01em" }}
+                            >
+                              {profile
+                                ? BOOK_CONTENT[profile].title.split(" ").slice(0, 3).join(" ")
+                                : "FREE DRONE"}
+                            </div>
+                            <div className="text-[9px] font-mono font-bold uppercase tracking-widest text-primary mt-1 transition-all duration-500">
+                              {profile
+                                ? BOOK_CONTENT[profile].title.split(" ").slice(3, 6).join(" ")
+                                : "PILOT GUIDE"}
+                            </div>
+                            <div className="text-[9px] font-mono uppercase tracking-widest text-primary/70 transition-all duration-500">
+                              {profile
+                                ? BOOK_CONTENT[profile].title.split(" ").slice(6).join(" ") ||
+                                  "2026"
+                                : "2026"}
+                            </div>
+
+                            <div className="mt-4 h-px bg-border/60" />
+
+                            <div className="mt-3 text-[8px] text-muted-foreground/70 font-mono leading-relaxed">
+                              NAKSHATR DRONE ACADEMY
+                              <br />
+                              BHAVNAGAR · GUJARAT
+                            </div>
+                          </div>
+
+                          {/* Bottom gradient bar */}
+                          <div
+                            className="h-1 w-full"
+                            style={{
+                              background: "linear-gradient(90deg, #F59E0B 0%, #06B6D4 100%)",
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Book mock-up */}
-                    <div className="relative z-10 flex justify-center mt-2">
-                      <div
-                        className="relative w-52 rounded-md shadow-2xl shadow-black/60 overflow-hidden"
-                        style={{
-                          background: "linear-gradient(160deg, #0E1420 0%, #080B14 100%)",
-                          border: "1px solid rgba(245,158,11,0.35)",
-                        }}
-                      >
-                        {/* Book spine accent */}
-                        <div
-                          className="absolute left-0 top-0 bottom-0 w-1.5"
-                          style={{
-                            background: "linear-gradient(180deg, #F59E0B 0%, #06B6D4 100%)",
-                          }}
-                        />
+                    {/* Book description — dynamic per profile */}
+                    <div className="p-7 pt-6">
+                      <div className="text-primary font-mono text-[10px] font-bold tracking-widest uppercase mb-2">
+                        [ FREE BONUS WITH FORM SUBMISSION ]
+                      </div>
+                      <h2 className="text-xl font-bold text-foreground font-display uppercase tracking-tight leading-snug group-hover:text-primary transition-colors duration-300">
+                        {profile ? BOOK_CONTENT[profile].title : DEFAULT_BOOK.title}
+                      </h2>
+                      <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
+                        {profile ? BOOK_CONTENT[profile].description : DEFAULT_BOOK.description}
+                      </p>
 
-                        <div className="px-5 pt-7 pb-6 pl-7">
-                          {/* Year badge */}
-                          <div className="text-[8px] font-mono font-bold uppercase tracking-[0.2em] text-cyan-400/80 mb-3">
-                            2026 EDITION
-                          </div>
+                      {/* Bullet features */}
+                      <ul className="mt-5 space-y-2.5">
+                        {(profile ? BOOK_CONTENT[profile].bullets : DEFAULT_BOOK.bullets).map(
+                          (item) => (
+                            <li
+                              key={item}
+                              className="flex items-center gap-2.5 text-xs text-muted-foreground font-mono"
+                            >
+                              <ArrowRight size={10} className="text-primary shrink-0" />
+                              {item}
+                            </li>
+                          ),
+                        )}
+                      </ul>
 
-                          {/* Book icon */}
-                          <div className="w-10 h-10 rounded bg-primary/10 border border-primary/30 flex items-center justify-center mb-4">
-                            <BookOpen size={20} className="text-primary" />
-                          </div>
-
-                          <div
-                            className="text-[11px] font-black font-display uppercase leading-tight text-foreground transition-all duration-500"
-                            style={{ letterSpacing: "-0.01em" }}
-                          >
-                            {profile
-                              ? BOOK_CONTENT[profile].title.split(" ").slice(0, 3).join(" ")
-                              : "FREE DRONE"}
-                          </div>
-                          <div className="text-[9px] font-mono font-bold uppercase tracking-widest text-primary mt-1 transition-all duration-500">
-                            {profile
-                              ? BOOK_CONTENT[profile].title.split(" ").slice(3, 6).join(" ")
-                              : "PILOT GUIDE"}
-                          </div>
-                          <div className="text-[9px] font-mono uppercase tracking-widest text-primary/70 transition-all duration-500">
-                            {profile
-                              ? BOOK_CONTENT[profile].title.split(" ").slice(6).join(" ") || "2026"
-                              : "2026"}
-                          </div>
-
-                          <div className="mt-4 h-px bg-border/60" />
-
-                          <div className="mt-3 text-[8px] text-muted-foreground/70 font-mono leading-relaxed">
-                            NAKSHATR DRONE ACADEMY
-                            <br />
-                            BHAVNAGAR · GUJARAT
-                          </div>
-                        </div>
-
-                        {/* Bottom gradient bar */}
-                        <div
-                          className="h-1 w-full"
-                          style={{
-                            background: "linear-gradient(90deg, #F59E0B 0%, #06B6D4 100%)",
-                          }}
-                        />
+                      {/* Info bar */}
+                      <div className="mt-6 bg-zinc-950/60 border border-border rounded p-3 font-mono text-[9px] uppercase tracking-wider text-muted-foreground/60">
+                        <span className="text-primary/70">●</span> Delivered instantly after form
+                        submission
                       </div>
                     </div>
                   </div>
-
-                  {/* Book description — dynamic per profile */}
-                  <div className="p-7 pt-6">
-                    <div className="text-primary font-mono text-[10px] font-bold tracking-widest uppercase mb-2">
-                      [ FREE BONUS WITH FORM SUBMISSION ]
-                    </div>
-                    <h2 className="text-xl font-bold text-foreground font-display uppercase tracking-tight leading-snug group-hover:text-primary transition-colors duration-300">
-                      {profile ? BOOK_CONTENT[profile].title : DEFAULT_BOOK.title}
-                    </h2>
-                    <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
-                      {profile ? BOOK_CONTENT[profile].description : DEFAULT_BOOK.description}
-                    </p>
-
-                    {/* Bullet features */}
-                    <ul className="mt-5 space-y-2.5">
-                      {(profile ? BOOK_CONTENT[profile].bullets : DEFAULT_BOOK.bullets).map(
-                        (item) => (
-                          <li
-                            key={item}
-                            className="flex items-center gap-2.5 text-xs text-muted-foreground font-mono"
-                          >
-                            <ArrowRight size={10} className="text-primary shrink-0" />
-                            {item}
-                          </li>
-                        ),
-                      )}
-                    </ul>
-
-                    {/* Info bar */}
-                    <div className="mt-6 bg-zinc-950/60 border border-border rounded p-3 font-mono text-[9px] uppercase tracking-wider text-muted-foreground/60">
-                      <span className="text-primary/70">●</span> Delivered instantly after form
-                      submission
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+                </Reveal>
+              </div>
+            )}
 
             {/* ── RIGHT PANEL: THE FORM ── */}
-            <div className="lg:col-span-3">
-              {submitted ? (
+            <div
+              className={isFeedback ? "lg:col-span-5 max-w-2xl mx-auto w-full" : "lg:col-span-3"}
+            >
+              {isFeedback ? (
+                feedbackSubmitted ? (
+                  <Reveal>
+                    <div className="tech-card rounded-lg p-10 text-center relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center border-blue-500/30">
+                      <div className="cyber-scanline" />
+                      <DroneVector className="absolute inset-0 m-auto w-48 h-48 text-blue-500 opacity-[0.025] animate-drone-wobble pointer-events-none" />
+
+                      <div
+                        className="w-20 h-20 rounded-full border-2 border-blue-500 flex items-center justify-center mb-6 relative z-10"
+                        style={{ boxShadow: "0 0 30px rgba(59,130,246,0.25)" }}
+                      >
+                        <CheckCircle2 size={36} className="text-blue-500" />
+                      </div>
+                      <div className="text-blue-400 font-mono text-xs font-bold tracking-widest uppercase mb-3 relative z-10">
+                        [ FEEDBACK TRANSMISSION SUCCESS ]
+                      </div>
+                      <h2 className="text-3xl font-bold text-foreground font-display uppercase relative z-10">
+                        Transmission Logged!
+                      </h2>
+                      <p className="text-muted-foreground mt-4 text-sm leading-relaxed max-w-md relative z-10">
+                        Thank you, <span className="text-white font-bold">{feedbackForm.name}</span>
+                        . Your operational rating of{" "}
+                        <span className="text-blue-400 font-bold">{feedbackForm.rating} / 5</span>{" "}
+                        and detailed comments have been successfully ingested into our system
+                        configuration board.
+                      </p>
+                      <div className="mt-6 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50 relative z-10">
+                        REPORT-ID: NDA-FB-{Date.now().toString(36).toUpperCase()}
+                      </div>
+                    </div>
+                  </Reveal>
+                ) : (
+                  <form onSubmit={handleFeedbackSubmit} className="space-y-6" noValidate>
+                    <Reveal>
+                      <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-6">
+                        {/* Decorative HUD Corner borders */}
+                        <div className="absolute top-0 left-0 w-8 h-[2px] bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                        <div className="absolute top-0 left-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                        <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                        <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                        <div className="cyber-scanline" />
+
+                        <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
+                          INGESTION // QA_LOG
+                        </div>
+
+                        <div className="text-blue-400 font-mono text-[10px] font-bold tracking-widest uppercase mb-1">
+                          SECTION 1
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-bold text-white font-display uppercase tracking-tight">
+                          Submit Operational Feedback
+                        </h2>
+                        <p className="text-muted-foreground text-xs font-mono mt-1 mb-6">
+                          Provide your scores and suggestions below to refine the Centre of
+                          Excellence
+                        </p>
+
+                        <div className="space-y-4">
+                          {/* Full Name */}
+                          <div className="space-y-1.5">
+                            <label
+                              htmlFor="fb-name"
+                              className="block text-[10px] font-mono font-bold uppercase tracking-widest text-blue-400"
+                            >
+                              Full Name *
+                            </label>
+                            <div className="relative">
+                              <User
+                                size={13}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 pointer-events-none"
+                              />
+                              <input
+                                id="fb-name"
+                                type="text"
+                                required
+                                placeholder="Your full name"
+                                value={feedbackForm.name}
+                                onChange={handleNameChange}
+                                className={`w-full bg-zinc-950/50 backdrop-blur-md border outline-none rounded px-4 py-3 pl-9 text-foreground placeholder:text-muted-foreground/40 text-sm font-mono transition-all ${
+                                  feedbackErrors.name
+                                    ? "border-rose-500/80 focus:shadow-[0_0_0_1px_rgba(244,63,94,0.2)]"
+                                    : "border-white/10 hover:border-blue-500/30 focus:border-blue-500 focus:bg-zinc-950/80 focus:shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+                                }`}
+                              />
+                            </div>
+                            {feedbackErrors.name && (
+                              <p className="text-[10px] font-mono text-rose-500 mt-1">
+                                {feedbackErrors.name}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Phone Number */}
+                          <div className="space-y-1.5">
+                            <label
+                              htmlFor="fb-phone"
+                              className="block text-[10px] font-mono font-bold uppercase tracking-widest text-blue-400"
+                            >
+                              Phone Number *
+                            </label>
+                            <div className="relative">
+                              <Phone
+                                size={13}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 pointer-events-none"
+                              />
+                              <input
+                                id="fb-phone"
+                                type="tel"
+                                required
+                                placeholder="10-digit number"
+                                maxLength={10}
+                                value={feedbackForm.phone}
+                                onChange={handlePhoneChange}
+                                className={`w-full bg-zinc-950/50 backdrop-blur-md border outline-none rounded px-4 py-3 pl-9 text-foreground placeholder:text-muted-foreground/40 text-sm font-mono transition-all ${
+                                  feedbackErrors.phone
+                                    ? "border-rose-500/80 focus:shadow-[0_0_0_1px_rgba(244,63,94,0.2)]"
+                                    : "border-white/10 hover:border-blue-500/30 focus:border-blue-500 focus:bg-zinc-950/80 focus:shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+                                }`}
+                              />
+                            </div>
+                            {feedbackErrors.phone && (
+                              <p className="text-[10px] font-mono text-rose-500 mt-1">
+                                {feedbackErrors.phone}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Email Address */}
+                          <div className="space-y-1.5">
+                            <label
+                              htmlFor="fb-email"
+                              className="block text-[10px] font-mono font-bold uppercase tracking-widest text-blue-400"
+                            >
+                              Email ID (Optional)
+                            </label>
+                            <div className="relative">
+                              <Mail
+                                size={13}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 pointer-events-none"
+                              />
+                              <input
+                                id="fb-email"
+                                type="email"
+                                placeholder="you@example.com"
+                                value={feedbackForm.email}
+                                onChange={handleEmailChange}
+                                className={`w-full bg-zinc-950/50 backdrop-blur-md border outline-none rounded px-4 py-3 pl-9 text-foreground placeholder:text-muted-foreground/40 text-sm font-mono transition-all ${
+                                  feedbackErrors.email
+                                    ? "border-rose-500/80 focus:shadow-[0_0_0_1px_rgba(244,63,94,0.2)]"
+                                    : "border-white/10 hover:border-blue-500/30 focus:border-blue-500 focus:bg-zinc-950/80 focus:shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+                                }`}
+                              />
+                            </div>
+                            {feedbackErrors.email && (
+                              <p className="text-[10px] font-mono text-rose-500 mt-1">
+                                {feedbackErrors.email}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Ratings */}
+                          <div className="space-y-1.5 pt-2">
+                            <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-blue-400">
+                              Ratings *
+                            </label>
+                            <div className="flex items-center gap-2">
+                              {[1, 2, 3, 4, 5].map((star) => {
+                                const active =
+                                  hoveredRating !== null
+                                    ? star <= hoveredRating
+                                    : star <= feedbackForm.rating;
+                                return (
+                                  <button
+                                    key={star}
+                                    type="button"
+                                    onMouseEnter={() => setHoveredRating(star)}
+                                    onMouseLeave={() => setHoveredRating(null)}
+                                    onClick={() => {
+                                      setFeedbackForm((f) => ({ ...f, rating: star }));
+                                      if (feedbackErrors.rating) {
+                                        setFeedbackErrors((errs) => ({ ...errs, rating: "" }));
+                                      }
+                                    }}
+                                    className="p-1 rounded cursor-pointer transition-all duration-200 hover:scale-110 focus:outline-none"
+                                    aria-label={`Rate ${star} Stars`}
+                                  >
+                                    <Star
+                                      size={24}
+                                      className={`transition-all duration-200 ${
+                                        active
+                                          ? "fill-blue-500 text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+                                          : "text-muted-foreground/30 hover:text-blue-400"
+                                      }`}
+                                    />
+                                  </button>
+                                );
+                              })}
+                              {feedbackForm.rating > 0 && (
+                                <span className="ml-3 font-mono text-xs text-blue-400 font-bold">
+                                  {feedbackForm.rating} / 5 Stars
+                                </span>
+                              )}
+                            </div>
+                            {feedbackErrors.rating && (
+                              <p className="text-[10px] font-mono text-rose-500 mt-1">
+                                {feedbackErrors.rating}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Full Description */}
+                          <div className="space-y-1.5">
+                            <label
+                              htmlFor="fb-desc"
+                              className="block text-[10px] font-mono font-bold uppercase tracking-widest text-blue-400"
+                            >
+                              Full Description *
+                            </label>
+                            <div className="relative">
+                              <textarea
+                                id="fb-desc"
+                                required
+                                rows={4}
+                                placeholder="Please enter details of your suggestion, operational audit, or experience..."
+                                value={feedbackForm.description}
+                                onChange={handleDescriptionChange}
+                                className={`w-full bg-zinc-950/50 backdrop-blur-md border outline-none rounded p-4 text-foreground placeholder:text-muted-foreground/40 text-sm font-mono transition-all ${
+                                  feedbackErrors.description
+                                    ? "border-rose-500/80 focus:shadow-[0_0_0_1px_rgba(244,63,94,0.2)]"
+                                    : "border-white/10 hover:border-blue-500/30 focus:border-blue-500 focus:bg-zinc-950/80 focus:shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+                                }`}
+                              />
+                            </div>
+                            {feedbackErrors.description && (
+                              <p className="text-[10px] font-mono text-rose-500 mt-1">
+                                {feedbackErrors.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Reveal>
+
+                    {/* Submit Button */}
+                    <Reveal delay={0.05}>
+                      <div className="relative">
+                        <div
+                          className="absolute inset-0 rounded-lg blur-xl opacity-30 pointer-events-none"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, rgba(59,130,246,0.4) 0%, rgba(29,78,216,0.2) 100%)",
+                          }}
+                        />
+                        <button
+                          id="fb-submit"
+                          type="submit"
+                          className="relative w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-mono text-sm font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center overflow-hidden group shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 cursor-pointer rounded-lg border border-blue-500/30"
+                        >
+                          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
+                          SUBMIT
+                        </button>
+                      </div>
+                    </Reveal>
+                  </form>
+                )
+              ) : submitted ? (
                 <Reveal>
                   <div className="tech-card rounded-lg p-10 text-center relative overflow-hidden min-h-[500px] flex flex-col items-center justify-center">
                     <div className="cyber-scanline" />
@@ -833,9 +1228,9 @@ function ContactPage() {
               {
                 icon: Mail,
                 label: "Email",
-                value: "hello@nakshatr.tech",
+                value: "support@nakshatrtech.in",
                 code: "MAIL-001",
-                href: "mailto:hello@nakshatr.tech",
+                href: "mailto:support@nakshatrtech.in",
               },
               {
                 icon: Phone,

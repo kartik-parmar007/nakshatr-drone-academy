@@ -565,8 +565,8 @@ function UniversitiesPage() {
 
             <div className="mt-6 flex justify-center">
               <a
-                href="mailto:hello@nakshatr.tech"
-                className="group relative inline-flex items-center justify-center bg-[#00F0FF] hover:bg-[#0077FF] text-[#050506] font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-10 py-4 rounded shadow-[0_0_25px_rgba(0,240,255,0.2)] border border-[#00F0FF] hud-glow-btn"
+                href="mailto:support@nakshatrtech.in"
+                className="group relative inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs sm:text-sm font-bold uppercase tracking-widest px-10 py-4 rounded shadow-[0_0_25px_rgba(59,130,246,0.2)] border border-blue-600"
               >
                 Schedule Partnerships Meeting
                 <ArrowRight className="ml-2.5 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />

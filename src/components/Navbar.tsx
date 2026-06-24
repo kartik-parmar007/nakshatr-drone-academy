@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
 const links = [
   { to: "/", label: "Home" },
@@ -50,18 +50,57 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-xs font-semibold text-white/70 relative py-2 group font-display tracking-wider uppercase transition-colors hover:text-white"
-              activeProps={{ className: "text-blue-400" }}
-              activeOptions={{ exact: l.to === "/" }}
-            >
-              {l.label}
-              <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full" />
-            </Link>
-          ))}
+          {links.map((l) => {
+            if (l.label === "Contact") {
+              return (
+                <div key={l.to} className="relative group py-2">
+                  <Link
+                    to={l.to}
+                    className="text-xs font-semibold text-white/70 font-display tracking-wider uppercase transition-colors hover:text-white flex items-center gap-1 cursor-pointer"
+                    activeProps={{ className: "text-blue-400" }}
+                    activeOptions={{ exact: true }}
+                  >
+                    Contact
+                    <ChevronDown
+                      size={12}
+                      className="text-white/40 group-hover:text-white transition-transform group-hover:rotate-180"
+                    />
+                  </Link>
+                  <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full" />
+
+                  {/* Dropdown Box */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-44 bg-[#0a0a0c]/95 backdrop-blur-md border border-white/[0.06] rounded shadow-2xl p-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col gap-1">
+                    <Link
+                      to="/contact"
+                      activeOptions={{ exact: true }}
+                      className="text-[10px] font-bold font-mono text-white/70 hover:text-white hover:bg-white/[0.04] px-3 py-2 rounded transition-colors text-left uppercase tracking-wider"
+                    >
+                      General Inquiry
+                    </Link>
+                    <Link
+                      to="/contact"
+                      search={{ type: "feedback" }}
+                      className="text-[10px] font-bold font-mono text-white/70 hover:text-white hover:bg-white/[0.04] px-3 py-2 rounded transition-colors text-left uppercase tracking-wider"
+                    >
+                      Submit Feedback
+                    </Link>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="text-xs font-semibold text-white/70 relative py-2 group font-display tracking-wider uppercase transition-colors hover:text-white"
+                activeProps={{ className: "text-blue-400" }}
+                activeOptions={{ exact: l.to === "/" }}
+              >
+                {l.label}
+                <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full" />
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden md:block">
@@ -84,16 +123,40 @@ export function Navbar() {
 
       {open && (
         <div className="md:hidden border-t border-white/[0.06] bg-[#080809]/90 backdrop-blur-xl px-4 py-5 flex flex-col gap-3 shadow-xl">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              onClick={() => setOpen(false)}
-              className="text-white/80 font-medium py-2.5 font-display text-sm tracking-wider uppercase border-b border-white/[0.07] hover:text-blue-400 transition-colors"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            if (l.label === "Contact") {
+              return (
+                <div key={l.to} className="flex flex-col gap-1 border-b border-white/[0.07] pb-2">
+                  <Link
+                    to="/contact"
+                    onClick={() => setOpen(false)}
+                    activeOptions={{ exact: true }}
+                    className="text-white/80 font-medium py-2 font-display text-sm tracking-wider uppercase hover:text-blue-400 transition-colors"
+                  >
+                    Contact Us
+                  </Link>
+                  <Link
+                    to="/contact"
+                    search={{ type: "feedback" }}
+                    onClick={() => setOpen(false)}
+                    className="text-white/60 pl-3 font-medium py-1.5 font-display text-xs tracking-wider uppercase hover:text-blue-400 transition-colors"
+                  >
+                    — Feedback Section
+                  </Link>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={l.to}
+                to={l.to}
+                onClick={() => setOpen(false)}
+                className="text-white/80 font-medium py-2.5 font-display text-sm tracking-wider uppercase border-b border-white/[0.07] hover:text-blue-400 transition-colors"
+              >
+                {l.label}
+              </Link>
+            );
+          })}
           <Link
             to="/contact"
             onClick={() => setOpen(false)}

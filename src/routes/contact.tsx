@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
+
+const contactSearchSchema = z.object({
+  type: z.string().optional(),
+});
 
 export const Route = createFileRoute("/contact")({
+  validateSearch: (search) => contactSearchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "Contact Us — Nakshatr Drone Academy | Get Your Free Drone Roadmap" },

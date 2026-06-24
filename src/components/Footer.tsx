@@ -102,10 +102,10 @@ export function Footer() {
             <li className="flex items-start gap-2.5 text-muted-foreground font-mono">
               <Mail size={16} className="mt-0.5 text-primary shrink-0" />
               <a
-                href="mailto:hello@nakshatr.tech"
+                href="mailto:support@nakshatrtech.in"
                 className="hover:text-primary transition-colors break-all"
               >
-                hello@nakshatr.tech
+                support@nakshatrtech.in
               </a>
             </li>
             <li className="flex items-start gap-2.5 text-muted-foreground font-mono">
