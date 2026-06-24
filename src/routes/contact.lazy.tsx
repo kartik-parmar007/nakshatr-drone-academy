@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   GraduationCap,
   Users,
@@ -9,13 +9,9 @@ import {
   Phone,
   Mail,
   MapPin,
-  Zap,
   ChevronDown,
-  BookOpen,
   CheckCircle2,
-  ArrowRight,
   Star,
-  Activity,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 
@@ -212,8 +208,46 @@ function CustomSelect({
   error?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [dropStyle, setDropStyle] = useState<React.CSSProperties>({});
   const ref = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
   const selected = options.find((o) => o.value === value);
+
+  const updateDropPosition = () => {
+    if (!btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const dropHeight = Math.min(options.length * 48, 240);
+
+    if (spaceBelow < dropHeight && spaceAbove > spaceBelow) {
+      // Open upward
+      setDropStyle({
+        position: "fixed",
+        top: rect.top - dropHeight - 4,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+        maxHeight: Math.min(dropHeight, spaceAbove - 8),
+      });
+    } else {
+      // Open downward
+      setDropStyle({
+        position: "fixed",
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+        maxHeight: Math.min(dropHeight, spaceBelow - 8),
+      });
+    }
+  };
+
+  const handleToggle = () => {
+    if (!open) updateDropPosition();
+    setOpen((v) => !v);
+  };
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -222,6 +256,18 @@ function CustomSelect({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onScroll = () => { updateDropPosition(); };
+    const onResize = () => { updateDropPosition(); };
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [open]);
 
   return (
     <div className="space-y-1.5" ref={ref}>
@@ -233,14 +279,15 @@ function CustomSelect({
       </label>
       <div className="relative">
         <button
+          ref={btnRef}
           id={id}
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={handleToggle}
           className={`w-full flex items-center justify-between bg-zinc-950/50 backdrop-blur-md border rounded px-4 py-3 text-sm font-mono transition-all cursor-pointer ${
             open
               ? "border-blue-500 text-foreground shadow-[0_0_10px_rgba(59,130,246,0.15)]"
               : error
-                ? "border-rose-500/80 text-muted-foreground focus:shadow-[0_0_0_1px_rgba(244,63,94,0.2)]"
+                ? "border-rose-500/80 text-muted-foreground"
                 : "border-white/10 text-muted-foreground hover:border-blue-500/30"
           }`}
           aria-haspopup="listbox"
@@ -251,13 +298,14 @@ function CustomSelect({
           </span>
           <ChevronDown
             size={14}
-            className={`text-muted-foreground transition-transform duration-200 ${open ? "rotate-180 text-blue-400" : ""}`}
+            className={`text-muted-foreground transition-transform duration-200 shrink-0 ${open ? "rotate-180 text-blue-400" : ""}`}
           />
         </button>
         {open && (
           <ul
             role="listbox"
-            className="absolute z-55 w-full mt-1 bg-zinc-950/90 backdrop-blur-xl border border-white/15 rounded shadow-2xl shadow-black/80 overflow-hidden"
+            style={dropStyle}
+            className="bg-zinc-950 backdrop-blur-xl border border-white/15 rounded shadow-2xl shadow-black/80 overflow-y-auto"
           >
             {options.map((o) => (
               <li
@@ -540,7 +588,7 @@ function ContactPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* ─────────────── HERO HEADER ─────────────── */}
-      <section className="relative bg-background border-b border-border overflow-hidden py-14 sm:py-18">
+      <section className="relative bg-background border-b border-border overflow-hidden py-8 sm:py-14">
         {/* Background grid */}
         <div className="absolute inset-0 bg-dot-grid opacity-60 pointer-events-none" />
         <div className="absolute inset-0 bg-line-grid pointer-events-none" />
@@ -574,7 +622,7 @@ function ContactPage() {
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground uppercase tracking-tight font-display leading-none">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-foreground uppercase tracking-tight font-display leading-none">
               {isFeedback ? (
                 <>
                   <span className="text-gradient-stellar">SHARE EXPERIENCE.</span>
@@ -619,7 +667,7 @@ function ContactPage() {
       </section>
 
       {/* ─────────────── MAIN FORM GRID ─────────────── */}
-      <section className="py-16 sm:py-20 bg-background bg-dot-grid">
+      <section className="py-8 sm:py-14 bg-background bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto w-full">
             {isFeedback ? (
@@ -656,7 +704,7 @@ function ContactPage() {
               ) : (
                 <form onSubmit={handleFeedbackSubmit} className="space-y-6" noValidate>
                   <Reveal>
-                    <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-6">
+                    <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-5">
                       {/* Decorative HUD Corner borders */}
                       <div className="absolute top-0 left-0 w-8 h-[2px] bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                       <div className="absolute top-0 left-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
@@ -915,10 +963,10 @@ function ContactPage() {
                 </div>
               </Reveal>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 {/* ── STEP 1: PROFILE ── */}
                 <Reveal>
-                  <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-6">
+                  <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-5">
                     {/* Decorative HUD Corner borders */}
                     <div className="absolute top-0 left-0 w-8 h-[2px] bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                     <div className="absolute top-0 left-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
@@ -1011,7 +1059,7 @@ function ContactPage() {
                 {/* ── STEP 2: YOUR DETAILS ── */}
                 <Reveal delay={0.05}>
                   <div
-                    className={`relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-6 transition-all duration-500 ${
+                    className={`relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-black/90 overflow-hidden space-y-4 transition-all duration-500 ${
                       !profile ? "opacity-50 pointer-events-none" : "opacity-100"
                     }`}
                   >
@@ -1180,7 +1228,7 @@ function ContactPage() {
                 {/* ── STEP 3: DYNAMIC PROFILE FIELDS ── */}
                 {profile && (
                   <Reveal delay={0.1} className="relative z-20">
-                    <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl shadow-black/90 !overflow-visible space-y-6">
+                    <div className="relative bg-zinc-950/45 backdrop-blur-2xl border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-black/90 !overflow-visible space-y-5">
                       {/* Decorative HUD Corner borders */}
                       <div className="absolute top-0 left-0 w-8 h-[2px] bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                       <div className="absolute top-0 left-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
@@ -1426,10 +1474,10 @@ function ContactPage() {
       </section>
 
       {/* ─────────────── BOTTOM CONTACT INFO STRIP ─────────────── */}
-      <section className="py-14 bg-background border-t border-border">
+      <section className="py-8 sm:py-12 bg-background border-t border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="text-center mb-10">
+            <div className="text-center mb-6 sm:mb-10">
               <div className="text-primary font-mono text-[10px] font-bold tracking-widest uppercase mb-2">
                 [ DIRECT COMMUNICATION CHANNELS ]
               </div>
