@@ -152,7 +152,7 @@ function HomePage() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* 1. HERO SECTION — INDUSTRIAL FULL-BLEED GRID LAYOUT */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="relative min-h-screen flex flex-col border-b border-[#1E2028] overflow-hidden pt-16">
+      <section className="relative min-h-screen flex flex-col border-b border-[#1E2028] overflow-hidden">
         {/* ── Full-bleed background ── */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none select-none"
@@ -173,7 +173,7 @@ function HomePage() {
 
         {/* ── Main hero content ── */}
         <div className="relative z-10 flex-1 flex flex-col justify-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-10 sm:py-14 lg:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 pb-12 sm:pt-0 sm:py-14 lg:py-16">
             {/* Primary headline */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
