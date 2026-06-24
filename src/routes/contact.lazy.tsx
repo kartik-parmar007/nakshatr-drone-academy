@@ -357,7 +357,6 @@ function ContactPage() {
     experience: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const [ticker, setTicker] = useState(0);
 
   // Contact form validation states
   const [contactErrors, setContactErrors] = useState({
@@ -391,11 +390,7 @@ function ContactPage() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
 
-  // Animated ticker for the HUD
-  useEffect(() => {
-    const id = setInterval(() => setTicker((v) => (v + 1) % 100), 80);
-    return () => clearInterval(id);
-  }, []);
+
 
   const handleContactFieldChange = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = key === "whatsapp" ? e.target.value.replace(/\D/g, "").slice(0, 10) : e.target.value;
@@ -587,87 +582,9 @@ function ContactPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* ─────────────── HERO HEADER ─────────────── */}
-      <section className="relative bg-background border-b border-border overflow-hidden py-8 sm:py-14">
-        {/* Background grid */}
-        <div className="absolute inset-0 bg-dot-grid opacity-60 pointer-events-none" />
-        <div className="absolute inset-0 bg-line-grid pointer-events-none" />
-
-        {/* Gradient glow orbs */}
-        <div
-          className="absolute top-0 left-1/4 w-[480px] h-[300px] rounded-full pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse, rgba(245,158,11,0.06) 0%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
-        <div
-          className="absolute bottom-0 right-1/4 w-[380px] h-[260px] rounded-full pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
-
-        {/* Watermark drone */}
-        <DroneVector className="absolute -right-8 top-1/2 -translate-y-1/2 w-64 h-64 text-primary opacity-[0.025] animate-drone-wobble pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Reveal>
-            {/* Status badge */}
-            <div className="inline-flex items-center gap-2 bg-zinc-900/70 border border-primary/30 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-primary animate-ping" />
-              <span className="font-mono text-[10px] text-primary font-bold uppercase tracking-widest">
-                ELITE FLIGHT SCHOOL // SYSTEM ACTIVE
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-foreground uppercase tracking-tight font-display leading-none">
-              {isFeedback ? (
-                <>
-                  <span className="text-gradient-stellar">SHARE EXPERIENCE.</span>
-                  <br />
-                  <span>REFINE FLIGHT.</span>
-                </>
-              ) : (
-                <>
-                  <span className="text-gradient-stellar">DEFY GRAVITY.</span>
-                  <br />
-                  <span>JOIN THE SKIES.</span>
-                </>
-              )}
-            </h1>
-
-            <p className="mt-6 text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-              {isFeedback ? (
-                <>
-                  Your feedback drives our curriculum upgrades, hardware lab adjustments, and
-                  simulated operations. Fill out the operational audit form below.
-                </>
-              ) : (
-                <>
-                  Select your profile, fill out the simple form below, and get your{" "}
-                  <span className="text-primary font-semibold">Free Drone Roadmap</span>. Our team
-                  will call you back within{" "}
-                  <span className="text-accent font-semibold">24 hours</span>.
-                </>
-              )}
-            </p>
-
-            {/* HUD status strip */}
-            <div className="mt-8 inline-flex items-center gap-6 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50 bg-zinc-950/60 border border-border px-5 py-2 rounded">
-              <span className="text-emerald-500/70">● INTAKE OPEN</span>
-              <span>·</span>
-              <span>SYS: CONTACT-FORM-V3</span>
-              <span>·</span>
-              <span>PKT: {String(ticker).padStart(2, "0")}%</span>
-            </div>
-          </Reveal>
-        </div>
-      </section>
 
       {/* ─────────────── MAIN FORM GRID ─────────────── */}
-      <section className="py-8 sm:py-14 bg-background bg-dot-grid">
+      <section className="pt-20 pb-8 sm:pt-24 sm:pb-14 bg-background bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto w-full">
             {isFeedback ? (
