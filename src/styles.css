@@ -278,3 +278,34 @@
     box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
   }
 }
+
+/* Cinematic scroll-driven experience custom utilities */
+.cinematic-vignette {
+  background: radial-gradient(circle, transparent 20%, rgba(5, 5, 6, 0.4) 60%, rgba(5, 5, 6, 0.85) 100%);
+  pointer-events: none;
+}
+
+.radial-glow-center {
+  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.glow-text-blue {
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.45);
+}
+
+/* Platform badge overrides - ensures maximum premium aesthetics by hiding system badges in bottom-right */
+.lovable-badge,
+#lovable-badge,
+iframe[src*="lovable"],
+iframe[id*="lovable"],
+[class*="lovable-badge"],
+[id*="lovable-badge"],
+.gemini-badge,
+#gemini-badge,
+[id*="gemini-badge-"] {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}

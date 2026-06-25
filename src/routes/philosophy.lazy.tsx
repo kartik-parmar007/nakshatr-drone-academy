@@ -17,7 +17,7 @@ import {
   Fan,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { ScrollDroneAnimation } from "@/components/ScrollDroneAnimation";
+import { PhilosophyHero } from "@/components/PhilosophyHero";
 
 const DroneVector = ({ className = "" }: { className?: string }) => (
   <svg
@@ -101,10 +101,10 @@ const steps = [
 function PhilosophyPage() {
   return (
     <div>
-      <ScrollDroneAnimation />
+      <PhilosophyHero />
 
       {/* What is a drone */}
-      <section className="bg-background py-10 sm:py-12 lg:py-14 border-b border-border">
+      <section id="what-is-a-drone" className="bg-background py-16 sm:py-20 lg:py-24 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground text-center uppercase tracking-tight font-display">
@@ -142,7 +142,7 @@ function PhilosophyPage() {
       </section>
 
       {/* Components flip cards */}
-      <section className="bg-background py-10 sm:py-12 lg:py-14 border-b border-border bg-dot-grid">
+      <section className="bg-background py-16 sm:py-20 lg:py-24 border-b border-border bg-dot-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">
@@ -163,7 +163,7 @@ function PhilosophyPage() {
       </section>
 
       {/* Assembly steps */}
-      <section className="bg-background py-10 sm:py-12 lg:py-14 border-b border-border">
+      <section className="bg-background py-16 sm:py-20 lg:py-24 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center uppercase tracking-tight font-display">
@@ -201,7 +201,7 @@ function PhilosophyPage() {
       </section>
 
       {/* Root principle */}
-      <section className="bg-background py-10 sm:py-12 lg:py-14 bg-line-grid border-b border-border">
+      <section className="bg-background py-20 sm:py-28 lg:py-32 bg-line-grid border-b border-border">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Reveal>
             <p className="text-foreground text-lg sm:text-xl md:text-3xl italic font-bold leading-relaxed font-display">
