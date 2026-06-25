@@ -47,7 +47,7 @@ export function PhilosophyHero() {
   // Determine correct video source based on screen size
   const videoSrc = screenSize === "desktop" 
     ? "/video/laptop video.mp4" 
-    : "/video/mobile video 1.mp4"; // Mobile and tablet use mobile video 1
+    : "/video/mobile video.mp4"; // Mobile and tablet use mobile video.mp4
 
   // 1. Calculate Scroll Progress relative to the sticky track
   useEffect(() => {
