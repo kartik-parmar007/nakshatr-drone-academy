@@ -90,6 +90,9 @@ export function PhilosophyHero() {
 
     video.addEventListener("seeked", handleSeeked);
 
+    let lastFrameTime = performance.now();
+    let lastSeekTime = 0;
+
     const updateScrub = () => {
       const vid = videoRef.current;
       
@@ -98,23 +101,28 @@ export function PhilosophyHero() {
         return;
       }
 
-      // Smooth scroll lerp ease factor
-      const ease = 0.05;
+      const now = performance.now();
+      const deltaTime = Math.min(50, now - lastFrameTime);
+      lastFrameTime = now;
+
+      // Smooth scroll lerp based on time delta (independent of screen refresh rate)
+      const rate = 0.008; // responsive rate
       const diff = targetProgress.current - currentProgress.current;
 
-      // Update currentProgress every frame for high responsiveness
       if (Math.abs(diff) > 0.0001) {
-        currentProgress.current += diff * ease;
+        currentProgress.current += diff * (1 - Math.exp(-rate * deltaTime));
       }
 
-      // Only request seek if browser has finished previous seek
-      if (!isSeeking.current) {
+      // Throttle seeking to avoid overloading the browser's decoder and blocking the main thread.
+      // This ensures the page scrolling movement itself remains completely smooth.
+      if (!isSeeking.current && now - lastSeekTime > 40) { // Limit seeks to ~25 FPS max
         const nextTime = currentProgress.current * vid.duration;
 
         // Verify seeking is actually needed (difference is larger than 0.03 seconds)
         if (Math.abs(vid.currentTime - nextTime) > 0.03) {
           isSeeking.current = true;
           vid.currentTime = nextTime;
+          lastSeekTime = now;
         }
       }
 
