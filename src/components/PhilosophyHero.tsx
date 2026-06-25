@@ -80,9 +80,16 @@ export function PhilosophyHero() {
   }, []);
 
   // 2. Hardware-Synchronized requestAnimationFrame Loop to smooth video scrub
+  // Source videos are encoded with every frame as a keyframe (see public/video),
+  // so currentTime seeks resolve in a single frame decode instead of walking a GOP.
+  // That makes per-frame seeking cheap enough to drop the old 25fps seek throttle
+  // and the wait for the previous "seeked" event, which is what produced the
+  // step-and-pause "video scrubbing" feel instead of a continuously-tracking render.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    let lastSeekStart = 0;
 
     const handleSeeked = () => {
       isSeeking.current = false;
@@ -91,11 +98,10 @@ export function PhilosophyHero() {
     video.addEventListener("seeked", handleSeeked);
 
     let lastFrameTime = performance.now();
-    let lastSeekTime = 0;
 
     const updateScrub = () => {
       const vid = videoRef.current;
-      
+
       if (!vid || !vid.duration || isNaN(vid.duration)) {
         scrollFrameRef.current = requestAnimationFrame(updateScrub);
         return;
@@ -105,24 +111,33 @@ export function PhilosophyHero() {
       const deltaTime = Math.min(50, now - lastFrameTime);
       lastFrameTime = now;
 
-      // Smooth scroll lerp based on time delta (independent of screen refresh rate)
-      const rate = 0.008; // responsive rate
+      // Time-based exponential smoothing (independent of refresh rate). Tuned tighter
+      // than a typical scroll-fade ease so the drone tracks the scrollbar closely,
+      // like a live render, while still absorbing discrete wheel/trackpad ticks.
+      const rate = 0.02;
       const diff = targetProgress.current - currentProgress.current;
 
-      if (Math.abs(diff) > 0.0001) {
+      if (Math.abs(diff) > 0.00005) {
         currentProgress.current += diff * (1 - Math.exp(-rate * deltaTime));
+      } else {
+        currentProgress.current = targetProgress.current;
       }
 
-      // Throttle seeking to avoid overloading the browser's decoder and blocking the main thread.
-      // This ensures the page scrolling movement itself remains completely smooth.
-      if (!isSeeking.current && now - lastSeekTime > 40) { // Limit seeks to ~25 FPS max
+      // Self-heals if a "seeked" event is ever dropped by the browser, so the lock
+      // can't get stuck and silently freeze the scrub.
+      if (isSeeking.current && now - lastSeekStart > 150) {
+        isSeeking.current = false;
+      }
+
+      if (!isSeeking.current) {
         const nextTime = currentProgress.current * vid.duration;
 
-        // Verify seeking is actually needed (difference is larger than 0.03 seconds)
-        if (Math.abs(vid.currentTime - nextTime) > 0.03) {
+        // Half a source frame (~24fps) — finer than the old 0.03s gate, since seeks
+        // are now near-instant and we want every visible frame to register.
+        if (Math.abs(vid.currentTime - nextTime) > 1 / 48) {
           isSeeking.current = true;
+          lastSeekStart = now;
           vid.currentTime = nextTime;
-          lastSeekTime = now;
         }
       }
 
@@ -231,12 +246,6 @@ export function PhilosophyHero() {
         
         {/* Bottom soft blend to subsequent sections */}
         <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#080809] via-[#080809]/60 to-transparent pointer-events-none z-10" />
-
-        {/* Dark film overlay (30% brightness reduction) */}
-        <div className="absolute inset-0 bg-[#080809]/30 pointer-events-none z-10" />
-
-        {/* Radial vignette centering attention */}
-        <div className="absolute inset-0 cinematic-vignette pointer-events-none z-10" />
 
         {/* Subtle center radial blue glow */}
         <div className="absolute inset-0 radial-glow-center pointer-events-none z-10" />
