@@ -1,6 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import React, { useState, useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
 import {
   GraduationCap,
   Users,
@@ -208,10 +207,9 @@ function CustomSelect({
   error?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [dropStyle, setDropStyle] = useState<React.CSSProperties>({});
+  const [openUpward, setOpenUpward] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
   const selected = options.find((o) => o.value === value);
 
   const updateDropPosition = () => {
@@ -223,25 +221,9 @@ function CustomSelect({
     const dropHeight = Math.min(options.length * 48, 240);
 
     if (spaceBelow < dropHeight && spaceAbove > spaceBelow) {
-      // Open upward
-      setDropStyle({
-        position: "fixed",
-        top: rect.top - dropHeight - 4,
-        left: rect.left,
-        width: rect.width,
-        zIndex: 9999,
-        maxHeight: Math.min(dropHeight, spaceAbove - 8),
-      });
+      setOpenUpward(true);
     } else {
-      // Open downward
-      setDropStyle({
-        position: "fixed",
-        top: rect.bottom + 4,
-        left: rect.left,
-        width: rect.width,
-        zIndex: 9999,
-        maxHeight: Math.min(dropHeight, spaceBelow - 8),
-      });
+      setOpenUpward(false);
     }
   };
 
@@ -254,24 +236,11 @@ function CustomSelect({
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (ref.current?.contains(target)) return;
-      if (listRef.current?.contains(target)) return;
       setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const onScroll = () => { updateDropPosition(); };
-    const onResize = () => { updateDropPosition(); };
-    window.addEventListener("scroll", onScroll, true);
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("scroll", onScroll, true);
-      window.removeEventListener("resize", onResize);
-    };
-  }, [open]);
 
   return (
     <div className="space-y-1.5" ref={ref}>
@@ -281,7 +250,7 @@ function CustomSelect({
       >
         {label}
       </label>
-      <div className="relative">
+      <div className={`relative ${open ? "z-30" : "z-10"}`}>
         <button
           ref={btnRef}
           id={id}
@@ -305,36 +274,34 @@ function CustomSelect({
             className={`text-muted-foreground transition-transform duration-200 shrink-0 ${open ? "rotate-180 text-blue-400" : ""}`}
           />
         </button>
-        {open &&
-          createPortal(
-            <ul
-              ref={listRef}
-              role="listbox"
-              style={dropStyle}
-              className="bg-zinc-950 backdrop-blur-xl border border-white/15 rounded shadow-2xl shadow-black/80 overflow-y-auto"
-            >
-              {options.map((o) => (
-                <li
-                  key={o.value}
-                  role="option"
-                  aria-selected={value === o.value}
-                  onClick={() => {
-                    onChange(o.value);
-                    setOpen(false);
-                  }}
-                  className={`px-4 py-3 text-sm font-mono cursor-pointer transition-all flex items-center gap-2 ${
-                    value === o.value
-                      ? "bg-blue-600/20 text-blue-400 border-l-2 border-blue-500"
-                      : "text-muted-foreground hover:bg-zinc-900/60 hover:text-foreground border-l-2 border-transparent"
-                  }`}
-                >
-                  {value === o.value && <CheckCircle2 size={12} className="text-blue-400 shrink-0" />}
-                  {o.label}
-                </li>
-              ))}
-            </ul>,
-            document.body,
-          )}
+        {open && (
+          <ul
+            role="listbox"
+            className={`absolute left-0 w-full bg-zinc-950 backdrop-blur-xl border border-white/15 rounded shadow-2xl shadow-black/80 overflow-y-auto z-50 max-h-[240px] ${
+              openUpward ? "bottom-full mb-1" : "top-full mt-1"
+            }`}
+          >
+            {options.map((o) => (
+              <li
+                key={o.value}
+                role="option"
+                aria-selected={value === o.value}
+                onClick={() => {
+                  onChange(o.value);
+                  setOpen(false);
+                }}
+                className={`px-4 py-3 text-sm font-mono cursor-pointer transition-all flex items-center gap-2 ${
+                  value === o.value
+                    ? "bg-blue-600/20 text-blue-400 border-l-2 border-blue-500"
+                    : "text-muted-foreground hover:bg-zinc-900/60 hover:text-foreground border-l-2 border-transparent"
+                }`}
+              >
+                {value === o.value && <CheckCircle2 size={12} className="text-blue-400 shrink-0" />}
+                {o.label}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       {error && (
         <p className="text-[10px] font-mono text-rose-500 mt-1">
