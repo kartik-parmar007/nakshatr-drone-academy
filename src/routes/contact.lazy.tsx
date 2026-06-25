@@ -1,5 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   GraduationCap,
   Users,
@@ -71,7 +72,6 @@ const STREAMS = [
   { value: "Science", label: "Science" },
   { value: "Commerce", label: "Commerce" },
   { value: "Arts", label: "Arts" },
-  { value: "Engineering", label: "Engineering" },
   { value: "Other", label: "Other" },
 ];
 
@@ -211,6 +211,7 @@ function CustomSelect({
   const [dropStyle, setDropStyle] = useState<React.CSSProperties>({});
   const ref = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   const selected = options.find((o) => o.value === value);
 
   const updateDropPosition = () => {
@@ -251,7 +252,10 @@ function CustomSelect({
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (ref.current?.contains(target)) return;
+      if (listRef.current?.contains(target)) return;
+      setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -301,33 +305,36 @@ function CustomSelect({
             className={`text-muted-foreground transition-transform duration-200 shrink-0 ${open ? "rotate-180 text-blue-400" : ""}`}
           />
         </button>
-        {open && (
-          <ul
-            role="listbox"
-            style={dropStyle}
-            className="bg-zinc-950 backdrop-blur-xl border border-white/15 rounded shadow-2xl shadow-black/80 overflow-y-auto"
-          >
-            {options.map((o) => (
-              <li
-                key={o.value}
-                role="option"
-                aria-selected={value === o.value}
-                onClick={() => {
-                  onChange(o.value);
-                  setOpen(false);
-                }}
-                className={`px-4 py-3 text-sm font-mono cursor-pointer transition-all flex items-center gap-2 ${
-                  value === o.value
-                    ? "bg-blue-600/20 text-blue-400 border-l-2 border-blue-500"
-                    : "text-muted-foreground hover:bg-zinc-900/60 hover:text-foreground border-l-2 border-transparent"
-                }`}
-              >
-                {value === o.value && <CheckCircle2 size={12} className="text-blue-400 shrink-0" />}
-                {o.label}
-              </li>
-            ))}
-          </ul>
-        )}
+        {open &&
+          createPortal(
+            <ul
+              ref={listRef}
+              role="listbox"
+              style={dropStyle}
+              className="bg-zinc-950 backdrop-blur-xl border border-white/15 rounded shadow-2xl shadow-black/80 overflow-y-auto"
+            >
+              {options.map((o) => (
+                <li
+                  key={o.value}
+                  role="option"
+                  aria-selected={value === o.value}
+                  onClick={() => {
+                    onChange(o.value);
+                    setOpen(false);
+                  }}
+                  className={`px-4 py-3 text-sm font-mono cursor-pointer transition-all flex items-center gap-2 ${
+                    value === o.value
+                      ? "bg-blue-600/20 text-blue-400 border-l-2 border-blue-500"
+                      : "text-muted-foreground hover:bg-zinc-900/60 hover:text-foreground border-l-2 border-transparent"
+                  }`}
+                >
+                  {value === o.value && <CheckCircle2 size={12} className="text-blue-400 shrink-0" />}
+                  {o.label}
+                </li>
+              ))}
+            </ul>,
+            document.body,
+          )}
       </div>
       {error && (
         <p className="text-[10px] font-mono text-rose-500 mt-1">
@@ -891,9 +898,7 @@ function ContactPage() {
                     <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                     <div className="cyber-scanline" />
 
-                    <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                      STEP 01 - PROFILE
-                    </div>
+                   
 
                     <div className="text-blue-400 font-mono text-[10px] font-bold tracking-widest uppercase mb-1">
                       STEP 1
@@ -987,9 +992,7 @@ function ContactPage() {
                     <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                     <div className="cyber-scanline" />
 
-                    <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                      STEP 02 - DETAILS
-                    </div>
+                  
 
                     <div className="text-blue-400 font-mono text-[10px] font-bold tracking-widest uppercase mb-1">
                       STEP 2
@@ -1153,9 +1156,6 @@ function ContactPage() {
                       <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                       <div className="cyber-scanline" />
 
-                      <div className="absolute top-4 right-5 font-mono text-[9px] text-blue-500/50 select-none uppercase">
-                        STEP 03 - INFO
-                      </div>
 
                       {profile === "student" && (
                         <>
@@ -1410,21 +1410,18 @@ function ContactPage() {
                 icon: MapPin,
                 label: "Address",
                 value: "Bhavnagar, Gujarat, India",
-                code: "LOC-001",
                 href: null,
               },
               {
                 icon: Mail,
                 label: "Email",
                 value: "support@nakshatrtech.in",
-                code: "MAIL-001",
                 href: "mailto:support@nakshatrtech.in",
               },
               {
                 icon: Phone,
-                label: "WhatsApp",
+                label: "Phone",
                 value: "+91 83200 02768",
-                code: "TEL-001",
                 href: "tel:+918320002768",
               },
             ].map((item, i) => (
@@ -1432,9 +1429,6 @@ function ContactPage() {
                 <div className="tech-card group rounded-md p-6 relative overflow-hidden">
                   <div className="cyber-scanline" />
                   <DroneVector className="absolute -bottom-4 -right-4 w-20 h-20 text-primary opacity-[0.03] group-hover:opacity-[0.11] transition-opacity duration-300 pointer-events-none animate-drone-wobble" />
-                  <div className="absolute top-3 right-4 font-mono text-[8px] text-blue-500/50 select-none uppercase">
-                    {item.code}
-                  </div>
 
                   <div className="w-10 h-10 rounded bg-zinc-900 border border-border flex items-center justify-center text-primary mb-4 group-hover:border-primary/40 transition-colors relative z-10">
                     <item.icon size={18} />
