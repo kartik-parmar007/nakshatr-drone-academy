@@ -240,13 +240,6 @@ export function PhilosophyHero() {
           />
         </div>
 
-        {/* ── Visual atmospheric overlays only (No text) ── */}
-        {/* Top soft blend to dark navbar */}
-        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-[#080809] via-[#080809]/60 to-transparent pointer-events-none z-10" />
-        
-        {/* Bottom soft blend to subsequent sections */}
-        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#080809] via-[#080809]/60 to-transparent pointer-events-none z-10" />
-
         {/* Subtle center radial blue glow */}
         <div className="absolute inset-0 radial-glow-center pointer-events-none z-10" />
       </div>
