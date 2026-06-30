@@ -30,23 +30,15 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-3 group">
+        <Link to="/" className="flex items-center group">
           <img
             src="/Logo_Main_1.webp"
             alt="Nakshatr Logo"
-            width={42}
-            height={36}
+            width={56}
+            height={48}
             loading="lazy"
-            className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
+            className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
           />
-          <div className="flex flex-col leading-none">
-            <span className="text-base sm:text-lg font-bold text-blue-400 tracking-wider font-display uppercase transition-colors group-hover:text-blue-300">
-              NAKSHATR
-            </span>
-            <span className="text-[8px] text-white/40 uppercase tracking-widest font-mono mt-0.5">
-              Technologies
-            </span>
-          </div>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

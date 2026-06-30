@@ -46,7 +46,6 @@ const programs = [
     duration: "90 Hours • 30 Days",
     durationDetail: "3 Hours per Session",
     fee: "₹15,000",
-    margin: "~60% margin",
     bullets: [
       "Reverse-engineering pedagogy",
       "All disciplines welcome",
@@ -74,7 +73,6 @@ const programs = [
     duration: "60 Hours • 30 Days",
     durationDetail: "2 Hours per Session",
     fee: "₹12,000",
-    margin: "~75% margin",
     bullets: [
       "Mission planning to AI autonomy",
       "Software-first interaction",
@@ -103,7 +101,6 @@ const programs = [
     duration: "Post-RPTO Approval",
     durationDetail: "Tailored Flight Cohort",
     fee: "₹22,000",
-    margin: "~70% margin",
     bullets: [
       "Hardware + Software + DGCA RPC",
       "Govt-recognized pilot license",
@@ -198,11 +195,6 @@ function ProgramsPage() {
                         <span className="text-3xl font-extrabold text-white tracking-tight font-display">
                           {p.fee}
                         </span>
-                        <span
-                          className={`text-[10px] font-semibold font-mono border px-2 py-0.5 rounded ${p.theme.feeMarginClass}`}
-                        >
-                          {p.margin}
-                        </span>
                       </div>
                     </div>
 
@@ -251,36 +243,7 @@ function ProgramsPage() {
           ))}
         </div>
 
-        {/* Partnership status banner at bottom */}
-        <div className="mt-12 border border-[#222328] bg-[#16171A]/40 backdrop-blur-sm p-4 sm:p-5 rounded-lg flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4 font-mono text-xs max-w-7xl mx-auto shadow-2xl relative select-none">
-          <div className="absolute top-0 left-4 -translate-y-1/2 bg-[#050506] px-2 text-blue-400 text-[9px] uppercase tracking-widest font-bold">
-            [ PARTNERSHIP PIPELINE MODEL ]
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center md:justify-start w-full md:w-auto">
-            <div>
-              <span className="text-[#8A94A6] uppercase tracking-wider block text-[10px]">
-                University Contributes
-              </span>
-              <span className="text-white font-bold uppercase mt-1 block">Space only</span>
-            </div>
-            <div className="h-px sm:h-8 w-full sm:w-px bg-white/[0.08]" />
-            <div>
-              <span className="text-[#8A94A6] uppercase tracking-wider block text-[10px]">
-                Nakshatr Contributes
-              </span>
-              <span className="text-blue-400 font-bold uppercase mt-1 block">Everything else</span>
-            </div>
-          </div>
-          <div className="h-px md:h-8 w-full md:w-px bg-white/[0.08]" />
-          <div className="bg-blue-500/10 border border-blue-500/30 px-5 py-3 rounded text-center w-full md:w-auto">
-            <span className="text-[#8A94A6] uppercase tracking-wider text-[10px] block">
-              University Earnings
-            </span>
-            <span className="text-blue-400 font-extrabold text-sm uppercase mt-0.5 block tracking-wide">
-              10% of ALL revenues
-            </span>
-          </div>
-        </div>
+
       </div>
 
       <section className="py-12 sm:py-16 bg-hud-radar opacity-95 border-t border-[#222328] mt-20">

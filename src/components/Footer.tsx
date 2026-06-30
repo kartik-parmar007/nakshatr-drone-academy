@@ -6,8 +6,7 @@ export function Footer() {
     <footer className="bg-card border-t border-border text-muted-foreground font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 md:grid-cols-5">
         <div className="md:col-span-2">
-          <div className="flex items-center gap-3">
-            <img
+          <img
               src="/Logo_Main_1.webp"
               alt="Nakshatr Logo"
               width={46}
@@ -15,15 +14,6 @@ export function Footer() {
               loading="lazy"
               className="h-10 w-auto object-contain"
             />
-            <div className="flex flex-col leading-none">
-              <span className="text-xl font-bold text-foreground font-display tracking-wider">
-                NAKSHATR
-              </span>
-              <span className="text-[8px] text-primary font-mono uppercase tracking-widest mt-1">
-                Technologies
-              </span>
-            </div>
-          </div>
           <p className="text-muted-foreground/80 text-xs mt-5 max-w-sm leading-relaxed">
             Bridging academia and the drone industry from Bhavnagar, Gujarat.
           </p>
